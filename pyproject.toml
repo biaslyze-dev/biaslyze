@@ -6,13 +6,15 @@ authors = ["Tobias Sterbak <sterbak-it@outlook.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.8"
-numpy = "^1.24.1"
+python = "<3.11,>=3.8"
+numpy = "1.23.2"
 jupyterlab = "^3.5.2"
 scikit-learn = "^1.2.0"
 pandas = "^1.5.3"
 eli5 = "^0.13.0"
-bertopic = "^0.13.0"
+bertopic = "0.13.0"
+umap-learn = "^0.5.3"
+scipy = "1.8.0"
 
 
 [build-system]
