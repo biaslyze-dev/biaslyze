@@ -1,0 +1,18 @@
+sources_dir: docs
+templates_dir: docs/templates
+repo: https://github.com/biaslyze-dev/biaslyze
+version: main
+
+pages:
+  - page: "biaslyze/bias_detectors.md"
+    source: "biaslyze/bias_detectors.py"
+    classes:
+      - KeywordBiasDetector 
+  - page: "biaslyze/concept_detectors.md"
+    source: "biaslyze/concept_detectors.py"
+    classes:
+      - KeywordConceptDetector
+  - page: "biaslyze/evaluators.md"
+    source: "biaslyze/evaluators.py"
+    classes:
+      - LimeBiasEvaluator 

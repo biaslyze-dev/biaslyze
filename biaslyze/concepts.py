@@ -1,0 +1,28 @@
+# dict of concepts with related keywords
+CONCEPTS = {
+    "nationality": [
+        "myanmar",
+        "german",
+        "israel",
+        "japan",
+        "taiwan",
+        "turkish",
+        "pakistan",
+        "english",
+        "finnish",
+        "egypt",
+        "syrian",
+        "palestine",
+        "saudi",
+        "russian",
+        "russia",
+        "syria",
+        "california",
+        "australia",
+        "ukraine",
+        "chinese",
+        "china",
+        "arabia",
+        "greece",
+    ],
+}

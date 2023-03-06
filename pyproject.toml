@@ -1,8 +1,8 @@
 [tool.poetry]
 name = "biaslyze"
-version = "0.1.0"
+version = "0.0.1"
 description = ""
-authors = ["Tobias Sterbak <sterbak-it@outlook.com>"]
+authors = ["Tobias Sterbak <hello@tobiassterbak.com>", "Stina Lohmüller <>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
@@ -15,6 +15,9 @@ eli5 = "^0.13.0"
 bertopic = "0.13.0"
 umap-learn = "^0.5.3"
 scipy = "1.8.0"
+mkdocs-material = "^9.1.1"
+mkgendocs = "^0.9.2"
+black = "^23.1.0"
 
 
 [build-system]
