@@ -1,11 +1,14 @@
 """Contains classes to evaluate the bias of detected concepts."""
 from typing import List
+import random
 import numpy as np
 from tqdm import tqdm
 import warnings
 from eli5.lime import TextExplainer
+from transformers import pipeline
 
-from concepts import CONCEPTS
+from biaslyze.concepts import CONCEPTS
+from biaslyze.evaluation_results import EvaluationResult, BiasedSampleResult
 
 
 class LimeBiasEvaluator:
@@ -13,8 +16,10 @@ class LimeBiasEvaluator:
         self.n_lime_samples = n_lime_samples
         self.explainer = TextExplainer(n_samples=n_lime_samples)
 
-    def evaluate(self, predict_func, texts: List[str], top_n: int = 10):
-        """Evaluate if a bias is present."""
+    def evaluate(
+        self, predict_func, texts: List[str], top_n: int = 10
+    ) -> EvaluationResult:
+        """Evaluate if a bias is present with LIME."""
         warnings.filterwarnings("ignore", category=FutureWarning)
         biased_samples = []
         for text in tqdm(texts):
@@ -50,35 +55,52 @@ class LimeBiasEvaluator:
         return EvaluationResult(biased_samples)
 
 
-class BiasedSampleResult:
-    def __init__(self, text: str, bias_concepts: List[str], bias_reasons: List[str]):
-        self.text = text
-        self.bias_concepts = bias_concepts
-        self.bias_reasons = bias_reasons
+class MaskedLMBiasEvaluator:
+    def __init__(self,):
+        self._lm = pipeline('fill-mask', model='distilbert-base-uncased')
 
-    def __repr__(self):
-        return f"''{self.text}'' might contain bias {self.bias_concepts}; reasons: {self.bias_reasons}"
+    def evaluate(self, predict_func, texts: List[str], n_resample_keywords: int = 10) -> EvaluationResult:
+        """Evaluate if a bias is present with masked language models.
+        
+        Use a masked language model to resample keywords in texts and measure the difference in prediction.
+        If the difference is 'large' we call is biased sample.
 
+        Note:
+            The language model might contain bias itself and resampling might be not diverse.
+        """
 
-class EvaluationResult:
-    def __init__(self, biased_samples: List[BiasedSampleResult]):
-        self.biased_samples = biased_samples
+        biased_samples = []
 
-    def summary(self):
-        print(self.__repr__())
+        for text in tqdm(texts):
+            bias_concepts = []
+            bias_indicator_tokens = []
+            for concept, concept_keywords in CONCEPTS.items():
+                probabilities = []
+                # TODO: this is to simple, use spacy for tokenization
+                present_keywords = list(keyword for keyword in concept_keywords if keyword in text.lower())
+                if not present_keywords:
+                    continue
+                for _ in range(n_resample_keywords):
+                    mask_keyword = random.choice(present_keywords)
 
-    def details(self):
-        """Print the details of every biased sample detected."""
-        for sample in self.biased_samples:
-            print(sample)
+                    # resample with the language model
+                    masked_text = text[:text.lower().find(mask_keyword)] + "[MASK]" + text[text.lower().find(mask_keyword) + len(mask_keyword):]
 
-    def __repr__(self):
-        concepts = []
-        reasons = []
-        for sample in self.biased_samples:
-            concepts.extend(sample.bias_concepts)
-            reasons.extend(sample.bias_reasons)
-        representation_string = f"""Detected {len(self.biased_samples)} samples with potential issues.
-Potentially problematic concepts detected: {set(concepts)}
-Based on keywords: {set(reasons)}."""
-        return representation_string
+                    probable_tokens = self._lm(masked_text, top_k=10)
+                    probable_token = random.choice(probable_tokens).get("token_str")
+
+                    resampled_text = masked_text.replace("[MASK]", probable_token)
+
+                    predicted_proba = predict_func([resampled_text])[:, 1]
+                    probabilities.append(predicted_proba)
+                # check if predicted probabilities vary a lot
+                if (max(probabilities) - min(probabilities)) > 0.1:
+                    bias_concepts.append(concept)
+                    bias_indicator_tokens.extend(present_keywords)
+
+            if len(bias_concepts) > 0:
+                biased_samples.append(
+                    BiasedSampleResult(text, bias_concepts, bias_indicator_tokens)
+                )
+
+        return EvaluationResult(biased_samples)

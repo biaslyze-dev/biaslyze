@@ -9,6 +9,7 @@ CONCEPTS = {
         "taiwan",
         "turkish",
         "pakistan",
+        "pakistani",
         "english",
         "finnish",
         "egypt",
