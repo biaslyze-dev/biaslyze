@@ -14,10 +14,10 @@
 
 
 ### .detect
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_detectors.py/#L12)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_detectors.py/#L11)
 ```python
 .detect(
-   texts: List[str], labels: List
+   texts: List[str]
 )
 ```
 
