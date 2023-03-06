@@ -1,5 +1,6 @@
 """Classes to return results of the different steps."""
 from typing import List
+from collections import Counter
 
 
 class BiasedSampleResult:
@@ -30,7 +31,12 @@ class EvaluationResult:
         for sample in self.biased_samples:
             concepts.extend(sample.bias_concepts)
             reasons.extend(sample.bias_reasons)
+
+        concepts_stats = Counter()
+        concepts_stats.update(concepts)
+        reasons_stats = Counter()
+        reasons_stats.update(reasons)
         representation_string = f"""Detected {len(self.biased_samples)} samples with potential issues.
-    Potentially problematic concepts detected: {set(concepts)}
-    Based on keywords: {set(reasons)}."""
+    Potentially problematic concepts detected: {concepts_stats}
+    Based on keywords: {reasons_stats}."""
         return representation_string

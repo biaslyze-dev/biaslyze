@@ -56,12 +56,16 @@ class LimeBiasEvaluator:
 
 
 class MaskedLMBiasEvaluator:
-    def __init__(self,):
-        self._lm = pipeline('fill-mask', model='distilbert-base-uncased')
+    def __init__(
+        self,
+    ):
+        self._lm = pipeline("fill-mask", model="distilbert-base-uncased")
 
-    def evaluate(self, predict_func, texts: List[str], n_resample_keywords: int = 10) -> EvaluationResult:
+    def evaluate(
+        self, predict_func, texts: List[str], n_resample_keywords: int = 10
+    ) -> EvaluationResult:
         """Evaluate if a bias is present with masked language models.
-        
+
         Use a masked language model to resample keywords in texts and measure the difference in prediction.
         If the difference is 'large' we call is biased sample.
 
@@ -77,14 +81,20 @@ class MaskedLMBiasEvaluator:
             for concept, concept_keywords in CONCEPTS.items():
                 probabilities = []
                 # TODO: this is to simple, use spacy for tokenization
-                present_keywords = list(keyword for keyword in concept_keywords if keyword in text.lower())
+                present_keywords = list(
+                    keyword for keyword in concept_keywords if keyword in text.lower()
+                )
                 if not present_keywords:
                     continue
                 for _ in range(n_resample_keywords):
                     mask_keyword = random.choice(present_keywords)
 
                     # resample with the language model
-                    masked_text = text[:text.lower().find(mask_keyword)] + "[MASK]" + text[text.lower().find(mask_keyword) + len(mask_keyword):]
+                    masked_text = (
+                        text[: text.lower().find(mask_keyword)]
+                        + "[MASK]"
+                        + text[text.lower().find(mask_keyword) + len(mask_keyword) :]
+                    )
 
                     probable_tokens = self._lm(masked_text, top_k=10)
                     probable_token = random.choice(probable_tokens).get("token_str")
