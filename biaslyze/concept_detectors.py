@@ -1,5 +1,5 @@
 """This module contains classes to detect the presence of protected concepts in texts."""
-from typing import List, Union
+from typing import List
 
 from biaslyze.concepts import CONCEPTS
 

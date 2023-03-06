@@ -1,14 +1,15 @@
 """Contains classes to evaluate the bias of detected concepts."""
-from typing import List
 import random
-import numpy as np
-from tqdm import tqdm
 import warnings
+from typing import List
+
+import numpy as np
 from eli5.lime import TextExplainer
+from tqdm import tqdm
 from transformers import pipeline
 
 from biaslyze.concepts import CONCEPTS
-from biaslyze.evaluation_results import EvaluationResult, BiasedSampleResult
+from biaslyze.evaluation_results import BiasedSampleResult, EvaluationResult
 
 
 class LimeBiasEvaluator:

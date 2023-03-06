@@ -1,11 +1,9 @@
 """Detect bias by finding keywords related to protected concepts with a language model that change the prediction a lot."""
-from typing import List, Callable
+from typing import Callable, List
 
 from biaslyze.concept_detectors import KeywordConceptDetector
-from biaslyze.evaluators import (
-    MaskedLMBiasEvaluator,
-)
 from biaslyze.evaluation_results import EvaluationResult
+from biaslyze.evaluators import MaskedLMBiasEvaluator
 
 
 class MaskedKeywordBiasDetector:

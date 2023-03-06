@@ -1,11 +1,9 @@
 """Detect bias by finding keywords related to protected concepts that rank high in LIME."""
-from typing import List, Callable
+from typing import Callable, List
 
 from biaslyze.concept_detectors import KeywordConceptDetector
-from biaslyze.evaluators import (
-    LimeBiasEvaluator,
-)
 from biaslyze.evaluation_results import EvaluationResult
+from biaslyze.evaluators import LimeBiasEvaluator
 
 
 class LimeKeywordBiasDetector:

@@ -1,6 +1,6 @@
 """Classes to return results of the different steps."""
-from typing import List
 from collections import Counter
+from typing import List
 
 
 class BiasedSampleResult:

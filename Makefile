@@ -13,7 +13,11 @@ doc:
 	poetry run mkdocs build
 
 style:
+	poetry run isort .
 	poetry run black .
+
+lint:
+	poetry run ruff biaslyze/ --ignore E501
 
 test:
 	PYTHONPATH=biaslyze:$(PYTHONPATH) poetry run pytest --cov=biaslyze tests/
