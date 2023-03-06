@@ -8,15 +8,18 @@ class KeywordConceptDetector:
     def __init__(self):
         pass
 
-    def detect(self, texts: List[str], labels: List) -> Union[List[str], List]:
+    def detect(self, texts: List[str]) -> List[str]:
         """Detect concepts present in texts.
 
         Returns a list of texts with the concept present.
         """
         detected_texts = []
-        detected_labels = []
-        for text, label in zip(texts, labels):
-            if any(n in text.lower() for n in CONCEPTS.get("nationality")):
+        concept_keywords = [
+            keyword
+            for concept_keywords in CONCEPTS.values()
+            for keyword in concept_keywords
+        ]
+        for text in texts:
+            if any(keyword in text.lower() for keyword in concept_keywords):
                 detected_texts.append(text)
-                detected_labels.append(label)
-        return detected_texts, detected_labels
+        return detected_texts

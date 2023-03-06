@@ -9,18 +9,22 @@ class KeywordBiasDetector:
     def __init__(
         self,
         predict_func: Callable[[List[str]], List[float]],
+        n_top_keywords: int = 10,
         concept_detector=KeywordConceptDetector(),
         bias_evaluator=LimeBiasEvaluator(),
     ):
         self.predict_func = predict_func
+        self.n_top_keywords = n_top_keywords
         self.concept_detector = concept_detector
         self.bias_evaluator = bias_evaluator
 
-    def detect(self, texts: List[str], labels: List):
-        detected_texts, detected_labels = self.concept_detector.detect(texts, labels)
+    def detect(self, texts: List[str]):
+        detected_texts = self.concept_detector.detect(texts)
 
         biased_samples = self.bias_evaluator.evaluate(
-            self.predict_func, detected_texts, detected_labels
+            predict_func=self.predict_func,
+            texts=detected_texts,
+            top_n=self.n_top_keywords,
         )
 
         return biased_samples
