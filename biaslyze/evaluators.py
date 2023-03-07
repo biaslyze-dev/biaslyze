@@ -7,6 +7,7 @@ import numpy as np
 from eli5.lime import TextExplainer
 from tqdm import tqdm
 from transformers import pipeline
+from loguru import logger
 
 from biaslyze.concepts import CONCEPTS
 from biaslyze.evaluation_results import BiasedSampleResult, EvaluationResult
@@ -36,9 +37,12 @@ class LimeBiasEvaluator:
             EvaluationResult object containing information on the detected bias.
         """
         warnings.filterwarnings("ignore", category=FutureWarning)
+        logger.info(f"Started bias detection on {len(texts)} samples...")
         biased_samples = []
         for text in tqdm(texts):
+            # use LIME on the given text sample
             self.explainer.fit(text, predict_func)
+            # get the explanation from LIME (linear model coefficients and feature names)
             interpret_sample_dict = {
                 coef: token
                 for coef, token in zip(
@@ -46,6 +50,7 @@ class LimeBiasEvaluator:
                     self.explainer.vec_.get_feature_names_out(),
                 )
             }
+            # get the most important tokens from the explanation 
             top_interpret_sample_dict = sorted(
                 interpret_sample_dict.items(), key=lambda x: -np.abs(x[0])
             )[: min(len(interpret_sample_dict), top_n)]
@@ -87,9 +92,9 @@ class MaskedLMBiasEvaluator:
         Note:
             The language model might contain bias itself and resampling might be not diverse.
         """
+        logger.info(f"Started bias detection on {len(texts)} samples...")
 
         biased_samples = []
-
         for text in tqdm(texts):
             bias_concepts = []
             bias_indicator_tokens = []

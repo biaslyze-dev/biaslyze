@@ -1,6 +1,7 @@
 """Classes to return results of the different steps."""
-from collections import Counter
+from collections import Counter, defaultdict
 from typing import List
+from pprint import pprint
 
 
 class BiasedSampleResult:
@@ -49,10 +50,23 @@ class EvaluationResult:
         """
         print(self.__repr__())
 
-    def details(self):
-        """Print the details of every biased sample detected."""
-        for sample in self.biased_samples:
-            print(sample)
+    def details(self, group_by_concept: bool = False):
+        """Print the details of every biased sample detected.
+        
+        Args:
+            group_by_concept: If the output should be grouped by concepts.
+        """
+        if group_by_concept:
+            concept_groups = defaultdict(list)
+            for sample in self.biased_samples:
+                for bias_concept in sample.bias_concepts:
+                    concept_groups[bias_concept].append({"text": sample.text, "reason": sample.bias_reasons})
+            for concept, group in concept_groups.items():
+                print(f"Concept: {concept}")
+                pprint(group)
+        else:
+            for sample in self.biased_samples:
+                print(sample)
 
     def __repr__(self) -> str:
         concepts = []
@@ -66,6 +80,6 @@ class EvaluationResult:
         reasons_stats = Counter()
         reasons_stats.update(reasons)
         representation_string = f"""Detected {len(self.biased_samples)} samples with potential issues.
-    Potentially problematic concepts detected: {concepts_stats}
-    Based on keywords: {reasons_stats}."""
+    Potentially problematic concepts detected: {concepts_stats.most_common(10)}
+    Based on keywords: {reasons_stats.most_common(20)}."""
         return representation_string

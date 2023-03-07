@@ -40,4 +40,14 @@ CONCEPTS = {
         "christian",
         "muslims",
     ],
+    "gender": [
+        "man",
+        "woman",
+        "he",
+        "she",
+        "her",
+        "his",
+        "girl",
+        "boy",
+    ]
 }
