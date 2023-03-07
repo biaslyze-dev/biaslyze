@@ -2,7 +2,7 @@
 
 
 ## KeywordConceptDetector
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_detectors.py/#L10)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_detectors.py/#L11)
 ```python 
 KeywordConceptDetector(
    use_tokenizer: bool = False
@@ -24,7 +24,7 @@ Use keywords to determine if a protected concept is present in text.
 
 
 ### .detect
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_detectors.py/#L21)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_detectors.py/#L22)
 ```python
 .detect(
    texts: List[str]

@@ -2,7 +2,7 @@
 
 
 ## EvaluationResult
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L26)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L27)
 ```python 
 EvaluationResult(
    biased_samples: List[BiasedSampleResult]
@@ -21,7 +21,7 @@ biased_samples: A list of BiasedSampleResults.
 
 
 ### .summary
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L35)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L37)
 ```python
 .summary()
 ```
@@ -44,7 +44,7 @@ Based on keywords: Counter({'german': 1}).
 ```
 
 ### .details
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L53)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L55)
 ```python
 .details(
    group_by_concept: bool = False
