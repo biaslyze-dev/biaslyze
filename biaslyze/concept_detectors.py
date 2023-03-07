@@ -17,7 +17,7 @@ class KeywordConceptDetector:
 
     def __init__(self, use_tokenizer: bool = False):
         self.use_tokenizer = use_tokenizer
-        self.tokenizer = spacy.load("en_core_web_sm")
+        self._tokenizer = spacy.load("en_core_web_sm")
 
     def detect(self, texts: List[str]) -> List[str]:
         """Detect concepts present in texts.
@@ -40,7 +40,7 @@ class KeywordConceptDetector:
         for text in tqdm(texts):
             if self.use_tokenizer:
                 text_representation = [
-                    token.text.lower() for token in self.tokenizer(text)
+                    token.text.lower() for token in self._tokenizer(text)
                 ]
             else:
                 text_representation = text.lower()

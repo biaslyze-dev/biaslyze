@@ -4,6 +4,7 @@ import warnings
 from typing import List
 
 import numpy as np
+import spacy
 from eli5.lime import TextExplainer
 from loguru import logger
 from tqdm import tqdm
@@ -81,6 +82,7 @@ class MaskedLMBiasEvaluator:
         self,
     ):
         self._lm = pipeline("fill-mask", model="distilbert-base-uncased")
+        self._tokenizer = spacy.load("en_core_web_sm")
 
     def evaluate(
         self, predict_func, texts: List[str], n_resample_keywords: int = 10
@@ -101,28 +103,36 @@ class MaskedLMBiasEvaluator:
             bias_indicator_tokens = []
             for concept, concept_keywords in CONCEPTS.items():
                 probabilities = []
-                # TODO: this is to simple, use spacy for tokenization
+                text_representation = self._tokenizer(text)
                 present_keywords = list(
-                    keyword for keyword in concept_keywords if keyword in text.lower()
+                    keyword
+                    for keyword in concept_keywords
+                    if keyword in (token.text.lower() for token in text_representation)
                 )
                 if not present_keywords:
                     continue
                 for _ in range(n_resample_keywords):
                     mask_keyword = random.choice(present_keywords)
 
-                    # resample with the language model
-                    masked_text = (
-                        text[: text.lower().find(mask_keyword)]
-                        + "[MASK]"
-                        + text[text.lower().find(mask_keyword) + len(mask_keyword) :]
+                    # TODO: Does it make sense to use the language model?
+                    # probable_tokens = self._lm(masked_text, top_k=10)
+                    # probable_token = random.choice(probable_tokens).get("token_str")
+
+                    # for now we sample from concept keywords
+                    probable_token = random.choice(concept_keywords)
+
+                    resampled_text = "".join(
+                        [
+                            probable_token + token.whitespace_
+                            if token.text.lower() == mask_keyword.lower()
+                            else token.text + token.whitespace_
+                            for token in text_representation
+                        ]
                     )
 
-                    probable_tokens = self._lm(masked_text, top_k=10)
-                    probable_token = random.choice(probable_tokens).get("token_str")
-
-                    resampled_text = masked_text.replace("[MASK]", probable_token)
-
                     predicted_proba = predict_func([resampled_text])[:, 1]
+                    # print(f"[{mask_keyword}/{probable_token}]", predicted_proba, resampled_text)
+
                     probabilities.append(predicted_proba)
                 # check if predicted probabilities vary a lot
                 if (max(probabilities) - min(probabilities)) > 0.1:

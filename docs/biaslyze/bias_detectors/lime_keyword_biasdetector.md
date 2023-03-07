@@ -5,10 +5,9 @@
 [source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/lime_keyword_biasdetector.py/#L9)
 ```python 
 LimeKeywordBiasDetector(
-   n_top_keywords: int = 10,
+   n_top_keywords: int = 10, use_tokenizer: bool = False,
    concept_detector: KeywordConceptDetector = KeywordConceptDetector(),
-   bias_evaluator: LimeBiasEvaluator = LimeBiasEvaluator(),
-   use_tokenizer: bool = False
+   bias_evaluator: LimeBiasEvaluator = LimeBiasEvaluator()
 )
 ```
 
@@ -41,9 +40,9 @@ detection_res.summary()
 **Attributes**
 
 * **n_top_keywords**  : In how many important LIME words should the method look for protected keywords.
-* **concept_detector**  : an instance of KeywordConceptDetector
-* **bias_evaluator**  : an instance of LimeBiasEvaluator
 * **use_tokenizer**  : If keywords should only be searched in tokenized text. Can be useful for short keywords like 'she'.
+* **concept_detector**  : An instance of KeywordConceptDetector
+* **bias_evaluator**  : An instance of LimeBiasEvaluator
 
 
 

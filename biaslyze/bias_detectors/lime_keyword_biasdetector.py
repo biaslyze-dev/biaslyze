@@ -32,22 +32,22 @@ class LimeKeywordBiasDetector:
 
     Attributes:
         n_top_keywords: In how many important LIME words should the method look for protected keywords.
-        concept_detector: an instance of KeywordConceptDetector
-        bias_evaluator: an instance of LimeBiasEvaluator
         use_tokenizer: If keywords should only be searched in tokenized text. Can be useful for short keywords like 'she'.
+        concept_detector: An instance of KeywordConceptDetector
+        bias_evaluator: An instance of LimeBiasEvaluator
     """
 
     def __init__(
         self,
         n_top_keywords: int = 10,
+        use_tokenizer: bool = False,
         concept_detector: KeywordConceptDetector = KeywordConceptDetector(),
         bias_evaluator: LimeBiasEvaluator = LimeBiasEvaluator(),
-        use_tokenizer: bool = False,
     ):
         self.n_top_keywords = n_top_keywords
+        self.use_tokenizer = use_tokenizer
         self.concept_detector = concept_detector
         self.bias_evaluator = bias_evaluator
-        self.use_tokenizer = use_tokenizer
 
         # overwrite use_tokenizer
         self.concept_detector.use_tokenizer = self.use_tokenizer
