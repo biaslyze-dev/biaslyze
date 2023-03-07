@@ -5,9 +5,9 @@ from typing import List
 
 import numpy as np
 from eli5.lime import TextExplainer
+from loguru import logger
 from tqdm import tqdm
 from transformers import pipeline
-from loguru import logger
 
 from biaslyze.concepts import CONCEPTS
 from biaslyze.evaluation_results import BiasedSampleResult, EvaluationResult
@@ -15,10 +15,11 @@ from biaslyze.evaluation_results import BiasedSampleResult, EvaluationResult
 
 class LimeBiasEvaluator:
     """Evaluate bias in text based on LIME.
-    
+
     Attributes:
         n_lime_samples: Number of perturbed samples to create for each LIME run.
     """
+
     def __init__(self, n_lime_samples: int = 100):
         self.n_lime_samples = n_lime_samples
         self.explainer = TextExplainer(n_samples=n_lime_samples)
@@ -27,7 +28,7 @@ class LimeBiasEvaluator:
         self, predict_func, texts: List[str], top_n: int = 10
     ) -> EvaluationResult:
         """Evaluate if a bias is present with LIME.
-        
+
         Args:
             predict_func: Function that predicts a for a given text. Currently only binary classification is supported.
             texts: List of texts to evaluate.
@@ -50,7 +51,7 @@ class LimeBiasEvaluator:
                     self.explainer.vec_.get_feature_names_out(),
                 )
             }
-            # get the most important tokens from the explanation 
+            # get the most important tokens from the explanation
             top_interpret_sample_dict = sorted(
                 interpret_sample_dict.items(), key=lambda x: -np.abs(x[0])
             )[: min(len(interpret_sample_dict), top_n)]

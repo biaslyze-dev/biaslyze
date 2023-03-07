@@ -48,7 +48,7 @@ class LimeKeywordBiasDetector:
         self.concept_detector = concept_detector
         self.bias_evaluator = bias_evaluator
         self.use_tokenizer = use_tokenizer
-        
+
         # overwrite use_tokenizer
         self.concept_detector.use_tokenizer = self.use_tokenizer
 

@@ -2,7 +2,7 @@
 
 
 ## EvaluationResult
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L25)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L26)
 ```python 
 EvaluationResult(
    biased_samples: List[BiasedSampleResult]
@@ -21,7 +21,7 @@ biased_samples: A list of BiasedSampleResults.
 
 
 ### .summary
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L34)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L35)
 ```python
 .summary()
 ```
@@ -44,19 +44,27 @@ Based on keywords: Counter({'german': 1}).
 ```
 
 ### .details
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L52)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L53)
 ```python
-.details()
+.details(
+   group_by_concept: bool = False
+)
 ```
 
 ---
 Print the details of every biased sample detected.
 
+
+**Args**
+
+* **group_by_concept**  : If the output should be grouped by concepts.
+
+
 ----
 
 
 ## BiasedSampleResult
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L6)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L7)
 ```python 
 BiasedSampleResult(
    text: str, bias_concepts: List[str], bias_reasons: List[str]

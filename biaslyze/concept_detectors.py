@@ -1,15 +1,16 @@
 """This module contains classes to detect the presence of protected concepts in texts."""
 from typing import List
-from tqdm import tqdm
+
 import spacy
 from loguru import logger
+from tqdm import tqdm
 
 from biaslyze.concepts import CONCEPTS
 
 
 class KeywordConceptDetector:
     """Use keywords to determine if a protected concept is present in text.
-    
+
     Attributes:
         use_tokenizer: If keywords should only be searched in tokenized text. Can be useful for short keywords like 'she'.
     """
@@ -38,7 +39,9 @@ class KeywordConceptDetector:
         ]
         for text in tqdm(texts):
             if self.use_tokenizer:
-                text_representation = [token.text.lower() for token in self.tokenizer(text)]
+                text_representation = [
+                    token.text.lower() for token in self.tokenizer(text)
+                ]
             else:
                 text_representation = text.lower()
             if any(keyword in text_representation for keyword in concept_keywords):
