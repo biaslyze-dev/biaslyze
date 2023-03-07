@@ -2,7 +2,7 @@
 
 
 ## LimeBiasEvaluator
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluators.py/#L14)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluators.py/#L15)
 ```python 
 LimeBiasEvaluator(
    n_lime_samples: int = 100
@@ -10,13 +10,21 @@ LimeBiasEvaluator(
 ```
 
 
+---
+Evaluate bias in text based on LIME.
+
+
+**Attributes**
+
+* **n_lime_samples**  : Number of perturbed samples to create for each LIME run.
+
 
 
 **Methods:**
 
 
 ### .evaluate
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluators.py/#L19)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluators.py/#L25)
 ```python
 .evaluate(
    predict_func, texts: List[str], top_n: int = 10
@@ -26,11 +34,23 @@ LimeBiasEvaluator(
 ---
 Evaluate if a bias is present with LIME.
 
+
+**Args**
+
+* **predict_func**  : Function that predicts a for a given text. Currently only binary classification is supported.
+* **texts**  : List of texts to evaluate.
+* **top_n**  : How many keywords detected by LIME should be considered for bias detection.
+
+
+**Returns**
+
+EvaluationResult object containing information on the detected bias.
+
 ----
 
 
 ## MaskedLMBiasEvaluator
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluators.py/#L58)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluators.py/#L73)
 ```python 
 
 ```
@@ -42,7 +62,7 @@ Evaluate if a bias is present with LIME.
 
 
 ### .evaluate
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluators.py/#L62)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluators.py/#L79)
 ```python
 .evaluate(
    predict_func, texts: List[str], n_resample_keywords: int = 10

@@ -2,7 +2,7 @@
 
 
 ## MaskedKeywordBiasDetector
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/masked_keyword_biasdetector.py/#L11)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/masked_keyword_biasdetector.py/#L9)
 ```python 
 MaskedKeywordBiasDetector(
    predict_func: Callable[[List[str]], List[float]], n_resample_keywords: int = 10,
@@ -20,7 +20,7 @@ Detect bias by finding keywords related to protected concepts with a language mo
 
 
 ### .detect
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/masked_keyword_biasdetector.py/#L26)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/masked_keyword_biasdetector.py/#L24)
 ```python
 .detect(
    texts: List[str]

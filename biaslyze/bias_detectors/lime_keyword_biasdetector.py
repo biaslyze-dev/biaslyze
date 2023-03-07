@@ -39,8 +39,8 @@ class LimeKeywordBiasDetector:
     def __init__(
         self,
         n_top_keywords: int = 10,
-        concept_detector=KeywordConceptDetector(),
-        bias_evaluator=LimeBiasEvaluator(),
+        concept_detector: KeywordConceptDetector = KeywordConceptDetector(),
+        bias_evaluator: LimeBiasEvaluator = LimeBiasEvaluator(),
     ):
         self.n_top_keywords = n_top_keywords
         self.concept_detector = concept_detector

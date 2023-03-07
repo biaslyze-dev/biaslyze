@@ -2,11 +2,12 @@
 
 
 ## LimeKeywordBiasDetector
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/lime_keyword_biasdetector.py/#L11)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/lime_keyword_biasdetector.py/#L9)
 ```python 
 LimeKeywordBiasDetector(
-   n_top_keywords: int = 10, concept_detector = KeywordConceptDetector(),
-   bias_evaluator = LimeBiasEvaluator()
+   n_top_keywords: int = 10,
+   concept_detector: KeywordConceptDetector = KeywordConceptDetector(),
+   bias_evaluator: LimeBiasEvaluator = LimeBiasEvaluator()
 )
 ```
 
@@ -39,7 +40,7 @@ detection_res.summary()
 **Attributes**
 
 * **n_top_keywords**  : In how many important LIME words should the method look for protected keywords.
-* **concept_detector**  : an instance of KeywordConceptDetector 
+* **concept_detector**  : an instance of KeywordConceptDetector
 * **bias_evaluator**  : an instance of LimeBiasEvaluator
 
 
@@ -48,7 +49,7 @@ detection_res.summary()
 
 
 ### .detect
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/lime_keyword_biasdetector.py/#L51)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/lime_keyword_biasdetector.py/#L49)
 ```python
 .detect(
    texts: List[str], predict_func: Callable[[List[str]], List[float]]

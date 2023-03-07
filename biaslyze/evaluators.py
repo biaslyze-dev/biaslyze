@@ -13,6 +13,11 @@ from biaslyze.evaluation_results import BiasedSampleResult, EvaluationResult
 
 
 class LimeBiasEvaluator:
+    """Evaluate bias in text based on LIME.
+    
+    Attributes:
+        n_lime_samples: Number of perturbed samples to create for each LIME run.
+    """
     def __init__(self, n_lime_samples: int = 100):
         self.n_lime_samples = n_lime_samples
         self.explainer = TextExplainer(n_samples=n_lime_samples)
@@ -20,7 +25,16 @@ class LimeBiasEvaluator:
     def evaluate(
         self, predict_func, texts: List[str], top_n: int = 10
     ) -> EvaluationResult:
-        """Evaluate if a bias is present with LIME."""
+        """Evaluate if a bias is present with LIME.
+        
+        Args:
+            predict_func: Function that predicts a for a given text. Currently only binary classification is supported.
+            texts: List of texts to evaluate.
+            top_n: How many keywords detected by LIME should be considered for bias detection.
+
+        Returns:
+            EvaluationResult object containing information on the detected bias.
+        """
         warnings.filterwarnings("ignore", category=FutureWarning)
         biased_samples = []
         for text in tqdm(texts):
