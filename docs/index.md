@@ -25,8 +25,23 @@ detection_res.summary()
 
 ## Development setup
 
+- First you need to install poetry to manage your python environment: https://python-poetry.org/docs/#installation
+- Run `make install` to install the dependencies and get the spacy basemodels.
+- Now you can use `biaslyze` in your jupyter notebooks.
+
+
+### Adding concepts and keywords
+
+You can add concepts and new keywords for existing concepts by editing [concepts.py](https://github.com/biaslyze-dev/biaslyze/blob/keyword-based-targeted-lime/biaslyze/concepts.py).
+
+## Preview/build the documentation with mkdocs
+
+To preview the documentation run `make doc-preview`. This will launch a preview of the documentation on `http://127.0.0.1:8000/`.
+To build the documentation html run `make doc`.
 
 ## Contributing
 
 Follow the google style guide for python: https://google.github.io/styleguide/pyguide.html
+
+This project uses black, isort and ruff to enforce style. Apply it by running `make style` and `make lint`.
 
