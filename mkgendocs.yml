@@ -1,0 +1,28 @@
+sources_dir: docs
+templates_dir: docs/templates
+repo: https://github.com/biaslyze-dev/biaslyze
+version: main
+
+pages:
+  - page: "biaslyze/bias_detectors/lime_keyword_biasdetector.md"
+    source: "biaslyze/bias_detectors/lime_keyword_biasdetector.py"
+    classes:
+      - LimeKeywordBiasDetector
+  - page: "biaslyze/bias_detectors/masked_keyword_biasdetector.md"
+    source: "biaslyze/bias_detectors/masked_keyword_biasdetector.py"
+    classes:
+      - MaskedKeywordBiasDetector
+  - page: "biaslyze/evaluation_results.md"
+    source: "biaslyze/evaluation_results.py"
+    classes:
+      - EvaluationResult
+      - BiasedSampleResult 
+  - page: "biaslyze/concept_detectors.md"
+    source: "biaslyze/concept_detectors.py"
+    classes:
+      - KeywordConceptDetector
+  - page: "biaslyze/evaluators.md"
+    source: "biaslyze/evaluators.py"
+    classes:
+      - LimeBiasEvaluator 
+      - MaskedLMBiasEvaluator
