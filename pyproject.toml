@@ -6,7 +6,7 @@ authors = ["Tobias Sterbak <hello@tobiassterbak.com>", "Stina Lohmüller <>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "<3.11,>=3.8"
+python = "<3.11,>=3.10"
 numpy = "1.23.2"
 jupyterlab = "^3.5.2"
 scikit-learn = "^1.2.0"
