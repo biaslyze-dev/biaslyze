@@ -11,6 +11,9 @@ nav:
   - Getting started:
     - Installation: getting-started.md
   - Ethical considerations: ethics.md
+  - Tutorials:
+    - Overview: tutorials-overview.md
+    - Disaster tweets: tutorials/disaster-tweets.md 
   - API:
     - Overview: api-overview.md
     - Concept detectors: biaslyze/concept_detectors.md
