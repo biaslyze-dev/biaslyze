@@ -24,13 +24,14 @@ class BiasedSampleResult:
         bias_reasons: Reasons why bias was detected. Might be a list of keywords.
     """
 
-    def __init__(self, text: str, bias_concepts: List[str], bias_reasons: List[str], top_words: List[str], num_tokens: List[str], keyword_position: int):
+    def __init__(self, text: str, bias_concepts: List[str], bias_reasons: List[str], top_words: List[str], num_tokens: List[str], keyword_position: int, score: float):
         self.text = text
         self.bias_concepts = bias_concepts
         self.bias_reasons = bias_reasons
         self.top_words = top_words
         self.num_tokens = num_tokens
         self.keyword_position = keyword_position
+        self.score = score
 
     def __repr__(self) -> str:
         return f"''{self.text}'' might contain bias {self.bias_concepts}; reasons: {self.bias_reasons}"

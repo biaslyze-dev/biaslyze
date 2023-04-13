@@ -24,6 +24,8 @@ class LimeBiasEvaluator:
     def __init__(self, n_lime_samples: int = 100):
         self.n_lime_samples = n_lime_samples
         self.explainer = TextExplainer(n_samples=n_lime_samples)
+        # only use unigrams
+        self.explainer.vec.ngram_range = (1, 1)
 
     def evaluate(
         self, predict_func, texts: List[str], top_n: int = 10
@@ -46,7 +48,7 @@ class LimeBiasEvaluator:
             self.explainer.fit(text, predict_func)
             # get the explanation from LIME (linear model coefficients and feature names)
             interpret_sample_dict = {
-                coef: token
+                np.sign(coef) * np.abs(coef) / sum(np.abs(self.explainer.clf_.coef_[0])): token
                 for coef, token in zip(
                     self.explainer.clf_.coef_[0],
                     self.explainer.vec_.get_feature_names_out(),
@@ -57,6 +59,7 @@ class LimeBiasEvaluator:
                 interpret_sample_dict.items(), key=lambda x: -np.abs(x[0])
             )[: min(len(interpret_sample_dict), top_n)]
             important_tokens = [w.lower() for (_, w) in top_interpret_sample_dict]
+            token_scores = [c for (c, _) in top_interpret_sample_dict]
 
             # check for concepts reasons
             bias_indicator_tokens = []
@@ -77,7 +80,8 @@ class LimeBiasEvaluator:
                         bias_reasons=bias_indicator_tokens,
                         top_words=important_tokens,
                         num_tokens=len(interpret_sample_dict),
-                        keyword_position=max([important_tokens.index(bias_token) for bias_token in bias_indicator_tokens])
+                        keyword_position=max([important_tokens.index(bias_token) for bias_token in bias_indicator_tokens]),
+                        score=max([token_scores[important_tokens.index(bias_token)] for bias_token in bias_indicator_tokens])
                     )
                 )
 
