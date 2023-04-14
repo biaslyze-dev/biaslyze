@@ -88,7 +88,7 @@ class LimeBiasEvaluator:
         return EvaluationResult(biased_samples)
 
 
-class MaskedLMBiasEvaluator:
+class MaskedBiasEvaluator:
     def __init__(
         self,
     ):
@@ -112,6 +112,7 @@ class MaskedLMBiasEvaluator:
         for text in tqdm(texts):
             bias_concepts = []
             bias_indicator_tokens = []
+            scores = []
             for concept, concept_keywords in CONCEPTS.items():
                 probabilities = []
                 text_representation = self._tokenizer(text)
@@ -146,13 +147,23 @@ class MaskedLMBiasEvaluator:
 
                     probabilities.append(predicted_proba)
                 # check if predicted probabilities vary a lot
-                if (max(probabilities) - min(probabilities)) > 0.1:
+                score = max(probabilities) - min(probabilities)
+                if score > 0.1:
                     bias_concepts.append(concept)
                     bias_indicator_tokens.extend(present_keywords)
+                    scores.append(score)
 
             if len(bias_concepts) > 0:
                 biased_samples.append(
-                    BiasedSampleResult(text, bias_concepts, bias_indicator_tokens)
+                    BiasedSampleResult(
+                        text=text,
+                        bias_concepts=bias_concepts,
+                        bias_reasons=bias_indicator_tokens,
+                        num_tokens=len(set(text_representation)),
+                        top_words=[],
+                        score=max(scores),
+                        keyword_position=0,
+                    )
                 )
 
         return EvaluationResult(biased_samples)
