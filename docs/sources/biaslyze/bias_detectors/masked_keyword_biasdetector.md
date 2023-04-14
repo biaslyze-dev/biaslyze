@@ -7,7 +7,7 @@
 MaskedKeywordBiasDetector(
    n_resample_keywords: int = 10, use_tokenizer: bool = False,
    concept_detector: KeywordConceptDetector = KeywordConceptDetector(),
-   bias_evaluator: MaskedLMBiasEvaluator = MaskedLMBiasEvaluator()
+   bias_evaluator: MaskedBiasEvaluator = MaskedBiasEvaluator()
 )
 ```
 
@@ -41,7 +41,7 @@ detection_res.summary()
 * **n_resample_keywords**  : How many time replace a found keyword by different concept keywords.
 * **use_tokenizer**  : If keywords should only be searched in tokenized text. Can be useful for short keywords like 'she'.
 * **concept_detector**  : an instance of KeywordConceptDetector
-* **bias_evaluator**  : an instance of LimeBiasEvaluator
+* **bias_evaluator**  : an instance of MaskedBiasEvaluator
 
 
 
