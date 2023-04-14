@@ -142,7 +142,7 @@ class EvaluationResult:
             
             # define histogram part
             n_bins = 30 if use_position else 50
-            xmin, xmax = 0 if use_position else -1, 1
+            xmin, xmax = 0 if use_position else min(res_df.score), max(res_df.score)
             concepts_present = res_df.bias_concepts_joined.unique().tolist()
             bar_alpha = 0.6
             total_range = np.linspace(xmin, xmax, n_bins)
