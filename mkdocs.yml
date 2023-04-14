@@ -1,6 +1,28 @@
 site_name: Biaslyze
-copyright: Copyright &copy; 2023 Biaslyze
+
+repo_name: biaslyze
 repo_url: https://github.com/biaslyze-dev/biaslyze
+copyright: Copyright &copy; 2023 Biaslyze
+
+docs_dir: "docs/sources"
+
+nav:
+  - Home: index.md
+  - Getting started:
+    - Installation: getting-started.md
+  - Ethical considerations: ethics.md
+  - Tutorials:
+    - Overview: tutorials-overview.md
+    - Disaster tweets: tutorials/disaster-tweets.md 
+  - API:
+    - Overview: api-overview.md
+    - Concept detectors: biaslyze/concept_detectors.md
+    - Bias detectors : 
+      - LimeKeywordBiasDetector: biaslyze/bias_detectors/lime_keyword_biasdetector.md
+      - MaskedKeywordBiasDetector: biaslyze/bias_detectors/masked_keyword_biasdetector.md
+    - Evaluators: biaslyze/evaluators.md
+    - Evaluation results: biaslyze/evaluation_results.md
+
 
 theme:
   name: material
@@ -9,6 +31,7 @@ theme:
 
   features:
     - content.code.copy
+    - navigation.tabs
 
   palette: 
     # Palette toggle for light mode

@@ -1,5 +1,5 @@
-sources_dir: docs
-templates_dir: docs/templates
+sources: docs/sources
+templates: docs/templates
 repo: https://github.com/biaslyze-dev/biaslyze
 version: main
 
@@ -25,4 +25,4 @@ pages:
     source: "biaslyze/evaluators.py"
     classes:
       - LimeBiasEvaluator 
-      - MaskedLMBiasEvaluator
+      - MaskedBiasEvaluator
