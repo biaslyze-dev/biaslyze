@@ -1,7 +1,7 @@
 # dict of concepts with related keywords
 CONCEPTS = {
     "nationality": [
-        ['aruba', 'andorra', 'u.a.e', 'u.s.', 'u.k.', 'england', 'antigua and barbuda', 'australia', 'austria', 
+    'aruba', 'andorra', 'u.a.e', 'u.s.', 'u.k.', 'england', 'antigua and barbuda', 'australia', 'austria', 
          'belgium', 'bahrain', 'bahamas, the', 'bermuda', 'barbados', 'brunei darussalam', 'canada', 'switzerland', 
          'channel islands', 'chile', 'curaçao', 'cayman islands', 'cyprus', 'czech republic', 'germany', 'denmark', 'spain', 
          'estonia', 'finland', 'france', 'faroe islands', 'united kingdom', 'gibraltar', 'greece', 'greenland', 'guam', 
@@ -23,7 +23,7 @@ CONCEPTS = {
          'costa rica', 'cuba', 'dominica', 'dominican republic', 'ecuador', 'fiji', 'gabon', 'georgia', 'equatorial guinea', 'grenada', 
          'guatemala', 'guyana', 'iraq', 'jamaica', 'jordan', 'kazakhstan', 'libya', 'st. lucia', 'moldova', 'maldives', 'mexico', 'marshall islands', 
          'north macedonia', 'montenegro', 'mauritius', 'malaysia', 'namibia', 'peru', 'palau', 'paraguay', 'russian federation', 'serbia', 'suriname', 
-         'thailand', 'turkmenistan', 'tonga', 'turkeytuvalu', 'st. vincent and the grenadines', 'kosovo', 'south africa']
+         'thailand', 'turkmenistan', 'tonga', 'turkeytuvalu', 'st. vincent and the grenadines', 'kosovo', 'south africa'
     ],
     "religion": [
         "jew",
