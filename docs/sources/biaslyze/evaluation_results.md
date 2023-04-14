@@ -2,7 +2,7 @@
 
 
 ## EvaluationResult
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L27)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L40)
 ```python 
 EvaluationResult(
    biased_samples: List[BiasedSampleResult]
@@ -21,7 +21,7 @@ biased_samples: A list of BiasedSampleResults.
 
 
 ### .summary
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L37)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L50)
 ```python
 .summary()
 ```
@@ -44,7 +44,7 @@ Based on keywords: Counter({'german': 1}).
 ```
 
 ### .details
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L55)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L68)
 ```python
 .details(
    group_by_concept: bool = False
@@ -60,14 +60,32 @@ Print the details of every biased sample detected.
 * **group_by_concept**  : If the output should be grouped by concepts.
 
 
+### .dashboard
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L104)
+```python
+.dashboard(
+   use_position = False
+)
+```
+
+---
+Return a bokeh dashboard.
+
+
+**Args**
+
+* **use_position**  : If True, use the normalized position for plotting.
+
+
 ----
 
 
 ## BiasedSampleResult
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L7)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L16)
 ```python 
 BiasedSampleResult(
-   text: str, bias_concepts: List[str], bias_reasons: List[str]
+   text: str, bias_concepts: List[str], bias_reasons: List[str],
+   top_words: List[str], num_tokens: List[str], keyword_position: int, score: float
 )
 ```
 

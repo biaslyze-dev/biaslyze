@@ -24,7 +24,7 @@ Evaluate bias in text based on LIME.
 
 
 ### .evaluate
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluators.py/#L28)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluators.py/#L30)
 ```python
 .evaluate(
    predict_func, texts: List[str], top_n: int = 10
@@ -49,8 +49,8 @@ EvaluationResult object containing information on the detected bias.
 ----
 
 
-## MaskedLMBiasEvaluator
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluators.py/#L80)
+## MaskedBiasEvaluator
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluators.py/#L91)
 ```python 
 
 ```
@@ -62,7 +62,7 @@ EvaluationResult object containing information on the detected bias.
 
 
 ### .evaluate
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluators.py/#L87)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluators.py/#L98)
 ```python
 .evaluate(
    predict_func, texts: List[str], n_resample_keywords: int = 10
