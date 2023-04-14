@@ -25,4 +25,4 @@ pages:
     source: "biaslyze/evaluators.py"
     classes:
       - LimeBiasEvaluator 
-      - MaskedLMBiasEvaluator
+      - MaskedBiasEvaluator
