@@ -93,7 +93,7 @@ class MaskedBiasEvaluator:
         self,
     ):
         self._lm = pipeline("fill-mask", model="distilbert-base-uncased")
-        self._tokenizer = spacy.load("en_core_web_sm")
+        self._tokenizer = spacy.load("en_core_web_sm", disable=['parser', 'tagger', 'ner'])
 
     def evaluate(
         self, predict_func, texts: List[str], n_resample_keywords: int = 10
