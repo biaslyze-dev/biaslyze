@@ -80,7 +80,7 @@ class LimeBiasEvaluator:
                         bias_reasons=bias_indicator_tokens,
                         top_words=important_tokens,
                         num_tokens=len(interpret_sample_dict),
-                        keyword_position=max([important_tokens.index(bias_token) for bias_token in bias_indicator_tokens]),
+                        keyword_position=min([important_tokens.index(bias_token) for bias_token in bias_indicator_tokens]),
                         score=max([token_scores[important_tokens.index(bias_token)] for bias_token in bias_indicator_tokens])
                     )
                 )
