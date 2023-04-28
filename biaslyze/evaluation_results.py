@@ -1,7 +1,7 @@
 """Classes to return results of the different steps."""
 from collections import Counter, defaultdict
 from pprint import pprint
-from typing import List
+from typing import List, Dict
 import numpy as np
 import pandas as pd
 import yaml
@@ -24,7 +24,7 @@ class BiasedSampleResult:
         bias_reasons: Reasons why bias was detected. Might be a list of keywords.
     """
 
-    def __init__(self, text: str, bias_concepts: List[str], bias_reasons: List[str], top_words: List[str], num_tokens: List[str], keyword_position: int, score: float):
+    def __init__(self, text: str, bias_concepts: List[str], bias_reasons: List[str], top_words: List[str], num_tokens: List[str], keyword_position: int, score: float, metrics: Dict = None):
         self.text = text
         self.bias_concepts = bias_concepts
         self.bias_reasons = bias_reasons
@@ -32,6 +32,7 @@ class BiasedSampleResult:
         self.num_tokens = num_tokens
         self.keyword_position = keyword_position
         self.score = score
+        self.metrics = metrics
 
     def __repr__(self) -> str:
         return f"''{self.text}'' might contain bias {self.bias_concepts}; reasons: {self.bias_reasons}"
@@ -143,6 +144,8 @@ class EvaluationResult:
             # define histogram part
             n_bins = 30 if use_position else 50
             xmin, xmax = 0 if use_position else min(res_df.score), max(res_df.score)
+            xmin = xmin - 0.1 * (xmax - xmin)
+            xmax = xmax + 0.1 * (xmax - xmin)
             concepts_present = res_df.bias_concepts_joined.unique().tolist()
             bar_alpha = 0.6
             total_range = np.linspace(xmin, xmax, n_bins)

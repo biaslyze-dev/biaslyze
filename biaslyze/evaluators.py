@@ -48,7 +48,8 @@ class LimeBiasEvaluator:
             self.explainer.fit(text, predict_func)
             # get the explanation from LIME (linear model coefficients and feature names)
             interpret_sample_dict = {
-                np.sign(coef) * np.abs(coef) / sum(np.abs(self.explainer.clf_.coef_[0])): token
+                # np.sign(coef) * np.abs(coef) / sum(np.abs(self.explainer.clf_.coef_[0])): token
+                np.exp(coef): token
                 for coef, token in zip(
                     self.explainer.clf_.coef_[0],
                     self.explainer.vec_.get_feature_names_out(),
@@ -81,7 +82,8 @@ class LimeBiasEvaluator:
                         top_words=important_tokens,
                         num_tokens=len(interpret_sample_dict),
                         keyword_position=min([important_tokens.index(bias_token) for bias_token in bias_indicator_tokens]),
-                        score=max([token_scores[important_tokens.index(bias_token)] for bias_token in bias_indicator_tokens])
+                        score=max([token_scores[important_tokens.index(bias_token)] for bias_token in bias_indicator_tokens]),
+                        metrics=self.explainer.metrics_
                     )
                 )
 
