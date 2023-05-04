@@ -124,6 +124,10 @@ class EvaluationResult:
         # the normalized position might be used instead of score
         if use_position:
             res_df["score"] = 1 - (res_df.keyword_position / res_df.num_tokens)
+            score_version = "PositionScore"
+        else:
+            score_version = "LimeScore"
+            
 
         def bkapp(doc):
             # update function for selection in histogram
@@ -132,7 +136,7 @@ class EvaluationResult:
                 TableColumn(field="text", title="text", width=800),
                 TableColumn(field="bias_concepts_joined", title="bias_concepts", width=100),
                 TableColumn(field="bias_keywords_joined", title="bias_keywords", width=100),
-                TableColumn(field="score", title="LimeScore", width=50),
+                TableColumn(field="score", title=score_version, width=50),
                 TableColumn(field="keyword_position", title="Keyword Position", width=50),
                 TableColumn(field="num_tokens", title="Num unique tokens", width=50),
             ]

@@ -26,6 +26,7 @@ class LimeBiasEvaluator:
         self.explainer = TextExplainer(n_samples=n_lime_samples)
         # only use unigrams
         self.explainer.vec.ngram_range = (1, 1)
+        # self.explainer.clf.fit_intercept = False
 
     def evaluate(
         self, predict_func, texts: List[str], top_n: int = 10
@@ -49,7 +50,7 @@ class LimeBiasEvaluator:
             # get the explanation from LIME (linear model coefficients and feature names)
             interpret_sample_dict = {
                 # np.sign(coef) * np.abs(coef) / sum(np.abs(self.explainer.clf_.coef_[0])): token
-                np.exp(coef): token
+                np.exp(coef): token  # change in odds if the word is present by a factor of exp(coef)
                 for coef, token in zip(
                     self.explainer.clf_.coef_[0],
                     self.explainer.vec_.get_feature_names_out(),
