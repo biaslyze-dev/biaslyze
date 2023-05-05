@@ -48,7 +48,9 @@ class LimeBiasEvaluator:
             self.explainer.fit(text, predict_func)
             # get the explanation from LIME (linear model coefficients and feature names)
             interpret_sample_dict = {
-                np.sign(coef) * np.abs(coef) / sum(np.abs(self.explainer.clf_.coef_[0])): token
+                np.sign(coef)
+                * np.abs(coef)
+                / sum(np.abs(self.explainer.clf_.coef_[0])): token
                 for coef, token in zip(
                     self.explainer.clf_.coef_[0],
                     self.explainer.vec_.get_feature_names_out(),
@@ -80,8 +82,18 @@ class LimeBiasEvaluator:
                         bias_reasons=bias_indicator_tokens,
                         top_words=important_tokens,
                         num_tokens=len(interpret_sample_dict),
-                        keyword_position=max([important_tokens.index(bias_token) for bias_token in bias_indicator_tokens]),
-                        score=max([token_scores[important_tokens.index(bias_token)] for bias_token in bias_indicator_tokens])
+                        keyword_position=max(
+                            [
+                                important_tokens.index(bias_token)
+                                for bias_token in bias_indicator_tokens
+                            ]
+                        ),
+                        score=max(
+                            [
+                                token_scores[important_tokens.index(bias_token)]
+                                for bias_token in bias_indicator_tokens
+                            ]
+                        ),
                     )
                 )
 
@@ -93,7 +105,9 @@ class MaskedBiasEvaluator:
         self,
     ):
         self._lm = pipeline("fill-mask", model="distilbert-base-uncased")
-        self._tokenizer = spacy.load("en_core_web_sm", disable=['parser', 'tagger', 'ner'])
+        self._tokenizer = spacy.load(
+            "en_core_web_sm", disable=["parser", "tagger", "ner"]
+        )
 
     def evaluate(
         self, predict_func, texts: List[str], n_resample_keywords: int = 10
