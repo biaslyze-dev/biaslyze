@@ -73,7 +73,7 @@ def calculate_all_scores(texts: List[str], concept: str, clf, n_samples=1000):
     if not n_samples:
         n_samples = len(texts)
 
-    samples = extract_concept_samples(texts=texts, concept="gender", N=n_samples)
+    samples = extract_concept_samples(texts=texts, concept=concept, N=n_samples)
 
     for keyword in tqdm(CONCEPTS[concept]):
         original_scores, predicted_scores = calculate_counterfactual_score(
