@@ -27,9 +27,9 @@ def extract_concept_samples(concept: str, texts: List[str], N: int = 1000):
     text_representations = _tokenizer.pipe(texts[:N])
     for text, text_representation in tqdm(zip(texts[:N], text_representations)):
         present_keywords = list(
-            keyword
+            keyword.get("keyword")
             for keyword in CONCEPTS[concept]
-            if keyword in (token.text.lower() for token in text_representation)
+            if keyword.get("keyword") in (token.text.lower() for token in text_representation)
         )
         if present_keywords:
             for keyword in present_keywords:
@@ -77,10 +77,10 @@ def calculate_all_scores(texts: List[str], concept: str, clf, n_samples=1000):
 
     for keyword in tqdm(CONCEPTS[concept]):
         original_scores, predicted_scores = calculate_counterfactual_score(
-            bias_keyword=keyword, clf=clf, samples=samples
+            bias_keyword=keyword.get("keyword"), clf=clf, samples=samples
         )
         score_diffs = np.array(original_scores) - np.array(predicted_scores)
-        score_dict[keyword] = score_diffs
+        score_dict[keyword.get("keyword")] = score_diffs
 
     score_df = pd.DataFrame(score_dict)
     # remove words with exactly the same score
