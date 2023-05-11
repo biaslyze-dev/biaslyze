@@ -26,6 +26,7 @@ class LimeBiasEvaluator:
         self.explainer = TextExplainer(n_samples=n_lime_samples)
         # only use unigrams
         self.explainer.vec.ngram_range = (1, 1)
+        # self.explainer.clf.fit_intercept = False
 
     def evaluate(
         self, predict_func, texts: List[str], top_n: int = 10
@@ -94,6 +95,7 @@ class LimeBiasEvaluator:
                                 for bias_token in bias_indicator_tokens
                             ]
                         ),
+                        metrics=self.explainer.metrics_
                     )
                 )
 

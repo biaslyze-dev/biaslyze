@@ -50,7 +50,7 @@ EvaluationResult object containing information on the detected bias.
 
 
 ## MaskedBiasEvaluator
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluators.py/#L91)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluators.py/#L93)
 ```python 
 
 ```
@@ -62,7 +62,7 @@ EvaluationResult object containing information on the detected bias.
 
 
 ### .evaluate
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluators.py/#L98)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluators.py/#L100)
 ```python
 .evaluate(
    predict_func, texts: List[str], n_resample_keywords: int = 10
