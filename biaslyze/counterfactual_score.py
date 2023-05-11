@@ -124,8 +124,4 @@ def calculate_counterfactual_sample_score(sample: Sample, concept: str, clf):
 
     predicted_scores = clf.predict_proba(replaced_texts)[:, 1]
     original_scores = np.ones(predicted_scores.shape) * original_score
-    score_diffs = np.array(original_scores) - np.array(predicted_scores)
-
-    #  the lower the mean diff, the more positive is the sample keyword.
-    # multiply by -1 to make greater more positive.
-    return -1 * score_diffs.mean()
+    return original_scores, predicted_scores
