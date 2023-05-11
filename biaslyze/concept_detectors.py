@@ -35,7 +35,7 @@ class KeywordConceptDetector:
         logger.info(f"Started keyword-based concept detection on {len(texts)} texts...")
         detected_texts = []
         concept_keywords = [
-            keyword
+            keyword["keyword"]
             for concept_keywords in CONCEPTS.values()
             for keyword in concept_keywords
         ]

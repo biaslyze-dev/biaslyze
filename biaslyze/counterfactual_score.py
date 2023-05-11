@@ -27,9 +27,9 @@ def extract_concept_samples(concept: str, texts: List[str], N: int = 1000):
     text_representations = _tokenizer.pipe(texts[:N])
     for text, text_representation in tqdm(zip(texts[:N], text_representations)):
         present_keywords = list(
-            keyword
+            keyword.get("keyword")
             for keyword in CONCEPTS[concept]
-            if keyword in (token.text.lower() for token in text_representation)
+            if keyword.get("keyword") in (token.text.lower() for token in text_representation)
         )
         if present_keywords:
             for keyword in present_keywords:
@@ -45,7 +45,12 @@ def extract_concept_samples(concept: str, texts: List[str], N: int = 1000):
     return samples
 
 
-def calculate_counterfactual_score(bias_keyword: str, clf, samples):
+def calculate_counterfactual_score(bias_keyword: str, clf, samples: List[Sample], positive_classes: List = None):
+    """Calculate the counterfactual score for a bias keyword given samples.
+    
+    TODO: If `positive_classes` is given, all other classes are considered non-positive and positive and negative outcomes are compared.
+    TODO: introduce neutral classes.
+    """
     # change the text for all of them and predict
     original_scores = clf.predict_proba([sample.text for sample in samples])[:, 1]
     replaced_texts = []
@@ -77,10 +82,10 @@ def calculate_all_scores(texts: List[str], concept: str, clf, n_samples=1000):
 
     for keyword in tqdm(CONCEPTS[concept]):
         original_scores, predicted_scores = calculate_counterfactual_score(
-            bias_keyword=keyword, clf=clf, samples=samples
+            bias_keyword=keyword.get("keyword"), clf=clf, samples=samples
         )
         score_diffs = np.array(original_scores) - np.array(predicted_scores)
-        score_dict[keyword] = score_diffs
+        score_dict[keyword.get("keyword")] = score_diffs
 
     score_df = pd.DataFrame(score_dict)
     # remove words with exactly the same score
@@ -89,8 +94,8 @@ def calculate_all_scores(texts: List[str], concept: str, clf, n_samples=1000):
 
 
 def plot_scores(dataf: pd.DataFrame, concept: str = ""):
-    dataf.plot.box(vert=False, figsize=(12, int(dataf.shape[1] / 2.2)))
-    plt.vlines(
+    ax = dataf.plot.box(vert=False, figsize=(12, int(dataf.shape[1] / 2.2)))
+    ax.vlines(
         x=0,
         ymin=0.5,
         ymax=dataf.shape[1] + 0.5,
@@ -98,4 +103,25 @@ def plot_scores(dataf: pd.DataFrame, concept: str = ""):
         linestyles="dashed",
         alpha=0.5,
     )
-    plt.title(f"Difference in scores for concept '{concept}'")
+    ax.set_title(f"Distribution of counterfactual scores for concept '{concept}'")
+    ax.set_xlabel("Counterfactual scores - differences from zero indicate the direction of bias.")
+
+
+def calculate_counterfactual_sample_score(sample: Sample, concept: str, clf):
+    # replace the keyword in the sample by all concept keywords and then predict
+    original_score = clf.predict_proba([sample.text])[:, 1]
+    replaced_texts = []
+    for keyword in CONCEPTS[concept]:
+        resampled_text = "".join(
+            [
+                keyword + token.whitespace_
+                if token.text.lower() == sample.keyword.lower()
+                else token.text + token.whitespace_
+                for token in sample.tokenized
+            ]
+        )
+        replaced_texts.append(resampled_text)
+
+    predicted_scores = clf.predict_proba(replaced_texts)[:, 1]
+    original_scores = np.ones(predicted_scores.shape) * original_score
+    return original_scores, predicted_scores
