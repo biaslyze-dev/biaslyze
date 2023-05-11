@@ -128,7 +128,7 @@ class MaskedBiasEvaluator:
             bias_indicator_tokens = []
             scores = []
             for concept, concept_keywords in CONCEPTS.items():
-                probabilities = []
+                # detect if there might be bias
                 text_representation = self._tokenizer(text)
                 present_keywords = list(
                     keyword
@@ -137,6 +137,12 @@ class MaskedBiasEvaluator:
                 )
                 if not present_keywords:
                     continue
+
+                # predict the original sample
+                original_score = predict_func([text])[:, 1][0]
+
+                # create the resampled dataset of texts
+                resampled_texts = []
                 for _ in range(n_resample_keywords):
                     mask_keyword = random.choice(present_keywords)
 
@@ -155,14 +161,14 @@ class MaskedBiasEvaluator:
                             for token in text_representation
                         ]
                     )
+                    resampled_texts.append(resampled_text)
 
-                    predicted_proba = predict_func([resampled_text])[:, 1]
-                    # print(f"[{mask_keyword}/{probable_token}]", predicted_proba, resampled_text)
+                predicted_scores = predict_func(resampled_texts)[:, 1]
 
-                    probabilities.append(predicted_proba)
                 # check if predicted probabilities vary a lot
-                score = max(probabilities) - min(probabilities)
-                if score > 0.1:
+                # score = max(predicted_scores) - min(predicted_scores)
+                score = np.max(np.abs(predicted_scores - original_score))
+                if score > 0.0:
                     bias_concepts.append(concept)
                     bias_indicator_tokens.extend(present_keywords)
                     scores.append(score)
