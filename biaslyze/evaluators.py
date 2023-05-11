@@ -68,7 +68,7 @@ class LimeBiasEvaluator:
             bias_indicator_tokens = []
             bias_concepts = []
             for concept, concept_keywords in CONCEPTS.items():
-                biased_tokens_set = set(concept_keywords).intersection(
+                biased_tokens_set = set([keyword_dict.get("keyword") for keyword_dict in concept_keywords]).intersection(
                     set(important_tokens)
                 )
                 if len(biased_tokens_set) > 0:
@@ -133,9 +133,9 @@ class MaskedBiasEvaluator:
                 # detect if there might be bias
                 text_representation = self._tokenizer(text)
                 present_keywords = list(
-                    keyword
-                    for keyword in concept_keywords
-                    if keyword in (token.text.lower() for token in text_representation)
+                    keyword_dict.get("keyword")
+                    for keyword_dict in concept_keywords
+                    if keyword_dict.get("keyword") in (token.text.lower() for token in text_representation)
                 )
                 if not present_keywords:
                     continue
@@ -153,7 +153,7 @@ class MaskedBiasEvaluator:
                     # probable_token = random.choice(probable_tokens).get("token_str")
 
                     # for now we sample from concept keywords
-                    probable_token = random.choice(concept_keywords)
+                    probable_token = random.choice([keyword_dict.get("keyword") for keyword_dict in concept_keywords])
 
                     resampled_text = "".join(
                         [
