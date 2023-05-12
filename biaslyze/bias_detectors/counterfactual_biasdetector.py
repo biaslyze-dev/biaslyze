@@ -187,14 +187,20 @@ class CounterfactualDetectionResult:
                 f"Concept: {concept_result.concept}\t\tMax-Mean Counterfactual Score: {np.abs(concept_result.scores.mean()).max()}"
             )
 
-    def visualize_counterfactual_scores(self, concept: str):
+    def visualize_counterfactual_scores(self, concept: str, top_n: int = None):
         """"""
         dataf = self._get_result_by_concept(concept=concept)
-        ax = dataf.plot.box(vert=False, figsize=(12, int(dataf.shape[1] / 2.2)))
+        sort_index = dataf.median().abs().sort_values(ascending=True)
+        sorted_dataf = dataf[sort_index.index]
+        if top_n:
+            sorted_dataf = sorted_dataf.iloc[:, -top_n:]
+        ax = sorted_dataf.plot.box(
+            vert=False, figsize=(12, int(sorted_dataf.shape[1] / 2.2))
+        )
         ax.vlines(
             x=0,
             ymin=0.5,
-            ymax=dataf.shape[1] + 0.5,
+            ymax=sorted_dataf.shape[1] + 0.5,
             colors="black",
             linestyles="dashed",
             alpha=0.5,

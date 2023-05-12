@@ -220,7 +220,12 @@ CONCEPTS = {
             "category": "country",
         },
         {
-            "keyword": 'saint vincent", "grenadines',
+            "keyword": "saint vincent",
+            "function": ["noun"],
+            "category": "country",
+        },
+        {
+            "keyword": "grenadines",
             "function": ["noun"],
             "category": "country",
         },
@@ -255,7 +260,12 @@ CONCEPTS = {
         {"keyword": "sudan", "function": ["noun"], "category": "country"},
         {"keyword": "suriname", "function": ["noun"], "category": "country"},
         {
-            "keyword": 'svalbard", "jan mayen islands',
+            "keyword": "jan mayen islands",
+            "function": ["noun"],
+            "category": "country",
+        },
+        {
+            "keyword": "svalbard",
             "function": ["noun"],
             "category": "country",
         },
@@ -263,7 +273,12 @@ CONCEPTS = {
         {"keyword": "switzerland", "function": ["noun"], "category": "country"},
         {"keyword": "syria", "function": ["noun"], "category": "country"},
         {
-            "keyword": 'são tomé", "príncipe',
+            "keyword": "são tomé",
+            "function": ["noun"],
+            "category": "country",
+        },
+        {
+            "keyword": "príncipe",
             "function": ["noun"],
             "category": "country",
         },
@@ -277,7 +292,8 @@ CONCEPTS = {
         {"keyword": "togo", "function": ["noun"], "category": "country"},
         {"keyword": "tokelau", "function": ["noun"], "category": "country"},
         {"keyword": "tonga", "function": ["noun"], "category": "country"},
-        {"keyword": 'trinidad", "tobago', "function": ["noun"], "category": "country"},
+        {"keyword": "trinidad", "function": ["noun"], "category": "country"},
+        {"keyword": "tobago", "function": ["noun"], "category": "country"},
         {"keyword": "tunisia", "function": ["noun"], "category": "country"},
         {"keyword": "turkey", "function": ["noun"], "category": "country"},
         {"keyword": "turkmenistan", "function": ["noun"], "category": "country"},
