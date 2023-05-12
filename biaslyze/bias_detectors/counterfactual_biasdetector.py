@@ -51,7 +51,7 @@ class CounterfactualBiasDetector:
         self.concept_detector.use_tokenizer = self.use_tokenizer
 
     def process(
-        self, texts: List[str], predict_func: Callable[[List[str]], List[float]]
+        self, texts: List[str], predict_func: Callable[[List[str]], List[float]], concepts_to_consider: List = None
     ) -> List:
         """Detect bias by masking out words.
 
@@ -64,6 +64,8 @@ class CounterfactualBiasDetector:
 
         results = []
         for concept, concept_keywords in CONCEPTS.items():
+            if concepts_to_consider and concept not in concepts_to_consider:
+                continue
             logger.info(f"Processing concept {concept}...")
             score_dict = dict()
 
@@ -88,9 +90,10 @@ class CounterfactualBiasDetector:
 
             score_df = pd.DataFrame(score_dict)
             # remove words with exactly the same score
+            omitted_keywords = score_df.loc[:, score_df.T.duplicated().T].columns.tolist()
             score_df = score_df.loc[:, ~score_df.T.duplicated().T]
             results.append(
-                CounterfactualConceptResult(concept=concept, scores=score_df)
+                CounterfactualConceptResult(concept=concept, scores=score_df, omitted_keywords=omitted_keywords)
             )
             logger.info("DONE")
 
@@ -166,9 +169,10 @@ class CounterfactualSample:
 
 
 class CounterfactualConceptResult:
-    def __init__(self, concept: str, scores: pd.DataFrame):
+    def __init__(self, concept: str, scores: pd.DataFrame, omitted_keywords: List[str]):
         self.concept = concept
         self.scores = scores
+        self.omitted_keywords = omitted_keywords
 
 
 class CounterfactualDetectionResult:
