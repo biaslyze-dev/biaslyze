@@ -148,7 +148,6 @@ class EvaluationResult:
             score_version = "PositionScore"
         else:
             score_version = "LimeScore"
-            
 
         def bkapp(doc):
             # update function for selection in histogram

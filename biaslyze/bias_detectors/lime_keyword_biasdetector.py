@@ -6,7 +6,7 @@ from biaslyze.evaluation_results import EvaluationResult
 from biaslyze.evaluators import LimeBiasEvaluator
 
 
-class LimeKeywordBiasDetector:
+class LimeBiasDetector:
     """Detect bias by finding keywords related to protected concepts that rank high in LIME.
 
     Usage example:

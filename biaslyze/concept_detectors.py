@@ -18,7 +18,7 @@ class KeywordConceptDetector:
     def __init__(self, use_tokenizer: bool = False):
         self.use_tokenizer = use_tokenizer
         self._tokenizer = spacy.load(
-            "en_core_web_sm", disable=["parser", "tagger", "ner"]
+            "en_core_web_sm", disable=["parser", "tagger", "ner", "lemmatizer"]
         )
 
     def detect(self, texts: List[str]) -> List[str]:
