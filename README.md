@@ -43,6 +43,12 @@ You can add concepts and new keywords for existing concepts by editing [concepts
 To preview the documentation run `make doc-preview`. This will launch a preview of the documentation on `http://127.0.0.1:8000/`.
 To build the documentation html run `make doc`.
 
+
+## Run the automated tests
+
+`make test`
+
+
 ## Style guide
 
 We are using isort and black: `make style`

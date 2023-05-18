@@ -1,6 +1,6 @@
 """Detect hints of bias by calculating counterfactual token scores for protected concepts."""
 import random
-from typing import Callable, List
+from typing import Callable, List, Optional
 
 import numpy as np
 import pandas as pd
@@ -60,8 +60,8 @@ class CounterfactualBiasDetector:
         self,
         texts: List[str],
         predict_func: Callable[[List[str]], List[float]],
-        concepts_to_consider: List = None,
-        max_counterfactual_samples: int = None,
+        concepts_to_consider: Optional[List[str]] = [],
+        max_counterfactual_samples: Optional[int] = None,
     ) -> List:
         """Detect bias by masking out words.
 
@@ -74,6 +74,15 @@ class CounterfactualBiasDetector:
         Returns:
             A [CounterfactualDetectionResult](/biaslyze/results/counterfactual_detection_results/) object.
         """
+        if texts is None:
+            raise ValueError("texts must be given.")
+        if predict_func is None:
+            raise ValueError("predict_func must be given.")
+        if not isinstance(concepts_to_consider, list):
+            raise ValueError("concepts_to_consider must be a list.")
+        if not isinstance(max_counterfactual_samples, int) or (max_counterfactual_samples < 1):
+            raise ValueError("max_counterfactual_samples must be a positive integer.")
+
         # find bias relevant texts
         detected_texts = self.concept_detector.detect(texts)
 
