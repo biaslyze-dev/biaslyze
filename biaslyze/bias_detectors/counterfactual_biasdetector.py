@@ -60,6 +60,7 @@ class CounterfactualBiasDetector:
         self,
         texts: List[str],
         predict_func: Callable[[List[str]], List[float]],
+        labels: Optional[List[str]] = None,
         concepts_to_consider: Optional[List[str]] = [],
         max_counterfactual_samples: Optional[int] = None,
     ) -> List:
@@ -68,6 +69,7 @@ class CounterfactualBiasDetector:
         Args:
             texts: texts to probe the model for bias.
             predict_func: Function to run the texts through the model and get probabilities as outputs.
+            labels: Optional. Used to add labels to the counterfactual results.
             concepts_to_consider: If given, only the given concepts are considered.
             max_counterfactual_samples: If given, only the given number of counterfactual samples are used for each concept.
 
@@ -80,8 +82,13 @@ class CounterfactualBiasDetector:
             raise ValueError("predict_func must be given.")
         if not isinstance(concepts_to_consider, list):
             raise ValueError("concepts_to_consider must be a list.")
-        if not isinstance(max_counterfactual_samples, int) or (max_counterfactual_samples < 1):
-            raise ValueError("max_counterfactual_samples must be a positive integer.")
+        if max_counterfactual_samples:
+            if (not isinstance(max_counterfactual_samples, int)) or (
+                max_counterfactual_samples < 1
+            ):
+                raise ValueError(
+                    "max_counterfactual_samples must be a positive integer."
+                )
 
         # find bias relevant texts
         detected_texts = self.concept_detector.detect(texts)
@@ -94,7 +101,7 @@ class CounterfactualBiasDetector:
             score_dict = dict()
 
             counterfactual_samples = self._extract_counterfactual_concept_samples(
-                texts=detected_texts, concept=concept
+                texts=detected_texts, concept=concept, labels=labels
             )
             if not counterfactual_samples:
                 logger.warning(f"No samples containing {concept} found. Skipping.")
@@ -132,12 +139,21 @@ class CounterfactualBiasDetector:
 
         return CounterfactualDetectionResult(concept_results=results)
 
-    def _extract_counterfactual_concept_samples(self, concept: str, texts: List[str]):
+    def _extract_counterfactual_concept_samples(
+        self, concept: str, texts: List[str], labels: Optional[List[str]] = None
+    ) -> List[CounterfactualSample]:
+        """Extract counterfactual samples for a given concept from a list of texts.
+
+        Args:
+            concept: The concept to extract counterfactual samples for.
+            texts: The texts to extract counterfactual samples from.
+            labels: Optional. Used to add labels to the counterfactual results.
+        """
         counterfactual_samples = []
         count_original_sample_texts = 0
         text_representations = self.concept_detector._tokenizer.pipe(texts)
-        for text, text_representation in tqdm(
-            zip(texts, text_representations), total=len(texts)
+        for idx, (text, text_representation) in tqdm(
+            enumerate(zip(texts, text_representations)), total=len(texts)
         ):
             present_keywords = list(
                 keyword.get("keyword")
@@ -157,6 +173,7 @@ class CounterfactualBiasDetector:
                                     keyword=concept_keyword.get("keyword"),
                                     concept=concept,
                                     tokenized=text_representation,
+                                    label=labels[idx] if labels else None,
                                 )
                             )
                         else:
@@ -175,6 +192,7 @@ class CounterfactualBiasDetector:
                                     keyword=concept_keyword.get("keyword"),
                                     concept=concept,
                                     tokenized=text_representation,
+                                    label=labels[idx] if labels else None,
                                 )
                             )
         logger.info(

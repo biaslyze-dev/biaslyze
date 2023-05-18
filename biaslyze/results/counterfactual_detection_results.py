@@ -16,6 +16,7 @@ class CounterfactualSample:
         keyword: The keyword that replaced the original keyword.
         concept: The concept that was detected in the text.
         tokenized: The tokenized text in spacy representation.
+        label: The label of the original text.
     """
 
     def __init__(
@@ -25,12 +26,14 @@ class CounterfactualSample:
         keyword: str,
         concept: str,
         tokenized: List[str],
+        label: int = None,
     ):
         self.text = text
         self.orig_keyword = orig_keyword
         self.keyword = keyword
         self.concept = concept
         self.tokenized = tokenized
+        self.label = label
 
     def __repr__(self):
         return f"concept={self.concept}; keyword={self.keyword}; text={self.text}"
@@ -66,6 +69,7 @@ class CounterfactualDetectionResult:
         for concept_result in self.concept_results:
             if concept_result.concept == concept:
                 return concept_result.scores.copy()
+        raise ValueError(f"Concept {concept} not found in results.")
 
     def _get_counterfactual_samples_by_concept(
         self, concept: str
@@ -74,6 +78,7 @@ class CounterfactualDetectionResult:
         for concept_result in self.concept_results:
             if concept_result.concept == concept:
                 return concept_result.counterfactual_samples
+        raise ValueError(f"Concept {concept} not found in results.")
 
     def report(self):
         """Show an overview of the results.

@@ -2,14 +2,14 @@
 
 import numpy as np
 import pytest
-from biaslyze.bias_detectors import (
-    CounterfactualBiasDetector,
-)
+
+from biaslyze.bias_detectors import CounterfactualBiasDetector
+
 
 def test_process():
     """Test process method of CounterfactualBiasDetector"""
     detector = CounterfactualBiasDetector()
-        
+
     with pytest.raises(ValueError):
         detector.process(texts=["text1", "text2"], predict_func=None)
 
@@ -20,22 +20,41 @@ def test_process():
         detector.process(texts=None, predict_func=None)
 
     with pytest.raises(ValueError):
-        detector.process(texts=["text1", "text2"], predict_func=lambda x: x, max_counterfactual_samples=-1) 
+        detector.process(
+            texts=["text1", "text2"],
+            predict_func=lambda x: x,
+            max_counterfactual_samples=-1,
+        )
 
     with pytest.raises(ValueError):
-        detector.process(texts=["text1", "text2"], predict_func=lambda x: x, max_counterfactual_samples="abc")
+        detector.process(
+            texts=["text1", "text2"],
+            predict_func=lambda x: x,
+            max_counterfactual_samples="abc",
+        )
 
     with pytest.raises(ValueError):
-        detector.process(texts=["text1", "text2"], predict_func=lambda x: x, concepts_to_consider="abc")
+        detector.process(
+            texts=["text1", "text2"],
+            predict_func=lambda x: x,
+            concepts_to_consider="abc",
+        )
 
     with pytest.raises(ValueError):
-        detector.process(texts=["text1", "text2"], predict_func=lambda x: x, concepts_to_consider=["abc"])
+        detector.process(
+            texts=["text1", "text2"],
+            predict_func=lambda x: x,
+            concepts_to_consider=["abc"],
+            max_counterfactual_samples=-1,
+        )
 
     with pytest.raises(ValueError):
-        detector.process(texts=["text1", "text2"], predict_func=lambda x: x, concepts_to_consider=["abc"], max_counterfactual_samples=-1)
-
-    with pytest.raises(ValueError):
-        detector.process(texts=["text1", "text2"], predict_func=lambda x: x, concepts_to_consider=["abc"], max_counterfactual_samples="abc")
+        detector.process(
+            texts=["text1", "text2"],
+            predict_func=lambda x: x,
+            concepts_to_consider=["abc"],
+            max_counterfactual_samples="abc",
+        )
 
 
 def test_init_detector():
@@ -47,7 +66,7 @@ def test_init_detector():
 
 
 def test_process_positive():
-    """"Test process method of CounterfactualBiasDetector with a successful run"""
+    """ "Test process method of CounterfactualBiasDetector with a successful run"""
     detector = CounterfactualBiasDetector(use_tokenizer=True)
 
     # test with a successful run
@@ -60,5 +79,3 @@ def test_process_positive():
 
     assert res is not None
     assert len(res._get_counterfactual_samples_by_concept("gender")) == 162
-
-    
