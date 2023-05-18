@@ -5,23 +5,27 @@ The NLP Bias Identification Toolkit
 ## Usage example
 
 ```python
-from biaslyze.bias_detectors import LimeKeywordBiasDetector
+from biaslyze.bias_detectors import CounterfactualBiasDetector
 
-bias_detector = LimeKeywordBiasDetector(
-    bias_evaluator=LimeBiasEvaluator(n_lime_samples=500),
-    n_top_keywords=10
-)
+bias_detector = CounterfactualBiasDetector()
 
 # detect bias in the model based on the given texts
 # here, clf is a scikit-learn text classification pipeline trained for a binary classification task
-detection_res = bias_detector.detect(
+detection_res = bias_detector.process(
     texts=texts,
     predict_func=clf.predict_proba
 )
 
 # see a summary of the detection
-detection_res.summary()
+detection_res.report()
+
+# visualize the counterfactual scores
+detection_res.visualize_counterfactual_scores()
 ```
+
+Example output:
+![](docs/resources/hatespeech_dl_scores_religion.png)
+
 
 ## Development setup
 
@@ -38,6 +42,11 @@ You can add concepts and new keywords for existing concepts by editing [concepts
 
 To preview the documentation run `make doc-preview`. This will launch a preview of the documentation on `http://127.0.0.1:8000/`.
 To build the documentation html run `make doc`.
+
+## Style guide
+
+We are using isort and black: `make style`
+For linting we are running ruff: `make lint`
 
 ## Contributing
 

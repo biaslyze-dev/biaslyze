@@ -130,3 +130,9 @@ dmypy.json
 
 # jupyter
 .ipynb_checkpoints
+
+# ruff
+.ruff_cache/
+
+# vscode
+.vscode/

@@ -72,7 +72,7 @@ class CounterfactualBiasDetector:
             max_counterfactual_samples: If given, only the given number of counterfactual samples are used for each concept.
 
         Returns:
-            A CounterfactualDetectionResult object.
+            A [CounterfactualDetectionResult](/biaslyze/results/counterfactual_detection_results/) object.
         """
         # find bias relevant texts
         detected_texts = self.concept_detector.detect(texts)
