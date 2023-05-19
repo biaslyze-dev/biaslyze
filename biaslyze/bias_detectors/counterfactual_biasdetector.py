@@ -150,53 +150,41 @@ class CounterfactualBiasDetector:
             labels: Optional. Used to add labels to the counterfactual results.
         """
         counterfactual_samples = []
-        count_original_sample_texts = 0
+        original_texts = []
         text_representations = self.concept_detector._tokenizer.pipe(texts)
+        concept_keywords = set([keyword.get("keyword") for keyword in CONCEPTS[concept]])
         for idx, (text, text_representation) in tqdm(
             enumerate(zip(texts, text_representations)), total=len(texts)
-        ):
+        ):  
             present_keywords = list(
-                keyword.get("keyword")
-                for keyword in CONCEPTS[concept]
-                if keyword.get("keyword")
-                in (token.text.lower() for token in text_representation)
+                keyword for keyword in concept_keywords
+                if keyword in (token.text.lower() for token in text_representation)
             )
             if present_keywords:
-                count_original_sample_texts += 1
+                original_texts.append(text) 
                 for orig_keyword in present_keywords:
-                    for concept_keyword in CONCEPTS[concept]:
-                        if concept_keyword.get("keyword") == orig_keyword.lower():
-                            counterfactual_samples.append(
-                                CounterfactualSample(
-                                    text=text,
-                                    orig_keyword=orig_keyword,
-                                    keyword=concept_keyword.get("keyword"),
-                                    concept=concept,
-                                    tokenized=text_representation,
-                                    label=labels[idx] if labels else None,
-                                )
+                    for concept_keyword in concept_keywords:
+                        resampled_text = "".join(
+                            [
+                                concept_keyword + token.whitespace_
+                                if token.text.lower() == orig_keyword.lower()
+                                else token.text + token.whitespace_
+                                for token in text_representation
+                            ]
+                        )
+                        counterfactual_samples.append(
+                            CounterfactualSample(
+                                text=resampled_text,
+                                orig_keyword=orig_keyword,
+                                keyword=concept_keyword,
+                                concept=concept,
+                                tokenized=text_representation,
+                                label=labels[idx] if labels else None,
+                                source_text=text,
                             )
-                        else:
-                            resampled_text = "".join(
-                                [
-                                    concept_keyword.get("keyword") + token.whitespace_
-                                    if token.text.lower() == orig_keyword.lower()
-                                    else token.text + token.whitespace_
-                                    for token in text_representation
-                                ]
-                            )
-                            counterfactual_samples.append(
-                                CounterfactualSample(
-                                    text=resampled_text,
-                                    orig_keyword=orig_keyword,
-                                    keyword=concept_keyword.get("keyword"),
-                                    concept=concept,
-                                    tokenized=text_representation,
-                                    label=labels[idx] if labels else None,
-                                )
-                            )
+                        )
         logger.info(
-            f"Extracted {len(counterfactual_samples)} counterfactual sample texts for concept {concept} from {count_original_sample_texts} original texts."
+            f"Extracted {len(counterfactual_samples)} counterfactual sample texts for concept {concept} from {len(original_texts)} original texts."
         )
         return counterfactual_samples
 
@@ -222,11 +210,12 @@ class CounterfactualBiasDetector:
         """
         # filter samples for the given bias keyword
         original_texts = [
-            sample.text for sample in samples if sample.orig_keyword == sample.keyword
+            sample.source_text for sample in samples if (sample.keyword == bias_keyword)
         ]
         counterfactual_texts = [
-            sample.text for sample in samples if sample.keyword == bias_keyword
+            sample.text for sample in samples if (sample.keyword == bias_keyword)
         ]
+
         # if max_counterfactual_samples is given, only use a random sample of the counterfactual texts
         if max_counterfactual_samples:
             original_texts, counterfactual_texts = zip(

@@ -229,7 +229,6 @@ CONCEPTS = {
             "function": ["noun"],
             "category": "country",
         },
-        {"keyword": "samoa", "function": ["noun"], "category": "country"},
         {"keyword": "san marino", "function": ["noun"], "category": "country"},
         {"keyword": "marino", "function": ["noun"], "category": "country"},
         {"keyword": "sark", "function": ["noun"], "category": "country"},
@@ -631,6 +630,11 @@ CONCEPTS = {
         },
         {
             "keyword": "egyptian",
+            "function": ["noun", "adjective"],
+            "category": "nationality",
+        },
+        {
+            "keyword": "english",
             "function": ["noun", "adjective"],
             "category": "nationality",
         },

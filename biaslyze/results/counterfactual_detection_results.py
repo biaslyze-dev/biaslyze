@@ -17,6 +17,7 @@ class CounterfactualSample:
         concept: The concept that was detected in the text.
         tokenized: The tokenized text in spacy representation.
         label: The label of the original text.
+        source_text: The source text from which the text was derived.
     """
 
     def __init__(
@@ -27,6 +28,7 @@ class CounterfactualSample:
         concept: str,
         tokenized: List[str],
         label: int = None,
+        source_text: str = None,
     ):
         self.text = text
         self.orig_keyword = orig_keyword
@@ -34,6 +36,7 @@ class CounterfactualSample:
         self.concept = concept
         self.tokenized = tokenized
         self.label = label
+        self.source_text = source_text
 
     def __repr__(self):
         return f"concept={self.concept}; keyword={self.keyword}; text={self.text}"
