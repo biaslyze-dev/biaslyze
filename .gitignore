@@ -127,3 +127,12 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# jupyter
+.ipynb_checkpoints
+
+# ruff
+.ruff_cache/
+
+# vscode
+.vscode/

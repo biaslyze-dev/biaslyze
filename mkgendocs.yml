@@ -4,25 +4,26 @@ repo: https://github.com/biaslyze-dev/biaslyze
 version: main
 
 pages:
-  - page: "biaslyze/bias_detectors/lime_keyword_biasdetector.md"
-    source: "biaslyze/bias_detectors/lime_keyword_biasdetector.py"
+  - page: "biaslyze/bias_detectors/lime_biasdetector.md"
+    source: "biaslyze/bias_detectors/lime_biasdetector.py"
     classes:
-      - LimeKeywordBiasDetector
-  - page: "biaslyze/bias_detectors/masked_keyword_biasdetector.md"
-    source: "biaslyze/bias_detectors/masked_keyword_biasdetector.py"
+      - LimeBiasDetector
+  - page: "biaslyze/bias_detectors/counterfactual_biasdetector.md"
+    source: "biaslyze/bias_detectors/counterfactual_biasdetector.py"
     classes:
-      - MaskedKeywordBiasDetector
-  - page: "biaslyze/evaluation_results.md"
-    source: "biaslyze/evaluation_results.py"
+      - CounterfactualBiasDetector 
+  - page: "biaslyze/results/lime_detection_results.md"
+    source: "biaslyze/results/lime_detection_results.py"
     classes:
-      - EvaluationResult
-      - BiasedSampleResult 
+      - LimeDetectionResult
+      - LimeSampleResult
+  - page: "biaslyze/results/counterfactual_detection_results.md"
+    source: "biaslyze/results/counterfactual_detection_results.py"
+    classes:
+      - CounterfactualDetectionResult
+      - CounterfactualConceptResult
+      - CounterfactualSample 
   - page: "biaslyze/concept_detectors.md"
     source: "biaslyze/concept_detectors.py"
     classes:
       - KeywordConceptDetector
-  - page: "biaslyze/evaluators.md"
-    source: "biaslyze/evaluators.py"
-    classes:
-      - LimeBiasEvaluator 
-      - MaskedBiasEvaluator

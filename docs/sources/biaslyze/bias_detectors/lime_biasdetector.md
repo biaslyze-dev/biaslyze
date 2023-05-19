@@ -1,13 +1,12 @@
 #
 
 
-## LimeKeywordBiasDetector
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/lime_keyword_biasdetector.py/#L9)
+## LimeBiasDetector
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/lime_biasdetector.py/#L18)
 ```python 
-LimeKeywordBiasDetector(
-   n_top_keywords: int = 10, use_tokenizer: bool = False,
-   concept_detector: KeywordConceptDetector = KeywordConceptDetector(),
-   bias_evaluator: LimeBiasEvaluator = LimeBiasEvaluator()
+LimeBiasDetector(
+   n_lime_samples: int = 1000, use_tokenizer: bool = False,
+   concept_detector: KeywordConceptDetector = KeywordConceptDetector()
 )
 ```
 
@@ -21,15 +20,15 @@ Usage example:
 from biaslyze.bias_detectors import LimeKeywordBiasDetector
 
 bias_detector = LimeKeywordBiasDetector(
-    bias_evaluator=LimeBiasEvaluator(n_lime_samples=500),
-    n_top_keywords=10
+    n_lime_samples=500,
 )
 
 # detect bias in the model based on the given texts
 # here, clf is a scikit-learn text classification pipeline trained for a binary classification task
 detection_res = bias_detector.detect(
     texts=texts,
-    predict_func=clf.predict_proba
+    predict_func=clf.predict_proba,
+    n_top_keywords=10,
 )
 
 # see a summary of the detection
@@ -39,10 +38,9 @@ detection_res.summary()
 
 **Attributes**
 
-* **n_top_keywords**  : In how many important LIME words should the method look for protected keywords.
+* **n_lime_samples**  : Number of perturbed samples to create for each LIME run.
 * **use_tokenizer**  : If keywords should only be searched in tokenized text. Can be useful for short keywords like 'she'.
 * **concept_detector**  : An instance of KeywordConceptDetector
-* **bias_evaluator**  : An instance of LimeBiasEvaluator
 
 
 
@@ -50,10 +48,11 @@ detection_res.summary()
 
 
 ### .detect
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/lime_keyword_biasdetector.py/#L55)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/lime_biasdetector.py/#L66)
 ```python
 .detect(
-   texts: List[str], predict_func: Callable[[List[str]], List[float]]
+   texts: List[str], predict_func: Callable[[List[str]], List[float]],
+   top_n_keywords: int = 10
 )
 ```
 
@@ -65,8 +64,9 @@ Detect bias using keyword concept detection and lime bias evaluation.
 
 * **texts**  : List of texts to evaluate.
 * **predict_func**  : Function that predicts a for a given text. Currently only binary classification is supported.
+* **top_n_keywords**  : How many keywords detected by LIME should be considered for bias detection.
 
 
 **Returns**
 
-An EvaluationResults object containing the results.
+A LimeDetectionResult containing all samples with detected bias.

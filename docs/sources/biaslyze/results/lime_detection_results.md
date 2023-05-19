@@ -1,11 +1,11 @@
 #
 
 
-## EvaluationResult
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L41)
+## LimeDetectionResult
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/lime_detection_results.py/#L56)
 ```python 
-EvaluationResult(
-   biased_samples: List[BiasedSampleResult]
+LimeDetectionResult(
+   biased_samples: List[LimeSampleResult]
 )
 ```
 
@@ -13,15 +13,18 @@ EvaluationResult(
 ---
 Contains all samples on detected potential bias issues.
 
-Attribues:
-biased_samples: A list of BiasedSampleResults.
+
+**Attributes**
+
+* **biased_samples**  : A list of BiasedSampleResults.
+
 
 
 **Methods:**
 
 
 ### .summary
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L51)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/lime_detection_results.py/#L66)
 ```python
 .summary()
 ```
@@ -44,7 +47,7 @@ Based on keywords: Counter({'german': 1}).
 ```
 
 ### .details
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L69)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/lime_detection_results.py/#L84)
 ```python
 .details(
    group_by_concept: bool = False
@@ -61,7 +64,7 @@ Print the details of every biased sample detected.
 
 
 ### .dashboard
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L105)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/lime_detection_results.py/#L121)
 ```python
 .dashboard(
    use_position = False
@@ -70,6 +73,10 @@ Print the details of every biased sample detected.
 
 ---
 Return a bokeh dashboard.
+
+Content of the dashboard:
+- A histogram of the LIME score of the samples.
+- A table with the details of the samples.
 
 
 **Args**
@@ -80,10 +87,10 @@ Return a bokeh dashboard.
 ----
 
 
-## BiasedSampleResult
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/evaluation_results.py/#L16)
+## LimeSampleResult
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/lime_detection_results.py/#L16)
 ```python 
-BiasedSampleResult(
+LimeSampleResult(
    text: str, bias_concepts: List[str], bias_reasons: List[str],
    top_words: List[str], num_tokens: List[str], keyword_position: int, score: float,
    metrics: Dict = None
@@ -92,7 +99,7 @@ BiasedSampleResult(
 
 
 ---
-A sample on which the model might behave biased.
+A sample on which the model might behave biased based on LIME.
 
 Contains details on why it might be biased and what concepts are affected.
 
@@ -102,4 +109,9 @@ Contains details on why it might be biased and what concepts are affected.
 * **text**  : Sample text
 * **bias_concepts**  : Protected concepts present in the text by which the model appears biased.
 * **bias_reasons**  : Reasons why bias was detected. Might be a list of keywords.
+* **top_words**  : Most important words for the prediction.
+* **num_tokens**  : Number of unique tokens in the text.
+* **keyword_position**  : Position of the keyword in the top_words list.
+* **score**  : Score of the sample.
+* **metrics**  : Metrics of the LIME explainer.
 

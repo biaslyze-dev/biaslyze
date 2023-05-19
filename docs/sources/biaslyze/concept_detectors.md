@@ -24,7 +24,7 @@ Use keywords to determine if a protected concept is present in text.
 
 
 ### .detect
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_detectors.py/#L22)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_detectors.py/#L24)
 ```python
 .detect(
    texts: List[str]

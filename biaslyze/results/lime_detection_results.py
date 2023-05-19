@@ -1,19 +1,20 @@
 """Classes to return results of the different steps."""
 from collections import Counter, defaultdict
 from pprint import pprint
-from typing import List, Dict
+from typing import Dict, List
+
 import numpy as np
 import pandas as pd
 import yaml
 from bokeh.layouts import column
 from bokeh.models import ColumnDataSource, DataTable, TableColumn
+from bokeh.palettes import Spectral
 from bokeh.plotting import figure
 from bokeh.themes import Theme
-from bokeh.palettes import Spectral
 
 
-class BiasedSampleResult:
-    """A sample on which the model might behave biased.
+class LimeSampleResult:
+    """A sample on which the model might behave biased based on LIME.
 
     Contains details on why it might be biased and what concepts are affected.
 
@@ -21,6 +22,11 @@ class BiasedSampleResult:
         text: Sample text
         bias_concepts: Protected concepts present in the text by which the model appears biased.
         bias_reasons: Reasons why bias was detected. Might be a list of keywords.
+        top_words: Most important words for the prediction.
+        num_tokens: Number of unique tokens in the text.
+        keyword_position: Position of the keyword in the top_words list.
+        score: Score of the sample.
+        metrics: Metrics of the LIME explainer.
     """
 
     def __init__(
@@ -47,14 +53,14 @@ class BiasedSampleResult:
         return f"''{self.text}'' might contain bias {self.bias_concepts}; reasons: {self.bias_reasons}"
 
 
-class EvaluationResult:
+class LimeDetectionResult:
     """Contains all samples on detected potential bias issues.
 
-    Attribues:
+    Attributes:
         biased_samples: A list of BiasedSampleResults.
     """
 
-    def __init__(self, biased_samples: List[BiasedSampleResult]):
+    def __init__(self, biased_samples: List[LimeSampleResult]):
         self.biased_samples = biased_samples
 
     def summary(self):
@@ -96,6 +102,7 @@ class EvaluationResult:
                 print(sample)
 
     def __repr__(self) -> str:
+        """Return a string representation of the EvaluationResult."""
         concepts = []
         reasons = []
         for sample in self.biased_samples:
@@ -113,6 +120,10 @@ class EvaluationResult:
 
     def dashboard(self, use_position=False):
         """Return a bokeh dashboard.
+
+        Content of the dashboard:
+            - A histogram of the LIME score of the samples.
+            - A table with the details of the samples.
 
         Args:
             use_position: If True, use the normalized position for plotting.
@@ -148,7 +159,6 @@ class EvaluationResult:
             score_version = "PositionScore"
         else:
             score_version = "LimeScore"
-            
 
         def bkapp(doc):
             # update function for selection in histogram
@@ -161,7 +171,7 @@ class EvaluationResult:
                 TableColumn(
                     field="bias_keywords_joined", title="bias_keywords", width=100
                 ),
-                TableColumn(field="score", title="LimeScore", width=50),
+                TableColumn(field="score", title=score_version, width=50),
                 TableColumn(
                     field="keyword_position", title="Keyword Position", width=50
                 ),
