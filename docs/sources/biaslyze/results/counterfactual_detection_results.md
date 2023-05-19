@@ -2,7 +2,7 @@
 
 
 ## CounterfactualDetectionResult
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L55)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L61)
 ```python 
 CounterfactualDetectionResult(
    concept_results: List[CounterfactualConceptResult]
@@ -24,7 +24,7 @@ The result of a counterfactual bias detection run.
 
 
 ### .report
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L78)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L86)
 ```python
 .report()
 ```
@@ -36,7 +36,7 @@ Details:
 For each concept, the maximum mean and maximum standard deviation of the counterfactual scores is shown.
 
 ### .visualize_counterfactual_scores
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L89)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L97)
 ```python
 .visualize_counterfactual_scores(
    concept: str, top_n: int = None
@@ -60,7 +60,7 @@ Details:
     The counterfactual scores are shown as boxplots. The median of the scores is indicated by a dashed line.
 
 ### .visualize_counterfactual_sample_scores
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L127)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L135)
 ```python
 .visualize_counterfactual_sample_scores(
    concept: str, top_n: int = None
@@ -81,7 +81,7 @@ score grouped by the original keyword in the text, not the counterfactual keywor
 
 
 ### .visualize_counterfactual_score_by_sample
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L179)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L187)
 ```python
 .visualize_counterfactual_score_by_sample(
    concept: str
@@ -95,7 +95,7 @@ Visualize the counterfactual scores for each sample for a given concept.
 
 
 ## CounterfactualConceptResult
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L39)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L45)
 ```python 
 CounterfactualConceptResult(
    concept: str, scores: pd.DataFrame, omitted_keywords: List[str],
@@ -114,7 +114,8 @@ The result of a counterfactual bias detection run for a single concept.
 [source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L10)
 ```python 
 CounterfactualSample(
-   text: str, orig_keyword: str, keyword: str, concept: str, tokenized: List[str]
+   text: str, orig_keyword: str, keyword: str, concept: str, tokenized: List[str],
+   label: int = None, source_text: str = None
 )
 ```
 
@@ -130,4 +131,6 @@ A sample for counterfactual bias detection.
 * **keyword**  : The keyword that replaced the original keyword.
 * **concept**  : The concept that was detected in the text.
 * **tokenized**  : The tokenized text in spacy representation.
+* **label**  : The label of the original text.
+* **source_text**  : The source text from which the text was derived.
 

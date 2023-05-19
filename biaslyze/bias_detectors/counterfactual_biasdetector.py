@@ -19,6 +19,15 @@ from biaslyze.results.counterfactual_detection_results import (
 class CounterfactualBiasDetector:
     """Detect hints of bias by calculating counterfactual token scores for protected concepts.
 
+    The counterfactual score is defined as the difference between the predicted
+    p robability score for the original text and the predicted probability score for the counterfactual text.
+    
+    $$counterfactual_score = P(x=1|original_text) - P(x=1|counterfactual_text),$$
+    
+    where counterfactual text is defined as the original text where a keyword of the given concept is
+    replaced by another keyword of the same concept. So a counterfactual_score > 0 means that the
+    model is more likely to predict the positive class for the original text than for the counterfactual text.
+
     Usage example:
 
         ```python
@@ -64,7 +73,7 @@ class CounterfactualBiasDetector:
         concepts_to_consider: Optional[List[str]] = [],
         max_counterfactual_samples: Optional[int] = None,
     ) -> List:
-        """Detect bias by masking out words.
+        """Detect potential bias in the model based on the given texts.
 
         Args:
             texts: texts to probe the model for bias.
@@ -143,6 +152,9 @@ class CounterfactualBiasDetector:
         self, concept: str, texts: List[str], labels: Optional[List[str]] = None
     ) -> List[CounterfactualSample]:
         """Extract counterfactual samples for a given concept from a list of texts.
+
+        A counterfactual sample is defined as a text where a keyword of the
+        given concept is replaced by another keyword of the same concept.
 
         Args:
             concept: The concept to extract counterfactual samples for.
