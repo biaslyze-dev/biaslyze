@@ -20,7 +20,7 @@ detection_res = bias_detector.process(
 detection_res.report()
 
 # visualize the counterfactual scores
-detection_res.visualize_counterfactual_scores()
+detection_res.visualize_counterfactual_scores(concept="religion", top_n=10)
 ```
 
 Example output:
