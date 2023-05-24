@@ -24,7 +24,7 @@ detection_res.visualize_counterfactual_scores()
 ```
 
 Example output:
-![](docs/resources/hatespeech_dl_scores_religion.png)
+![](resources/hatespeech_dl_scores_religion.png)
 
 
 ## Development setup
