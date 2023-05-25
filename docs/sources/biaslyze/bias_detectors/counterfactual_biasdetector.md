@@ -41,7 +41,10 @@ detection_res = bias_detector.process(
 detection_res.report()
 
 # visualize the counterfactual scores
-detection_res.visualize_counterfactual_scores()
+detection_res.visualize_counterfactual_scores(concept="religion")
+
+# visualize the counterfactual sample scores
+detection_res.visualize_counterfactual_score_by_sample_histogram(concepts=["religion", "gender"])
 ```
 
 
@@ -56,7 +59,7 @@ detection_res.visualize_counterfactual_scores()
 
 
 ### .process
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/counterfactual_biasdetector.py/#L68)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/counterfactual_biasdetector.py/#L71)
 ```python
 .process(
    texts: List[str], predict_func: Callable[[List[str]], List[float]],
@@ -81,3 +84,9 @@ Detect potential bias in the model based on the given texts.
 **Returns**
 
 A [CounterfactualDetectionResult](/biaslyze/results/counterfactual_detection_results/) object.
+
+
+**Raises**
+
+* **ValueError**  : If texts or predict_func is not given.
+

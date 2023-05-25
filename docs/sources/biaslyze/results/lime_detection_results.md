@@ -2,7 +2,7 @@
 
 
 ## LimeDetectionResult
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/lime_detection_results.py/#L56)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/lime_detection_results.py/#L49)
 ```python 
 LimeDetectionResult(
    biased_samples: List[LimeSampleResult]
@@ -24,7 +24,7 @@ Contains all samples on detected potential bias issues.
 
 
 ### .summary
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/lime_detection_results.py/#L66)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/lime_detection_results.py/#L59)
 ```python
 .summary()
 ```
@@ -47,7 +47,7 @@ Based on keywords: Counter({'german': 1}).
 ```
 
 ### .details
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/lime_detection_results.py/#L84)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/lime_detection_results.py/#L77)
 ```python
 .details(
    group_by_concept: bool = False
@@ -64,7 +64,7 @@ Print the details of every biased sample detected.
 
 
 ### .dashboard
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/lime_detection_results.py/#L121)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/lime_detection_results.py/#L114)
 ```python
 .dashboard(
    use_position = False
@@ -88,7 +88,7 @@ Content of the dashboard:
 
 
 ## LimeSampleResult
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/lime_detection_results.py/#L16)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/lime_detection_results.py/#L9)
 ```python 
 LimeSampleResult(
    text: str, bias_concepts: List[str], bias_reasons: List[str],
