@@ -46,7 +46,10 @@ class CounterfactualBiasDetector:
         detection_res.report()
 
         # visualize the counterfactual scores
-        detection_res.visualize_counterfactual_scores()
+        detection_res.visualize_counterfactual_scores(concept="religion")
+
+        # visualize the counterfactual sample scores
+        detection_res.visualize_counterfactual_score_by_sample_histogram(concepts=["religion", "gender"])
         ```
 
     Attributes:
@@ -126,13 +129,17 @@ class CounterfactualBiasDetector:
                     max_counterfactual_samples=max_counterfactual_samples,
                 )
                 # add to score dict
-                score_dict[keyword.get("keyword")] = counterfactual_scores 
+                score_dict[keyword.get("keyword")] = counterfactual_scores
                 # add scores to samples
                 original_keyword_samples = [
-                    sample for sample in counterfactual_samples
-                    if (sample.keyword == keyword.get("keyword")) 
-                        and (sample.keyword == sample.orig_keyword)]
-                for score, sample in zip(counterfactual_scores, original_keyword_samples):
+                    sample
+                    for sample in counterfactual_samples
+                    if (sample.keyword == keyword.get("keyword"))
+                    and (sample.keyword == sample.orig_keyword)
+                ]
+                for score, sample in zip(
+                    counterfactual_scores, original_keyword_samples
+                ):
                     sample.score = score
 
             score_df = pd.DataFrame(score_dict)

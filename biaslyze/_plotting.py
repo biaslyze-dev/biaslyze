@@ -1,9 +1,9 @@
 """This module contains functions for plotting results and metrics."""
-import yaml
-import numpy as np
-import pandas as pd
 from typing import List, Optional
 
+import numpy as np
+import pandas as pd
+import yaml
 from bokeh.layouts import column
 from bokeh.models import ColumnDataSource, DataTable, TableColumn
 from bokeh.palettes import Spectral
@@ -13,7 +13,7 @@ from bokeh.themes import Theme
 
 def _plot_box_plot(dataf: pd.DataFrame, top_n: Optional[int] = None):
     """Plot a box plot of scores.
-    
+
     Args:
         dataf: A dataframe with scores for each sample.
         top_n: Only plot the top n concepts.
@@ -84,9 +84,13 @@ def _plot_histogram_dashboard(
         plot_dataf["top_words"] = top_words
 
     if isinstance(concepts[0], list):
-        plot_dataf["bias_concepts"] = plot_dataf.bias_concepts.apply(lambda x: ", ".join(x))
+        plot_dataf["bias_concepts"] = plot_dataf.bias_concepts.apply(
+            lambda x: ", ".join(x)
+        )
     if isinstance(keywords[0], list):
-        plot_dataf["bias_keywords"] = plot_dataf.bias_keywords.apply(lambda x: ", ".join(x))
+        plot_dataf["bias_keywords"] = plot_dataf.bias_keywords.apply(
+            lambda x: ", ".join(x)
+        )
     # the normalized position might be used instead of score
     if use_position and score_version == "LimeScore":
         plot_dataf["score"] = 1 - (plot_dataf.keyword_position / plot_dataf.num_tokens)
@@ -134,7 +138,8 @@ def _plot_histogram_dashboard(
                     total_range[new[-1]],
                 )
                 subset = plot_dataf[
-                    (plot_dataf.score > new_min_score) & (plot_dataf.score < new_max_score)
+                    (plot_dataf.score > new_min_score)
+                    & (plot_dataf.score < new_max_score)
                 ].sort_values(by=["score"], ascending=False)
             else:
                 subset = plot_dataf.copy()

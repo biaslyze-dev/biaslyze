@@ -6,10 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from biaslyze._plotting import (
-    _plot_histogram_dashboard,
-    _plot_box_plot,
-)
+from biaslyze._plotting import _plot_box_plot, _plot_histogram_dashboard
 
 
 class CounterfactualSample:
@@ -44,7 +41,7 @@ class CounterfactualSample:
         self.source_text = source_text
 
     def __repr__(self):
-            return f"concept={self.concept}; keyword={self.keyword}; text={self.text}"
+        return f"concept={self.concept}; keyword={self.keyword}; text={self.text}"
 
 
 class CounterfactualConceptResult:
@@ -163,9 +160,11 @@ class CounterfactualDetectionResult:
         )
         plt.show()
 
-    def visualize_counterfactual_score_by_sample_histogram(self, concepts: Optional[List[str]] = None):
+    def visualize_counterfactual_score_by_sample_histogram(
+        self, concepts: Optional[List[str]] = None
+    ):
         """Visualize the counterfactual scores for each sample as a histogram.
-        
+
         Args:
             concepts: If given, only the concepts in this list are shown. Otherwise, all concepts are shown.
         """
