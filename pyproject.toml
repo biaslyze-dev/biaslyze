@@ -1,8 +1,11 @@
 [tool.poetry]
 name = "biaslyze"
-version = "0.0.3-alpha"
+version = "0.0.4-alpha"
 description = "The NLP Bias Identification Toolkit"
 authors = [
+    "Tobias Sterbak & Stina Lohmüller <hello@biaslyze.org>",
+]
+maintainers = [
     "Tobias Sterbak <hello@tobiassterbak.com>",
     "Stina Lohmüller <slohmueller@posteo.de>",
 ]
