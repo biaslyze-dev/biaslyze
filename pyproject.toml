@@ -1,10 +1,21 @@
 [tool.poetry]
 name = "biaslyze"
-version = "0.0.1-alpha"
+version = "0.0.3-alpha"
 description = "The NLP Bias Identification Toolkit"
-authors = ["Tobias Sterbak <hello@tobiassterbak.com>", "Stina Lohmüller <slohmüller@posteo.de>"]
+authors = [
+    "Tobias Sterbak <hello@tobiassterbak.com>",
+    "Stina Lohmüller <slohmueller@posteo.de>",
+]
 readme = "README.md"
-license = "LICENSE"
+license = "BSD-3-Clause"
+homepage = "https://biaslyze.org"
+repository = "https://github.com/biaslyze-dev/biaslyze/issues"
+keywords = ["NLP", "bias", "ethics", "fairness"]
+classifiers = [
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Software Development :: Libraries :: Python Modules"
+]
+
 
 [tool.poetry.dependencies]
 python = "<3.11,>=3.10"
@@ -37,7 +48,3 @@ profile = "black"
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
-
-[project.urls]
-"Homepage" = "https:biaslyze.org"
-"Bug Tracker" = "https://github.com/biaslyze-dev/biaslyze/issues"
