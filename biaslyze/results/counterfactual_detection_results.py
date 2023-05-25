@@ -71,6 +71,17 @@ class CounterfactualDetectionResult:
         self.concept_results = concept_results
 
     def _get_result_by_concept(self, concept: str) -> pd.DataFrame:
+        """Get the result for a given concept.
+
+        Args:
+            concept: The concept for which to get the result.
+
+        Returns:
+            The DataFrame with results for the given concept.
+
+        Raises:
+            ValueError: If the concept is not found in the results.
+        """
         for concept_result in self.concept_results:
             if concept_result.concept == concept:
                 return concept_result.scores.copy()
@@ -79,7 +90,17 @@ class CounterfactualDetectionResult:
     def _get_counterfactual_samples_by_concept(
         self, concept: str
     ) -> List[CounterfactualSample]:
-        """Get all counterfactual samples for a given concept."""
+        """Get all counterfactual samples for a given concept.
+
+        Args:
+            concept: The concept for which to get the counterfactual samples.
+
+        Returns:
+            A list of CounterfactualSample objects.
+
+        Raises:
+            ValueError: If the concept is not found in the results.
+        """
         for concept_result in self.concept_results:
             if concept_result.concept == concept:
                 return concept_result.counterfactual_samples
@@ -96,19 +117,26 @@ class CounterfactualDetectionResult:
                 f"""Concept: {concept_result.concept}\t\tMax-Mean Counterfactual Score: {np.abs(concept_result.scores.mean()).max():.5f}\t\tMax-Std Counterfactual Score: {concept_result.scores.std().max():.5f}"""
             )
 
-    def visualize_counterfactual_scores(self, concept: str, top_n: int = None):
+    def visualize_counterfactual_scores(
+        self, concept: str, top_n: Optional[int] = None
+    ):
         """
         Visualize the counterfactual scores for a given concept.
 
         The score is calculated by comparing the prediction of the original sample with the prediction of the counterfactual sample.
         For every keyword shown all concept keywords are replaced with the keyword shown. The difference in the prediction to the original is then calculated.
 
+        The counterfactual scores are shown as boxplots. The median of the scores is indicated by a dashed line.
+
         Args:
             concept: The concept to visualize.
             top_n: If given, only the top n keywords are shown.
 
-        Details:
-            The counterfactual scores are shown as boxplots. The median of the scores is indicated by a dashed line.
+        Returns:
+            The matplotlib plot.
+
+        Raises:
+            ValueError: If the concept is not found in the results.
         """
         dataf = self._get_result_by_concept(concept=concept)
         ax = _plot_box_plot(dataf, top_n=top_n)
@@ -120,7 +148,9 @@ class CounterfactualDetectionResult:
         )
         plt.show()
 
-    def visualize_counterfactual_sample_scores(self, concept: str, top_n: int = None):
+    def visualize_counterfactual_sample_scores(
+        self, concept: str, top_n: Optional[int] = None
+    ):
         """Visualize the counterfactual scores given concept.
 
         This differs from visualize_counterfactual_score_by_sample in that it shows the counterfactual
@@ -167,6 +197,9 @@ class CounterfactualDetectionResult:
 
         Args:
             concepts: If given, only the concepts in this list are shown. Otherwise, all concepts are shown.
+
+        Raises:
+            ValueError: If no samples are found for the given concepts.
         """
         all_scores = []
         all_samples = []
@@ -189,6 +222,10 @@ class CounterfactualDetectionResult:
                 # this means that the score represents the median change in prediction if the keyword is replaced
                 # with a concept keyword.
                 all_scores.append(-1 * np.median(score.tolist()))
+        if all_samples == []:
+            raise ValueError(
+                f"No results found. Please make sure that the concepts are in the results."
+            )
 
         dashboard = _plot_histogram_dashboard(
             texts=[sample.text for sample in all_samples],

@@ -87,6 +87,9 @@ class CounterfactualBiasDetector:
 
         Returns:
             A [CounterfactualDetectionResult](/biaslyze/results/counterfactual_detection_results/) object.
+
+        Raises:
+            ValueError: If texts or predict_func is not given.
         """
         if texts is None:
             raise ValueError("texts must be given.")
@@ -238,6 +241,10 @@ class CounterfactualBiasDetector:
         Returns:
             A numpy array of differences between the original predictions and the predictions for the counterfactual samples.
             We call this the **counterfactual score**.
+
+        Raises:
+            ValueError: If `positive_classes` is given but the model is not a binary classifier.
+            IndexError: If `positive_classes` is given but the model does not have the given classes.
         """
         # filter samples for the given bias keyword
         original_texts = [
@@ -256,9 +263,31 @@ class CounterfactualBiasDetector:
                 )
             )
         # predict the scores for the original texts and the counterfactual texts
-        original_scores = predict_func(original_texts)[:, 1]
-        predicted_scores = predict_func(counterfactual_texts)[:, 1]
+        original_scores = predict_func(original_texts)
+        predicted_scores = predict_func(counterfactual_texts)
+
+        # check if the model is a binary classifier
+        if (not positive_classes) and (len(original_scores[0]) != 2):
+            raise NotImplementedError(
+                "Multi-class classification is not yet supported for counterfactual detection."
+                "Please use a binary classifier."
+                "If you are using a multi-class classifier, please specify the positive classes."
+            )
 
         # calculate score differences
-        score_diffs = np.array(original_scores) - np.array(predicted_scores)
+        if positive_classes:
+            # sum up the scores for the positive classes and take the difference
+            try:
+                score_diffs = (
+                    np.array(original_scores[:, positive_classes]).sum(axis=1)
+                    - np.array(predicted_scores[:, positive_classes]).sum(axis=1),
+                )
+            except IndexError:
+                raise IndexError(
+                    f"Positive classes {positive_classes} not found in predictions."
+                )
+        else:
+            score_diffs = np.array(original_scores[:, 1]) - np.array(
+                predicted_scores[:, 1]
+            )
         return score_diffs
