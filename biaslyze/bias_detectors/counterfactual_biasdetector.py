@@ -21,9 +21,9 @@ class CounterfactualBiasDetector:
 
     The counterfactual score is defined as the difference between the predicted
     p robability score for the original text and the predicted probability score for the counterfactual text.
-    
+
     $$counterfactual_score = P(x=1|original_text) - P(x=1|counterfactual_text),$$
-    
+
     where counterfactual text is defined as the original text where a keyword of the given concept is
     replaced by another keyword of the same concept. So a counterfactual_score > 0 means that the
     model is more likely to predict the positive class for the original text than for the counterfactual text.
@@ -118,17 +118,22 @@ class CounterfactualBiasDetector:
 
             # calculate counterfactual scores for each keyword
             for keyword in tqdm(concept_keywords):
-                (
-                    original_scores,
-                    predicted_scores,
-                ) = self._calculate_counterfactual_scores(
+                # get the counterfactual scores
+                counterfactual_scores = self._calculate_counterfactual_scores(
                     bias_keyword=keyword.get("keyword"),
                     predict_func=predict_func,
                     samples=counterfactual_samples,
                     max_counterfactual_samples=max_counterfactual_samples,
                 )
-                score_diffs = np.array(original_scores) - np.array(predicted_scores)
-                score_dict[keyword.get("keyword")] = score_diffs
+                # add to score dict
+                score_dict[keyword.get("keyword")] = counterfactual_scores 
+                # add scores to samples
+                original_keyword_samples = [
+                    sample for sample in counterfactual_samples
+                    if (sample.keyword == keyword.get("keyword")) 
+                        and (sample.keyword == sample.orig_keyword)]
+                for score, sample in zip(counterfactual_scores, original_keyword_samples):
+                    sample.score = score
 
             score_df = pd.DataFrame(score_dict)
             # remove words with exactly the same score
@@ -164,16 +169,19 @@ class CounterfactualBiasDetector:
         counterfactual_samples = []
         original_texts = []
         text_representations = self.concept_detector._tokenizer.pipe(texts)
-        concept_keywords = set([keyword.get("keyword") for keyword in CONCEPTS[concept]])
+        concept_keywords = set(
+            [keyword.get("keyword") for keyword in CONCEPTS[concept]]
+        )
         for idx, (text, text_representation) in tqdm(
             enumerate(zip(texts, text_representations)), total=len(texts)
-        ):  
+        ):
             present_keywords = list(
-                keyword for keyword in concept_keywords
+                keyword
+                for keyword in concept_keywords
                 if keyword in (token.text.lower() for token in text_representation)
             )
             if present_keywords:
-                original_texts.append(text) 
+                original_texts.append(text)
                 for orig_keyword in present_keywords:
                     for concept_keyword in concept_keywords:
                         resampled_text = "".join(
@@ -206,8 +214,8 @@ class CounterfactualBiasDetector:
         predict_func: Callable,
         samples: List,
         max_counterfactual_samples: int = None,
-        positive_classes: List = None,
-    ):
+        positive_classes: Optional[List] = None,
+    ) -> np.ndarray:
         """Calculate the counterfactual score for a bias keyword given samples.
 
         Args:
@@ -219,6 +227,10 @@ class CounterfactualBiasDetector:
 
         TODO: If `positive_classes` is given, all other classes are considered non-positive and positive and negative outcomes are compared.
         TODO: introduce neutral classes.
+
+        Returns:
+            A numpy array of differences between the original predictions and the predictions for the counterfactual samples.
+            We call this the **counterfactual score**.
         """
         # filter samples for the given bias keyword
         original_texts = [
@@ -240,4 +252,6 @@ class CounterfactualBiasDetector:
         original_scores = predict_func(original_texts)[:, 1]
         predicted_scores = predict_func(counterfactual_texts)[:, 1]
 
-        return original_scores, predicted_scores
+        # calculate score differences
+        score_diffs = np.array(original_scores) - np.array(predicted_scores)
+        return score_diffs

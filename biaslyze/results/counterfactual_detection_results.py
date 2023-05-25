@@ -1,10 +1,15 @@
 """This module contains classes to store and process the results of counterfactual bias detection runs."""
 from collections import defaultdict
-from typing import List
+from typing import List, Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+
+from biaslyze._plotting import (
+    _plot_histogram_dashboard,
+    _plot_box_plot,
+)
 
 
 class CounterfactualSample:
@@ -39,7 +44,7 @@ class CounterfactualSample:
         self.source_text = source_text
 
     def __repr__(self):
-        return f"concept={self.concept}; keyword={self.keyword}; text={self.text}"
+            return f"concept={self.concept}; keyword={self.keyword}; text={self.text}"
 
 
 class CounterfactualConceptResult:
@@ -109,21 +114,7 @@ class CounterfactualDetectionResult:
             The counterfactual scores are shown as boxplots. The median of the scores is indicated by a dashed line.
         """
         dataf = self._get_result_by_concept(concept=concept)
-        sort_index = dataf.median().abs().sort_values(ascending=True)
-        sorted_dataf = dataf[sort_index.index]
-        if top_n:
-            sorted_dataf = sorted_dataf.iloc[:, -top_n:]
-        ax = sorted_dataf.plot.box(
-            vert=False, figsize=(12, int(sorted_dataf.shape[1] / 2.2))
-        )
-        ax.vlines(
-            x=0,
-            ymin=0.5,
-            ymax=sorted_dataf.shape[1] + 0.5,
-            colors="black",
-            linestyles="dashed",
-            alpha=0.5,
-        )
+        ax = _plot_box_plot(dataf, top_n=top_n)
         ax.set_title(
             f"Distribution of counterfactual scores for concept '{concept}'\nsorted by median score"
         )
@@ -159,23 +150,11 @@ class CounterfactualDetectionResult:
             dict([(k, pd.Series(v)) for k, v in counterfactual_plot_dict.items()])
         )
 
-        # sort by score median
-        sort_index = counterfactual_df.median().abs().sort_values(ascending=True)
-        sorted_dataf = counterfactual_df[sort_index.index]
-        if top_n:
-            sorted_dataf = sorted_dataf.iloc[:, -top_n:]
+        # change the sign of the scores in the dataframe
+        counterfactual_df = counterfactual_df.applymap(lambda x: -x)
+
         # plot
-        ax = sorted_dataf.plot.box(
-            vert=False, figsize=(12, int(sorted_dataf.shape[1] / 2.2))
-        )
-        ax.vlines(
-            x=0,
-            ymin=0.5,
-            ymax=sorted_dataf.shape[1] + 0.5,
-            colors="black",
-            linestyles="dashed",
-            alpha=0.5,
-        )
+        ax = _plot_box_plot(counterfactual_df, top_n=top_n)
         ax.set_title(
             f"Distribution of counterfactual scores for concept '{concept}' by original keyword\nsorted by median score"
         )
@@ -183,6 +162,44 @@ class CounterfactualDetectionResult:
             "Counterfactual scores - differences from zero indicate the direction of bias."
         )
         plt.show()
+
+    def visualize_counterfactual_score_by_sample_histogram(self, concepts: Optional[List[str]] = None):
+        """Visualize the counterfactual scores for each sample as a histogram.
+        
+        Args:
+            concepts: If given, only the concepts in this list are shown. Otherwise, all concepts are shown.
+        """
+        all_scores = []
+        all_samples = []
+        for concept_result in self.concept_results:
+            # check if the concept is in the list of concepts to show
+            if concepts and (concept_result.concept not in concepts):
+                continue
+            dataf = concept_result.scores.copy()
+            samples = concept_result.counterfactual_samples
+
+            # get the original samples
+            original_samples = [
+                sample for sample in samples if (sample.keyword == sample.orig_keyword)
+            ]
+
+            # get the counterfactual scores for each original sample
+            for sample, (_, score) in zip(original_samples, dataf.iterrows()):
+                all_samples.append(sample)
+                # calculate the median score and change the sign
+                # this means that the score represents the median change in prediction if the keyword is replaced
+                # with a concept keyword.
+                all_scores.append(-1 * np.median(score.tolist()))
+
+        dashboard = _plot_histogram_dashboard(
+            texts=[sample.text for sample in all_samples],
+            concepts=[sample.concept for sample in all_samples],
+            scores=all_scores,
+            keywords=[sample.keyword for sample in all_samples],
+            score_version="CounterfactualSampleScore",
+        )
+
+        return dashboard
 
     def visualize_counterfactual_score_by_sample(self, concept: str):
         """Visualize the counterfactual scores for each sample for a given concept."""
