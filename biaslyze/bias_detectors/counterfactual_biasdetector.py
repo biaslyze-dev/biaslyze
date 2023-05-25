@@ -23,7 +23,7 @@ class CounterfactualBiasDetector:
     The counterfactual score is defined as the difference between the predicted
     p robability score for the original text and the predicted probability score for the counterfactual text.
 
-    $$counterfactual_score = P(x=1|original_text) - P(x=1|counterfactual_text),$$
+    $$counterfactual_score = P(x=1|counterfactual_text) - P(x=1|original_text),$$
 
     where counterfactual text is defined as the original text where a keyword of the given concept is
     replaced by another keyword of the same concept. So a counterfactual_score > 0 means that the
@@ -225,7 +225,7 @@ def _extract_counterfactual_concept_samples(
 def _calculate_counterfactual_scores(
     bias_keyword: str,
     predict_func: Callable,
-    samples: List,
+    samples: List[CounterfactualSample],
     max_counterfactual_samples: int = None,
     positive_classes: Optional[List] = None,
 ) -> np.ndarray:
@@ -243,7 +243,7 @@ def _calculate_counterfactual_scores(
 
     Returns:
         A numpy array of differences between the original predictions and the predictions for the counterfactual samples.
-        We call this the **counterfactual score**.
+        We call this the **counterfactual score**:  counterfactual_score = P(x=1|counterfactual_text) - P(x=1|original_text).
 
     Raises:
         ValueError: If `positive_classes` is given but the model is not a binary classifier.
@@ -282,15 +282,13 @@ def _calculate_counterfactual_scores(
         # sum up the scores for the positive classes and take the difference
         try:
             score_diffs = (
-                np.array(original_scores[:, positive_classes]).sum(axis=1)
-                - np.array(predicted_scores[:, positive_classes]).sum(axis=1),
+                np.array(predicted_scores[:, positive_classes]).sum(axis=1),
+                - np.array(original_scores[:, positive_classes]).sum(axis=1)
             )
         except IndexError:
             raise IndexError(
                 f"Positive classes {positive_classes} not found in predictions."
             )
     else:
-        score_diffs = np.array(original_scores[:, 1]) - np.array(
-            predicted_scores[:, 1]
-        )
+        score_diffs = np.array(predicted_scores[:, 1]) - np.array(original_scores[:, 1])
     return score_diffs
