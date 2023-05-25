@@ -1,26 +1,26 @@
 [tool.poetry]
 name = "biaslyze"
-version = "0.0.1"
-description = ""
-authors = ["Tobias Sterbak <hello@tobiassterbak.com>", "Stina Lohmüller <>"]
+version = "0.0.1-alpha"
+description = "The NLP Bias Identification Toolkit"
+authors = ["Tobias Sterbak <hello@tobiassterbak.com>", "Stina Lohmüller <slohmüller@posteo.de>"]
 readme = "README.md"
 license = "LICENSE"
 
 [tool.poetry.dependencies]
 python = "<3.11,>=3.10"
 numpy = "1.23.2"
+pandas = "^1.5.3"
+scipy = "1.8.0"
 jupyterlab = "^3.5.2"
 scikit-learn = "^1.2.0"
-pandas = "^1.5.3"
-eli5 = "^0.13.0"
-bertopic = "0.13.0"
-umap-learn = "^0.5.3"
-scipy = "1.8.0"
-transformers = "^4.26.1"
-spacy = "^3.5.0"
 loguru = "^0.6.0"
 matplotlib = "^3.7.1"
 bokeh = "^3.1.0"
+eli5 = "^0.13.0"
+spacy = "^3.5.0"
+transformers = "^4.26.1"
+bertopic = "0.13.0"
+umap-learn = "^0.5.3"
 
 [tool.poetry.group.dev.dependencies]
 mkdocs-material = "^9.1.1"
