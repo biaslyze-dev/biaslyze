@@ -37,7 +37,7 @@ theme:
 
   palette: 
     # Palette toggle for light mode
-    - scheme: default
+    - scheme: dark
       toggle:
         icon: material/brightness-7 
         name: Switch to dark mode
