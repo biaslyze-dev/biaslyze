@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 from loguru import logger
 from tqdm import tqdm
+import spacy
 
 from biaslyze.concept_detectors import KeywordConceptDetector
 from biaslyze.concepts import CONCEPTS
@@ -21,9 +22,9 @@ class CounterfactualBiasDetector:
 
     The counterfactual score is defined as the difference between the predicted
     p robability score for the original text and the predicted probability score for the counterfactual text.
-    
-    $$counterfactual_score = P(x=1|original_text) - P(x=1|counterfactual_text),$$
-    
+
+    $$counterfactual_score = P(x=1|counterfactual_text) - P(x=1|original_text),$$
+
     where counterfactual text is defined as the original text where a keyword of the given concept is
     replaced by another keyword of the same concept. So a counterfactual_score > 0 means that the
     model is more likely to predict the positive class for the original text than for the counterfactual text.
@@ -46,7 +47,10 @@ class CounterfactualBiasDetector:
         detection_res.report()
 
         # visualize the counterfactual scores
-        detection_res.visualize_counterfactual_scores()
+        detection_res.visualize_counterfactual_scores(concept="religion")
+
+        # visualize the counterfactual sample scores
+        detection_res.visualize_counterfactual_score_by_sample_histogram(concepts=["religion", "gender"])
         ```
 
     Attributes:
@@ -84,6 +88,9 @@ class CounterfactualBiasDetector:
 
         Returns:
             A [CounterfactualDetectionResult](/biaslyze/results/counterfactual_detection_results/) object.
+
+        Raises:
+            ValueError: If texts or predict_func is not given.
         """
         if texts is None:
             raise ValueError("texts must be given.")
@@ -109,8 +116,8 @@ class CounterfactualBiasDetector:
             logger.info(f"Processing concept {concept}...")
             score_dict = dict()
 
-            counterfactual_samples = self._extract_counterfactual_concept_samples(
-                texts=detected_texts, concept=concept, labels=labels
+            counterfactual_samples = _extract_counterfactual_concept_samples(
+                texts=detected_texts, concept=concept, tokenizer=self.concept_detector._tokenizer, labels=labels
             )
             if not counterfactual_samples:
                 logger.warning(f"No samples containing {concept} found. Skipping.")
@@ -118,17 +125,26 @@ class CounterfactualBiasDetector:
 
             # calculate counterfactual scores for each keyword
             for keyword in tqdm(concept_keywords):
-                (
-                    original_scores,
-                    predicted_scores,
-                ) = self._calculate_counterfactual_scores(
+                # get the counterfactual scores
+                counterfactual_scores = _calculate_counterfactual_scores(
                     bias_keyword=keyword.get("keyword"),
                     predict_func=predict_func,
                     samples=counterfactual_samples,
                     max_counterfactual_samples=max_counterfactual_samples,
                 )
-                score_diffs = np.array(original_scores) - np.array(predicted_scores)
-                score_dict[keyword.get("keyword")] = score_diffs
+                # add to score dict
+                score_dict[keyword.get("keyword")] = counterfactual_scores
+                # add scores to samples
+                original_keyword_samples = [
+                    sample
+                    for sample in counterfactual_samples
+                    if (sample.keyword == keyword.get("keyword"))
+                    and (sample.keyword == sample.orig_keyword)
+                ]
+                for score, sample in zip(
+                    counterfactual_scores, original_keyword_samples
+                ):
+                    sample.score = score
 
             score_df = pd.DataFrame(score_dict)
             # remove words with exactly the same score
@@ -148,96 +164,131 @@ class CounterfactualBiasDetector:
 
         return CounterfactualDetectionResult(concept_results=results)
 
-    def _extract_counterfactual_concept_samples(
-        self, concept: str, texts: List[str], labels: Optional[List[str]] = None
-    ) -> List[CounterfactualSample]:
-        """Extract counterfactual samples for a given concept from a list of texts.
 
-        A counterfactual sample is defined as a text where a keyword of the
-        given concept is replaced by another keyword of the same concept.
+def _extract_counterfactual_concept_samples(
+    concept: str, texts: List[str], tokenizer: spacy.tokenizer.Tokenizer, labels: Optional[List[str]] = None
+) -> List[CounterfactualSample]:
+    """Extract counterfactual samples for a given concept from a list of texts.
 
-        Args:
-            concept: The concept to extract counterfactual samples for.
-            texts: The texts to extract counterfactual samples from.
-            labels: Optional. Used to add labels to the counterfactual results.
-        """
-        counterfactual_samples = []
-        original_texts = []
-        text_representations = self.concept_detector._tokenizer.pipe(texts)
-        concept_keywords = set([keyword.get("keyword") for keyword in CONCEPTS[concept]])
-        for idx, (text, text_representation) in tqdm(
-            enumerate(zip(texts, text_representations)), total=len(texts)
-        ):  
-            present_keywords = list(
-                keyword for keyword in concept_keywords
-                if keyword in (token.text.lower() for token in text_representation)
-            )
-            if present_keywords:
-                original_texts.append(text) 
-                for orig_keyword in present_keywords:
-                    for concept_keyword in concept_keywords:
-                        resampled_text = "".join(
-                            [
-                                concept_keyword + token.whitespace_
-                                if token.text.lower() == orig_keyword.lower()
-                                else token.text + token.whitespace_
-                                for token in text_representation
-                            ]
-                        )
-                        counterfactual_samples.append(
-                            CounterfactualSample(
-                                text=resampled_text,
-                                orig_keyword=orig_keyword,
-                                keyword=concept_keyword,
-                                concept=concept,
-                                tokenized=text_representation,
-                                label=labels[idx] if labels else None,
-                                source_text=text,
-                            )
-                        )
-        logger.info(
-            f"Extracted {len(counterfactual_samples)} counterfactual sample texts for concept {concept} from {len(original_texts)} original texts."
-        )
-        return counterfactual_samples
+    A counterfactual sample is defined as a text where a keyword of the
+    given concept is replaced by another keyword of the same concept.
 
-    def _calculate_counterfactual_scores(
-        self,
-        bias_keyword: str,
-        predict_func: Callable,
-        samples: List,
-        max_counterfactual_samples: int = None,
-        positive_classes: List = None,
+    Args:
+        concept: The concept to extract counterfactual samples for.
+        texts: The texts to extract counterfactual samples from.
+        tokenizer: The tokenizer to use for tokenization.
+        labels: Optional. Used to add labels to the counterfactual results.
+    """
+    counterfactual_samples = []
+    original_texts = []
+    text_representations = tokenizer.pipe(texts)
+    concept_keywords = set(
+        [keyword.get("keyword") for keyword in CONCEPTS[concept]]
+    )
+    for idx, (text, text_representation) in tqdm(
+        enumerate(zip(texts, text_representations)), total=len(texts)
     ):
-        """Calculate the counterfactual score for a bias keyword given samples.
+        present_keywords = list(
+            keyword
+            for keyword in concept_keywords
+            if keyword in (token.text.lower() for token in text_representation)
+        )
+        if present_keywords:
+            original_texts.append(text)
+            for orig_keyword in present_keywords:
+                for concept_keyword in concept_keywords:
+                    resampled_text = "".join(
+                        [
+                            concept_keyword + token.whitespace_
+                            if token.text.lower() == orig_keyword.lower()
+                            else token.text + token.whitespace_
+                            for token in text_representation
+                        ]
+                    )
+                    counterfactual_samples.append(
+                        CounterfactualSample(
+                            text=resampled_text,
+                            orig_keyword=orig_keyword,
+                            keyword=concept_keyword,
+                            concept=concept,
+                            tokenized=text_representation,
+                            label=labels[idx] if labels else None,
+                            source_text=text,
+                        )
+                    )
+    logger.info(
+        f"Extracted {len(counterfactual_samples)} counterfactual sample texts for concept {concept} from {len(original_texts)} original texts."
+    )
+    return counterfactual_samples
 
-        Args:
-            bias_keyword: The keyword to calculate the counterfactual score for.
-            predict_func: Function to run the texts through the model and get probabilities as outputs.
-            samples: A list of CounterfactualSample objects.
-            max_counterfactual_samples: The maximum number of counterfactual samples to use.
-            positive_classes: A list of classes that are considered positive.
 
-        TODO: If `positive_classes` is given, all other classes are considered non-positive and positive and negative outcomes are compared.
-        TODO: introduce neutral classes.
-        """
-        # filter samples for the given bias keyword
-        original_texts = [
-            sample.source_text for sample in samples if (sample.keyword == bias_keyword)
-        ]
-        counterfactual_texts = [
-            sample.text for sample in samples if (sample.keyword == bias_keyword)
-        ]
+def _calculate_counterfactual_scores(
+    bias_keyword: str,
+    predict_func: Callable,
+    samples: List[CounterfactualSample],
+    max_counterfactual_samples: int = None,
+    positive_classes: Optional[List] = None,
+) -> np.ndarray:
+    """Calculate the counterfactual score for a bias keyword given samples.
 
-        # if max_counterfactual_samples is given, only use a random sample of the counterfactual texts
-        if max_counterfactual_samples:
-            original_texts, counterfactual_texts = zip(
-                *random.sample(
-                    list(zip(original_texts, counterfactual_texts)),
-                    max_counterfactual_samples,
-                )
+    Args:
+        bias_keyword: The keyword to calculate the counterfactual score for.
+        predict_func: Function to run the texts through the model and get probabilities as outputs.
+        samples: A list of CounterfactualSample objects.
+        max_counterfactual_samples: The maximum number of counterfactual samples to use.
+        positive_classes: A list of classes that are considered positive.
+
+    TODO: If `positive_classes` is given, all other classes are considered non-positive and positive and negative outcomes are compared.
+    TODO: introduce neutral classes.
+
+    Returns:
+        A numpy array of differences between the original predictions and the predictions for the counterfactual samples.
+        We call this the **counterfactual score**:  counterfactual_score = P(x=1|counterfactual_text) - P(x=1|original_text).
+
+    Raises:
+        ValueError: If `positive_classes` is given but the model is not a binary classifier.
+        IndexError: If `positive_classes` is given but the model does not have the given classes.
+    """
+    # filter samples for the given bias keyword
+    original_texts = [
+        sample.source_text for sample in samples if (sample.keyword == bias_keyword)
+    ]
+    counterfactual_texts = [
+        sample.text for sample in samples if (sample.keyword == bias_keyword)
+    ]
+
+    # if max_counterfactual_samples is given, only use a random sample of the counterfactual texts
+    if max_counterfactual_samples:
+        original_texts, counterfactual_texts = zip(
+            *random.sample(
+                list(zip(original_texts, counterfactual_texts)),
+                max_counterfactual_samples,
             )
-        # predict the scores for the original texts and the counterfactual texts
-        original_scores = predict_func(original_texts)[:, 1]
-        predicted_scores = predict_func(counterfactual_texts)[:, 1]
+        )
+    # predict the scores for the original texts and the counterfactual texts
+    original_scores = predict_func(original_texts)
+    predicted_scores = predict_func(counterfactual_texts)
 
-        return original_scores, predicted_scores
+    # check if the model is a binary classifier
+    if (not positive_classes) and (len(original_scores[0]) != 2):
+        raise NotImplementedError(
+            "Multi-class classification is not yet supported for counterfactual detection."
+            "Please use a binary classifier."
+            "If you are using a multi-class classifier, please specify the positive classes."
+        )
+
+    # calculate score differences
+    if positive_classes:
+        # sum up the scores for the positive classes and take the difference
+        try:
+            score_diffs = (
+                np.array(predicted_scores[:, positive_classes]).sum(axis=1),
+                - np.array(original_scores[:, positive_classes]).sum(axis=1)
+            )
+        except IndexError:
+            raise IndexError(
+                f"Positive classes {positive_classes} not found in predictions."
+            )
+    else:
+        score_diffs = np.array(predicted_scores[:, 1]) - np.array(original_scores[:, 1])
+    return score_diffs

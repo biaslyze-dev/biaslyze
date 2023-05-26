@@ -1,10 +1,12 @@
 """This module contains classes to store and process the results of counterfactual bias detection runs."""
 from collections import defaultdict
-from typing import List
+from typing import List, Optional
 
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+
+from biaslyze._plotting import _plot_box_plot, _plot_histogram_dashboard
 
 
 class CounterfactualSample:
@@ -69,6 +71,17 @@ class CounterfactualDetectionResult:
         self.concept_results = concept_results
 
     def _get_result_by_concept(self, concept: str) -> pd.DataFrame:
+        """Get the result for a given concept.
+
+        Args:
+            concept: The concept for which to get the result.
+
+        Returns:
+            The DataFrame with results for the given concept.
+
+        Raises:
+            ValueError: If the concept is not found in the results.
+        """
         for concept_result in self.concept_results:
             if concept_result.concept == concept:
                 return concept_result.scores.copy()
@@ -77,7 +90,17 @@ class CounterfactualDetectionResult:
     def _get_counterfactual_samples_by_concept(
         self, concept: str
     ) -> List[CounterfactualSample]:
-        """Get all counterfactual samples for a given concept."""
+        """Get all counterfactual samples for a given concept.
+
+        Args:
+            concept: The concept for which to get the counterfactual samples.
+
+        Returns:
+            A list of CounterfactualSample objects.
+
+        Raises:
+            ValueError: If the concept is not found in the results.
+        """
         for concept_result in self.concept_results:
             if concept_result.concept == concept:
                 return concept_result.counterfactual_samples
@@ -94,36 +117,29 @@ class CounterfactualDetectionResult:
                 f"""Concept: {concept_result.concept}\t\tMax-Mean Counterfactual Score: {np.abs(concept_result.scores.mean()).max():.5f}\t\tMax-Std Counterfactual Score: {concept_result.scores.std().max():.5f}"""
             )
 
-    def visualize_counterfactual_scores(self, concept: str, top_n: int = None):
+    def visualize_counterfactual_scores(
+        self, concept: str, top_n: Optional[int] = None
+    ):
         """
         Visualize the counterfactual scores for a given concept.
 
         The score is calculated by comparing the prediction of the original sample with the prediction of the counterfactual sample.
         For every keyword shown all concept keywords are replaced with the keyword shown. The difference in the prediction to the original is then calculated.
 
+        The counterfactual scores are shown as boxplots. The median of the scores is indicated by a dashed line.
+
         Args:
             concept: The concept to visualize.
             top_n: If given, only the top n keywords are shown.
 
-        Details:
-            The counterfactual scores are shown as boxplots. The median of the scores is indicated by a dashed line.
+        Returns:
+            The matplotlib plot.
+
+        Raises:
+            ValueError: If the concept is not found in the results.
         """
         dataf = self._get_result_by_concept(concept=concept)
-        sort_index = dataf.median().abs().sort_values(ascending=True)
-        sorted_dataf = dataf[sort_index.index]
-        if top_n:
-            sorted_dataf = sorted_dataf.iloc[:, -top_n:]
-        ax = sorted_dataf.plot.box(
-            vert=False, figsize=(12, int(sorted_dataf.shape[1] / 2.2))
-        )
-        ax.vlines(
-            x=0,
-            ymin=0.5,
-            ymax=sorted_dataf.shape[1] + 0.5,
-            colors="black",
-            linestyles="dashed",
-            alpha=0.5,
-        )
+        ax = _plot_box_plot(dataf, top_n=top_n)
         ax.set_title(
             f"Distribution of counterfactual scores for concept '{concept}'\nsorted by median score"
         )
@@ -132,7 +148,9 @@ class CounterfactualDetectionResult:
         )
         plt.show()
 
-    def visualize_counterfactual_sample_scores(self, concept: str, top_n: int = None):
+    def visualize_counterfactual_sample_scores(
+        self, concept: str, top_n: Optional[int] = None
+    ):
         """Visualize the counterfactual scores given concept.
 
         This differs from visualize_counterfactual_score_by_sample in that it shows the counterfactual
@@ -159,23 +177,8 @@ class CounterfactualDetectionResult:
             dict([(k, pd.Series(v)) for k, v in counterfactual_plot_dict.items()])
         )
 
-        # sort by score median
-        sort_index = counterfactual_df.median().abs().sort_values(ascending=True)
-        sorted_dataf = counterfactual_df[sort_index.index]
-        if top_n:
-            sorted_dataf = sorted_dataf.iloc[:, -top_n:]
         # plot
-        ax = sorted_dataf.plot.box(
-            vert=False, figsize=(12, int(sorted_dataf.shape[1] / 2.2))
-        )
-        ax.vlines(
-            x=0,
-            ymin=0.5,
-            ymax=sorted_dataf.shape[1] + 0.5,
-            colors="black",
-            linestyles="dashed",
-            alpha=0.5,
-        )
+        ax = _plot_box_plot(counterfactual_df, top_n=top_n)
         ax.set_title(
             f"Distribution of counterfactual scores for concept '{concept}' by original keyword\nsorted by median score"
         )
@@ -183,6 +186,53 @@ class CounterfactualDetectionResult:
             "Counterfactual scores - differences from zero indicate the direction of bias."
         )
         plt.show()
+
+    def visualize_counterfactual_score_by_sample_histogram(
+        self, concepts: Optional[List[str]] = None
+    ):
+        """Visualize the counterfactual scores for each sample as a histogram.
+
+        Args:
+            concepts: If given, only the concepts in this list are shown. Otherwise, all concepts are shown.
+
+        Raises:
+            ValueError: If no samples are found for the given concepts.
+        """
+        all_scores = []
+        all_samples = []
+        for concept_result in self.concept_results:
+            # check if the concept is in the list of concepts to show
+            if concepts and (concept_result.concept not in concepts):
+                continue
+            dataf = concept_result.scores.copy()
+            samples = concept_result.counterfactual_samples
+
+            # get the original samples
+            original_samples = [
+                sample for sample in samples if (sample.keyword == sample.orig_keyword)
+            ]
+
+            # get the counterfactual scores for each original sample
+            for sample, (_, score) in zip(original_samples, dataf.iterrows()):
+                all_samples.append(sample)
+                # calculate the median score and change the sign
+                # this means that the score represents the median change in prediction if the keyword is replaced
+                # with a concept keyword.
+                all_scores.append(-1 * np.median(score.tolist()))
+        if all_samples == []:
+            raise ValueError(
+                f"No results found. Please make sure that the concepts are in the results."
+            )
+
+        dashboard = _plot_histogram_dashboard(
+            texts=[sample.text for sample in all_samples],
+            concepts=[sample.concept for sample in all_samples],
+            scores=all_scores,
+            keywords=[sample.keyword for sample in all_samples],
+            score_version="CounterfactualSampleScore",
+        )
+
+        return dashboard
 
     def visualize_counterfactual_score_by_sample(self, concept: str):
         """Visualize the counterfactual scores for each sample for a given concept."""
