@@ -177,9 +177,6 @@ class CounterfactualDetectionResult:
             dict([(k, pd.Series(v)) for k, v in counterfactual_plot_dict.items()])
         )
 
-        # change the sign of the scores in the dataframe
-        counterfactual_df = counterfactual_df.applymap(lambda x: -x)
-
         # plot
         ax = _plot_box_plot(counterfactual_df, top_n=top_n)
         ax.set_title(
