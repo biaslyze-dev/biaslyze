@@ -2,7 +2,7 @@
 
 
 ## CounterfactualBiasDetector
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/counterfactual_biasdetector.py/#L19)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/counterfactual_biasdetector.py/#L20)
 ```python 
 CounterfactualBiasDetector(
    use_tokenizer: bool = False,
@@ -17,7 +17,7 @@ Detect hints of bias by calculating counterfactual token scores for protected co
 The counterfactual score is defined as the difference between the predicted
 p robability score for the original text and the predicted probability score for the counterfactual text.
 
-$$counterfactual_score = P(x=1|original_text) - P(x=1|counterfactual_text),$$
+$$counterfactual_score = P(x=1|counterfactual_text) - P(x=1|original_text),$$
 
 where counterfactual text is defined as the original text where a keyword of the given concept is
 replaced by another keyword of the same concept. So a counterfactual_score > 0 means that the
@@ -59,7 +59,7 @@ detection_res.visualize_counterfactual_score_by_sample_histogram(concepts=["reli
 
 
 ### .process
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/counterfactual_biasdetector.py/#L71)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/counterfactual_biasdetector.py/#L72)
 ```python
 .process(
    texts: List[str], predict_func: Callable[[List[str]], List[float]],

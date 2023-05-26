@@ -60,3 +60,6 @@ Follow the google style guide for python: https://google.github.io/styleguide/py
 
 This project uses black, isort and ruff to enforce style. Apply it by running `make style` and `make lint`.
 
+## Acknowledgements
+
+* Funded from March 2023 until August 2023 by ![logos of the "Bundesministerium für Bildung und Forschung", Prodotype Fund and OKFN-Deutschland](resources/pf_funding_logos.svg)

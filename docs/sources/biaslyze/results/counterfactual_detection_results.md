@@ -90,7 +90,7 @@ score grouped by the original keyword in the text, not the counterfactual keywor
 
 
 ### .visualize_counterfactual_score_by_sample_histogram
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L193)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L190)
 ```python
 .visualize_counterfactual_score_by_sample_histogram(
    concepts: Optional[List[str]] = None
@@ -112,7 +112,7 @@ Visualize the counterfactual scores for each sample as a histogram.
 
 
 ### .visualize_counterfactual_score_by_sample
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L240)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L237)
 ```python
 .visualize_counterfactual_score_by_sample(
    concept: str
