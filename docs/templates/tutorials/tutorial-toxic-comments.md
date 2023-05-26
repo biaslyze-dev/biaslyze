@@ -1,4 +1,4 @@
-# Tutorial: How to identify bias in toxic comments with Biaslyze
+# Tutorial: How to identify bias in hate speech detection
 
 In this notebook you will see how to test a model with our Biaslyze tool in order to inspect it on hints for possible bias. Biaslyze uses counterfactual token fairness scores to evaluate the significance of concepts and attributes sensible to discrimination within the models decisions. 
 To show you how Biaslyze works we use data from a Kaggle challenge and build a model that classifies texts from online comments as toxic or not toxic. 
@@ -7,12 +7,13 @@ The data consists of instances of 226235 online comments. You can get the data o
 Data source: [https://www.kaggle.com/c/jigsaw-toxic-comment-classification-challenge](https://www.kaggle.com/c/jigsaw-toxic-comment-classification-challenge)
 
 # Installation
-First install the biaslyze python package using:
+First install the Biaslyze python package using:
 
 
 ```python
 !pip install biaslyze
 ```
+
 
 ```python
 import numpy as np
@@ -27,7 +28,7 @@ from sklearn.metrics import accuracy_score
 
 
 ```python
-df = pd.read_csv("../data/toxic-comments/train.csv"); df.head()
+df = pd.read_csv("../data/jigsaw-toxic-comment-classification/train.csv"); df.head()
 ```
 
 
@@ -124,7 +125,7 @@ df = pd.read_csv("../data/toxic-comments/train.csv"); df.head()
 
 
 ## Now make the classification problem binary: 
-Apart from the descriptive multi-label toxicity labels, there is another target column with binary class signifying if a comment text is toxic or non-toxic.
+Apart from the descriptive multi-label toxicity labels, there is another target column with a binary class signifying if a comment text is toxic or non-toxic.
 
 
 ```python
@@ -154,18 +155,9 @@ clf.fit(df.comment_text, df.target)
 
 
 
-
-```python
-train_pred = clf.predict(df.comment_text)
-print(accuracy_score(df.target, train_pred))
-```
-
-    0.9753338639226425
-
-
 ## Counterfactual token based bias detection
 
-Now that we have a model to test, lets evaluate it with the Biaslyze tool and test the sensible concepts. 
+Now that we have a model to test, lets evaluate it with the Biaslyze tool and test the sensible concepts for possible bias. 
 Biaslyze takes keywords representing sensitive concepts and perturbates them with the other keywords from the same concept to evaluate its significance for the models prediction.
 
 
@@ -189,19 +181,19 @@ counterfactual_detection_results = bias_detector.process(
 )
 ```
 
-    2023-05-26 10:02:47.894 | INFO     | biaslyze.concept_detectors:detect:35 - Started keyword-based concept detection on 10000 texts...
-    100%|████████████████████████████████████████████████████████████████████| 10000/10000 [00:01<00:00, 7873.28it/s]
-    2023-05-26 10:02:49.168 | INFO     | biaslyze.concept_detectors:detect:51 - Done. Found 8997 texts with protected concepts.
-    2023-05-26 10:02:49.169 | INFO     | biaslyze.bias_detectors.counterfactual_biasdetector:process:109 - Processing concept religion...
-    100%|███████████████████████████████████████████████████████████████████████| 8997/8997 [00:38<00:00, 233.22it/s]
-    2023-05-26 10:03:27.749 | INFO     | biaslyze.bias_detectors.counterfactual_biasdetector:_extract_counterfactual_concept_samples:198 - Extracted 6118 counterfactual sample texts for concept religion from 233 original texts.
-    100%|████████████████████████████████████████████████████████████████████████████| 19/19 [00:01<00:00, 17.19it/s]
-    2023-05-26 10:03:28.899 | INFO     | biaslyze.bias_detectors.counterfactual_biasdetector:process:147 - DONE
-    2023-05-26 10:03:28.900 | INFO     | biaslyze.bias_detectors.counterfactual_biasdetector:process:109 - Processing concept gender...
-    100%|████████████████████████████████████████████████████████████████████████| 8997/8997 [01:42<00:00, 88.05it/s]
-    2023-05-26 10:05:11.085 | INFO     | biaslyze.bias_detectors.counterfactual_biasdetector:_extract_counterfactual_concept_samples:198 - Extracted 485109 counterfactual sample texts for concept gender from 3260 original texts.
-    100%|████████████████████████████████████████████████████████████████████████████| 81/81 [01:13<00:00,  1.10it/s]
-    2023-05-26 10:06:25.764 | INFO     | biaslyze.bias_detectors.counterfactual_biasdetector:process:147 - DONE
+    2023-05-26 17:12:14.547 | INFO     | biaslyze.concept_detectors:detect:35 - Started keyword-based concept detection on 10000 texts...
+    100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 10000/10000 [00:02<00:00, 4097.15it/s]
+    2023-05-26 17:12:16.995 | INFO     | biaslyze.concept_detectors:detect:51 - Done. Found 8997 texts with protected concepts.
+    2023-05-26 17:12:16.996 | INFO     | biaslyze.bias_detectors.counterfactual_biasdetector:process:116 - Processing concept religion...
+    100%|████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 8997/8997 [00:58<00:00, 152.90it/s]
+    2023-05-26 17:13:15.845 | INFO     | biaslyze.bias_detectors.counterfactual_biasdetector:_extract_counterfactual_concept_samples:219 - Extracted 6118 counterfactual sample texts for concept religion from 233 original texts.
+    100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 19/19 [00:02<00:00,  9.17it/s]
+    2023-05-26 17:13:18.035 | INFO     | biaslyze.bias_detectors.counterfactual_biasdetector:process:163 - DONE
+    2023-05-26 17:13:18.039 | INFO     | biaslyze.bias_detectors.counterfactual_biasdetector:process:116 - Processing concept gender...
+    100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 8997/8997 [03:02<00:00, 49.23it/s]
+    2023-05-26 17:16:20.800 | INFO     | biaslyze.bias_detectors.counterfactual_biasdetector:_extract_counterfactual_concept_samples:219 - Extracted 485109 counterfactual sample texts for concept gender from 3260 original texts.
+    100%|█████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 81/81 [02:26<00:00,  1.81s/it]
+    2023-05-26 17:18:48.999 | INFO     | biaslyze.bias_detectors.counterfactual_biasdetector:process:163 - DONE
 
 
 ### Not every Keyword has an effect. 
@@ -218,10 +210,12 @@ print(counterfactual_detection_results.concept_results[1].omitted_keywords)
 # Lets look at some results
 
 ## Counterfactual Score
-The first plot below shows you the top 10 keywords found within the concept "gender" according to the difference resulting from the replacement of counterfactuals with that keyword. 
-The counterfactual score is defined as the difference between the predicted probability score for the counterfactual text and  the predicted probability score for the original text.
-    
-    $$counterfactual_score = P(x=1|counterfactual_text) - P(x=1|original_text),$$
+The first plot below shows you the top $10$ keywords found within the concept "gender" according to the difference resulting from the replacement of counterfactuals with that keyword. 
+The counterfactual score is defined as the difference between the predicted probability score for the counterfactual text and the predicted probability score for the original text.
+
+$$   
+\text{counterfactual_score} = P(\text{toxic} | \text{counterfactual_text}) - P(\text{toxic} | \text{original_text}).
+$$
 
 Therefore the further a samples score is from zero, the greater the change in the model's decision whether a comment is toxic or non-toxic when it is replaced by that keyword. In this case the positive class is "toxic" and the negative class is "non-toxic". As you can see replacing any other gender keyword with the word "mum" makes the samples classification more likely to be "toxic".
 
@@ -232,7 +226,7 @@ counterfactual_detection_results.visualize_counterfactual_scores(concept="gender
 
 
     
-![png](res_toxic_comments/output_21_0.png)
+![png](res_tutorial-toxic-comments/output_19_0.png)
     
 
 
@@ -243,7 +237,7 @@ counterfactual_detection_results.visualize_counterfactual_scores(concept="religi
 
 
     
-![png](res_toxic_comments/output_22_0.png)
+![png](res_tutorial-toxic-comments/output_20_0.png)
     
 
 
@@ -259,7 +253,7 @@ counterfactual_detection_results.visualize_counterfactual_sample_scores(concept=
 
 
     
-![png](res_toxic_comments/output_24_0.png)
+![png](res_tutorial-toxic-comments/output_22_0.png)
     
 
 
@@ -270,7 +264,7 @@ counterfactual_detection_results.visualize_counterfactual_scores(concept="religi
 
 
     
-![png](res_toxic_comments/output_25_0.png)
+![png](res_tutorial-toxic-comments/output_23_0.png)
     
 
 
@@ -281,13 +275,18 @@ The next plot shows you the samples from concept "gender" with the bubble size r
 ```python
 from bokeh.io import show, output_notebook
 
+output_notebook()
+```
+
+
+```python
 viz = counterfactual_detection_results.visualize_counterfactual_score_by_sample(concept="gender")
 
-output_notebook()
 show(viz)
 ```
 
-    Batches: 100%|█████████████████████████████████████████████████████████████████| 188/188 [04:05<00:00,  1.31s/it]
+    Batches: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 188/188 [05:45<00:00,  1.84s/it]
+    
+    
+![png](res_tutorial-toxic-comments/output_26_0.png)
 
-
-![png](res_toxic_comments/output_26_0.png)
