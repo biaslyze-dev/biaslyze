@@ -10,10 +10,11 @@ nav:
   - Home: index.md
   - Getting started:
     - Installation: getting-started.md
-  - Ethical considerations: ethics.md
+  - FAQ: faq.md
   - Tutorials:
     - Overview: tutorials-overview.md
     - Disaster tweets: tutorials/disaster-tweets.md 
+    - Toxic comments: tutorials/tutorial_toxic-comments.md
   - API:
     - Overview: api-overview.md
     - Concept detectors: biaslyze/concept_detectors.md
