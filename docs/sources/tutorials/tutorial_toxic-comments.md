@@ -232,7 +232,7 @@ counterfactual_detection_results.visualize_counterfactual_scores(concept="gender
 
 
     
-![png](output_21_0.png)
+![png](res_toxic_comments/output_21_0.png)
     
 
 
@@ -243,7 +243,7 @@ counterfactual_detection_results.visualize_counterfactual_scores(concept="religi
 
 
     
-![png](output_22_0.png)
+![png](res_toxic_comments/output_22_0.png)
     
 
 
@@ -259,7 +259,7 @@ counterfactual_detection_results.visualize_counterfactual_sample_scores(concept=
 
 
     
-![png](output_24_0.png)
+![png](res_toxic_comments/output_24_0.png)
     
 
 
@@ -270,7 +270,7 @@ counterfactual_detection_results.visualize_counterfactual_scores(concept="religi
 
 
     
-![png](output_25_0.png)
+![png](res_toxic_comments/output_25_0.png)
     
 
 
@@ -290,4 +290,4 @@ show(viz)
     Batches: 100%|█████████████████████████████████████████████████████████████████| 188/188 [04:05<00:00,  1.31s/it]
 
 
-![png](output_26_0.png)
+![png](res_toxic_comments/output_26_0.png)

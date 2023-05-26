@@ -8,24 +8,20 @@ docs_dir: "docs/sources"
 
 nav:
   - Home: index.md
-  - Getting started:
-    - Installation: getting-started.md
   - FAQ: faq.md
   - Tutorials:
-    - Overview: tutorials-overview.md
-    - Toxic comments: tutorials/tutorial-toxic-comments/tutorial_toxic-comments.md
+    - How to identify bias in hate speech detection: tutorials/tutorial-toxic-comments.md
   - API:
-    - Overview: api-overview.md
-    - Concept detectors: biaslyze/concept_detectors.md
     - Bias detectors : 
-      - LimeKeywordBiasDetector: biaslyze/bias_detectors/lime_biasdetector.md
       - CounterfactualBiasDetector: biaslyze/bias_detectors/counterfactual_biasdetector.md
+      - LimeKeywordBiasDetector: biaslyze/bias_detectors/lime_biasdetector.md
     - Results:
-      - LimeDetectionResult: biaslyze/results/lime_detection_results.md
-      - LimeSampleResult: biaslyze/results/lime_detection_results.md
       - CounterfactualDetectionResult: biaslyze/results/counterfactual_detection_results.md
       - CounterfactualConceptResult: biaslyze/results/counterfactual_detection_results.md
       - CounterfactualSample: biaslyze/results/counterfactual_detection_results.md
+      - LimeDetectionResult: biaslyze/results/lime_detection_results.md
+      - LimeSampleResult: biaslyze/results/lime_detection_results.md
+    - Concept detectors: biaslyze/concept_detectors.md
 
 theme:
   name: material
@@ -35,6 +31,9 @@ theme:
   features:
     - content.code.copy
     - navigation.tabs
+    - navigation.tabs.sticky
+    - navigation.sections
+    - toc.integrate 
 
   palette: 
     # Palette toggle for light mode

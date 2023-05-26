@@ -1,8 +1,17 @@
-# biaslyze
-The NLP Bias Identification Toolkit
+# biaslyze - The NLP Bias Identification Toolkit
 
+Bias is often subtle and difficult to detect in NLP models, as the protected attributes are less obvious and can take many forms in language (e.g. proxies, double meanings, ambiguities etc.). Therefore, technical bias testing is a key step in avoiding algorithmically mediated discrimination. However, it is currently conducted too rarely due to the effort involved, missing resources or lack of awareness for the problem.
 
-## Usage example
+Biaslyze helps to get started with the analysis of bias within NLP models and offers a concrete entry point for further impact assessments and mitigation measures. Especially for young developers, students and teams with limited resources, our toolbox offers a low-effort approach to bias testing in NLP use cases.
+
+## Installation
+
+Installation can be done using pypi:
+```bash
+pip install biaslyze
+```
+
+## Quickstart
 
 ```python
 from biaslyze.bias_detectors import CounterfactualBiasDetector
@@ -25,6 +34,9 @@ detection_res.visualize_counterfactual_scores(concept="religion", top_n=10)
 
 Example output:
 ![](resources/hatespeech_dl_scores_religion.png)
+
+
+You can see a more detailed example in the [tutorial](tutorials/tutorial-toxic-comments/).
 
 
 ## Development setup

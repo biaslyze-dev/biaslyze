@@ -15,7 +15,7 @@ CounterfactualBiasDetector(
 Detect hints of bias by calculating counterfactual token scores for protected concepts.
 
 The counterfactual score is defined as the difference between the predicted
-p robability score for the original text and the predicted probability score for the counterfactual text.
+probability score for the original text and the predicted probability score for the counterfactual text.
 
 $$counterfactual_score = P(x=1|counterfactual_text) - P(x=1|original_text),$$
 
