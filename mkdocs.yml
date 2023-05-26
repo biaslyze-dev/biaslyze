@@ -10,7 +10,7 @@ nav:
   - Home: index.md
   - Getting started:
     - Installation: getting-started.md
-  - Ethical considerations: ethics.md
+  - FAQ: faq.md
   - Tutorials:
     - Overview: tutorials-overview.md
     - Disaster tweets: tutorials/disaster-tweets.md 
