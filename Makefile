@@ -23,3 +23,5 @@ lint:
 test:
 	PYTHONPATH=biaslyze:$(PYTHONPATH) poetry run pytest --cov=biaslyze tests/
 
+publish:
+	poetry publish --build
