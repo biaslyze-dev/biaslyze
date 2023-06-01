@@ -68,6 +68,9 @@ extra:
   analytics:
     provider: plausible
     domain: biaslyze.org
+    #: If using custom domain proxy or self-hosting Plausible,
+    #: uncomment and specify script path here:
+    # src: "https://plausible.example.com/js/plausible.js"
 
 extra_javascript:
   - javascripts/mathjax.js
