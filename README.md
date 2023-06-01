@@ -1,4 +1,20 @@
-# biaslyze - The NLP Bias Identification Toolkit
+
+<p align="center">
+  <h1>biaslyze - The NLP Bias Identification Toolkit</h1>
+</p>
+
+<p align="center">
+    <a href="https://github.com/biaslyze-dev/biaslyze/blob/main/LICENSE">
+        <img alt="licence" src="https://img.shields.io/github/license/biaslyze-dev/biaslyze">
+    </a>
+    <a href="https://pypi.org/project/biaslyze/">
+        <img alt="pypi" src="https://img.shields.io/pypi/v/biaslyze">
+    </a>
+    <a href="https://pypi.org/project/biaslyze/">
+        <img alt="pypi" src="https://img.shields.io/pypi/pyversions/biaslyze">
+    </a>
+</p>
+
 
 Bias is often subtle and difficult to detect in NLP models, as the protected attributes are less obvious and can take many forms in language (e.g. proxies, double meanings, ambiguities etc.). Therefore, technical bias testing is a key step in avoiding algorithmically mediated discrimination. However, it is currently conducted too rarely due to the effort involved, missing resources or lack of awareness for the problem.
 
@@ -9,6 +25,11 @@ Biaslyze helps to get started with the analysis of bias within NLP models and of
 Installation can be done using pypi:
 ```bash
 pip install biaslyze
+```
+
+Then you need to download the required spacy models:
+```bash
+python -m spacy download en_core_web_sm
 ```
 
 ## Quickstart
