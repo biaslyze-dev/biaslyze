@@ -117,7 +117,10 @@ class CounterfactualBiasDetector:
             score_dict = dict()
 
             counterfactual_samples = _extract_counterfactual_concept_samples(
-                texts=detected_texts, concept=concept, tokenizer=self.concept_detector._tokenizer, labels=labels
+                texts=detected_texts,
+                concept=concept,
+                tokenizer=self.concept_detector._tokenizer,
+                labels=labels,
             )
             if not counterfactual_samples:
                 logger.warning(f"No samples containing {concept} found. Skipping.")
@@ -166,7 +169,10 @@ class CounterfactualBiasDetector:
 
 
 def _extract_counterfactual_concept_samples(
-    concept: str, texts: List[str], tokenizer: spacy.tokenizer.Tokenizer, labels: Optional[List[str]] = None
+    concept: str,
+    texts: List[str],
+    tokenizer: spacy.tokenizer.Tokenizer,
+    labels: Optional[List[str]] = None,
 ) -> List[CounterfactualSample]:
     """Extract counterfactual samples for a given concept from a list of texts.
 
@@ -182,9 +188,7 @@ def _extract_counterfactual_concept_samples(
     counterfactual_samples = []
     original_texts = []
     text_representations = tokenizer.pipe(texts)
-    concept_keywords = set(
-        [keyword.get("keyword") for keyword in CONCEPTS[concept]]
-    )
+    concept_keywords = set([keyword.get("keyword") for keyword in CONCEPTS[concept]])
     for idx, (text, text_representation) in tqdm(
         enumerate(zip(texts, text_representations)), total=len(texts)
     ):
@@ -283,7 +287,7 @@ def _calculate_counterfactual_scores(
         try:
             score_diffs = (
                 np.array(predicted_scores[:, positive_classes]).sum(axis=1),
-                - np.array(original_scores[:, positive_classes]).sum(axis=1)
+                -np.array(original_scores[:, positive_classes]).sum(axis=1),
             )
         except IndexError:
             raise IndexError(

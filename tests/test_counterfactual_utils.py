@@ -13,6 +13,7 @@ class MockToken:
         self.text = text
         self.whitespace_ = " "
 
+
 # mock the tokenizer with a pipe method
 class MockTokenizer:
     def pipe(self, texts):
@@ -22,7 +23,12 @@ class MockTokenizer:
 def test_extract_counterfactual_concept_samples():
     """Test _extract_counterfactual_concept_samples"""
     concept = "gender"
-    texts = ["she is a doctor", "he is a nurse", "they are a doctor", "they are a nurse"]
+    texts = [
+        "she is a doctor",
+        "he is a nurse",
+        "they are a doctor",
+        "they are a nurse",
+    ]
 
     tokenizer = MockTokenizer()
 
@@ -39,7 +45,12 @@ def test_calculate_counterfactual_score():
     """Test _calculate_counterfactual_scores."""
 
     concept = "gender"
-    texts = ["she is a doctor", "he is a nurse", "they are a doctor", "they are a nurse"]
+    texts = [
+        "she is a doctor",
+        "he is a nurse",
+        "they are a doctor",
+        "they are a nurse",
+    ]
 
     tokenizer = MockTokenizer()
 
@@ -49,7 +60,9 @@ def test_calculate_counterfactual_score():
         tokenizer=tokenizer,
     )
 
-    predict_func=lambda x: np.array([[0.1, 0.9] if ("she" in xi) else [0.9, 0.1] for xi in x])
+    predict_func = lambda x: np.array(
+        [[0.1, 0.9] if ("she" in xi) else [0.9, 0.1] for xi in x]
+    )
 
     scores = _calculate_counterfactual_scores(
         bias_keyword="she",
