@@ -3,7 +3,10 @@ This module contains the Concept class, which is used to represent a concept in 
 As well as Keyword Class, which is used to represent a keyword in the biaslyze package.
 """
 
-from typing import List
+from typing import List, Tuple
+
+from biaslyze.concepts import CONCEPTS
+from biaslyze.text_representation import TextRepresentation, Token
 
 
 class Keyword:
@@ -11,22 +14,36 @@ class Keyword:
     A class used to represent a keyword in the biaslyze package.
 
     Attributes:
-        word (str): The word that is the keyword.
+        text (str): The word that is the keyword.
         function (List[str]): The possible functions of the keyword.
         category (str): The category of the keyword.
     """
 
-    def __init__(self, word: str, function: List[str], category: str):
+    def __init__(self, text: str, function: List[str], category: str):
         """The constructor for the Keyword class."""
-        self.word = word
+        self.text = text
         self.function = function
         self.category = category
 
     def __str__(self) -> str:
-        return f"Keyword({self.word}, {self.function}, {self.category})"
+        return f"Keyword({self.text}, {self.function}, {self.category})"
 
     def __repr__(self) -> str:
-        return f"Keyword({self.word}, {self.function}, {self.category})"
+        return f"Keyword({self.text}, {self.function}, {self.category})"
+
+    def can_replace_token(self, token: Token) -> bool:
+        """Returns True if the keyword can replace the given token."""
+        return True
+
+    def equal_to_token(self, token: Token) -> bool:
+        """Returns True if the given token is equal to the keyword."""
+        if self.text.lower() == token.text.lower():
+            return True
+        return False
+
+    def get_keyword_in_style_of_token(self, token: Token) -> str:
+        """Returns the keyword text in the style of the given token."""
+        return self.text
 
 
 class Concept:
@@ -35,7 +52,7 @@ class Concept:
 
     Attributes:
         name (str): The name of the concept.
-        keywords (List[Keyword]): The keywords of the concept.        
+        keywords (List[Keyword]): The keywords of the concept.
     """
 
     def __init__(self, name: str, keywords: List[Keyword]):
@@ -48,5 +65,57 @@ class Concept:
         """Constructs a Concept object from a list of dictionaries."""
         keyword_list = []
         for keyword in keywords:
-            keyword_list.append(Keyword(keyword["keyword"], keyword["function"], keyword["category"]))
+            keyword_list.append(
+                Keyword(
+                    keyword["keyword"],
+                    keyword["function"],
+                    keyword.get("category", None),
+                )
+            )
         return cls(name, keyword_list)
+
+    def get_present_keywords(
+        self, text_representation: TextRepresentation
+    ) -> List[Keyword]:
+        """Returns the keywords that are present in the given text."""
+        present_keywords = []
+        for keyword in self.keywords:
+            if keyword.text in text_representation:
+                present_keywords.append(keyword)
+        return present_keywords
+
+    def get_counterfactual_texts(
+        self, keyword: Keyword, text_representation: TextRepresentation
+    ) -> List[Tuple[str, Keyword]]:
+        """Returns a counterfactual texts based on a specific keyword for the given text representation."""
+        counterfactual_texts = []
+        for token in text_representation.tokens:
+            if keyword.equal_to_token(token):
+                for counterfactual_keyword in self.keywords:
+                    if counterfactual_keyword.can_replace_token(token):
+                        counterfactual_text = (
+                            text_representation.text[: token.start]
+                            + counterfactual_keyword.get_keyword_in_style_of_token(
+                                token
+                            )
+                            + text_representation.text[token.end :]
+                        )
+                        counterfactual_texts.append(
+                            (counterfactual_text, counterfactual_keyword)
+                        )
+        return counterfactual_texts
+
+
+def load_concepts() -> List[Concept]:
+    """Loads the concepts from the concepts.py file.
+
+    TODO:
+    - Make this load from a JSON file instead of a Python file.
+    - Accept a language parameter to load the concepts for a specific language.
+    """
+    concept_list = []
+    for concept_name, concept_keywords in CONCEPTS.items():
+        concept_list.append(
+            Concept.from_dict_keyword_list(concept_name, concept_keywords)
+        )
+    return concept_list

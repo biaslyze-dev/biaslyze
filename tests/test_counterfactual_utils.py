@@ -1,8 +1,9 @@
 """Tests for functions to help calculate counterfactual bias metrics."""
 import numpy as np
+
 from biaslyze.bias_detectors.counterfactual_biasdetector import (
-    _extract_counterfactual_concept_samples,
     _calculate_counterfactual_scores,
+    _extract_counterfactual_concept_samples,
 )
 from biaslyze.concepts import CONCEPTS
 
