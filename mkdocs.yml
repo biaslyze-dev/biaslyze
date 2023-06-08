@@ -8,6 +8,7 @@ docs_dir: "docs/sources"
 
 nav:
   - Home: index.md
+  - The Algorithm: algorithm.md
   - FAQ: faq.md
   - Tutorials:
     - How to identify bias in hate speech detection: tutorials/tutorial-toxic-comments.md
