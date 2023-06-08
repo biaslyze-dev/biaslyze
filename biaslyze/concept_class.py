@@ -3,7 +3,8 @@ This module contains the Concept class, which is used to represent a concept in 
 As well as Keyword Class, which is used to represent a keyword in the biaslyze package.
 """
 
-from typing import List, Tuple
+from typing import List, Tuple, Optional
+import random
 
 from biaslyze.concepts import CONCEPTS
 from biaslyze.text_representation import TextRepresentation, Token
@@ -85,13 +86,27 @@ class Concept:
         return present_keywords
 
     def get_counterfactual_texts(
-        self, keyword: Keyword, text_representation: TextRepresentation
+        self, keyword: Keyword, text_representation: TextRepresentation, n_texts: Optional[int] = None
     ) -> List[Tuple[str, Keyword]]:
-        """Returns a counterfactual texts based on a specific keyword for the given text representation."""
+        """Returns a counterfactual texts based on a specific keyword for the given text representation.
+        
+        Args:
+            keyword (Keyword): The keyword in the text to replace.
+            text_representation (TextRepresentation): The text representation to replace the keyword in.
+            n_texts (Optional[int]): The number of counterfactual texts to return. Defaults to None, which returns all possible counterfactual texts.
+
+        Returns:
+            List[Tuple[str, Keyword]]: A list of tuples containing the counterfactual text and the keyword that was replaced.
+        """
         counterfactual_texts = []
         for token in text_representation.tokens:
+            # check if the token is equal to the keyword
             if keyword.equal_to_token(token):
+                # shuffle the keywords
+                random.shuffle(self.keywords)
+                # create a counterfactual text for each keyword until n_texts is reached
                 for counterfactual_keyword in self.keywords:
+                    # check if the keyword can be replaced by another keyword
                     if counterfactual_keyword.can_replace_token(token):
                         counterfactual_text = (
                             text_representation.text[: token.start]
@@ -103,6 +118,8 @@ class Concept:
                         counterfactual_texts.append(
                             (counterfactual_text, counterfactual_keyword)
                         )
+                    if len(counterfactual_texts) == n_texts:
+                        return counterfactual_texts
         return counterfactual_texts
 
 
