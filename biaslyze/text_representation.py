@@ -64,7 +64,7 @@ class TextRepresentation:
         return string in [token.text.lower() for token in self.tokens]
 
     @classmethod
-    def from_spacy_doc(cls, doc):
+    def from_spacy_doc(cls, doc: spacy.tokens.Doc):
         """Constructs a TextRepresentation object from a spacy doc."""
         tokens = []
         for token in doc:
