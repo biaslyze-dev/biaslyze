@@ -4,26 +4,36 @@ repo: https://github.com/biaslyze-dev/biaslyze
 version: main
 
 pages:
-  - page: "biaslyze/bias_detectors/lime_biasdetector.md"
-    source: "biaslyze/bias_detectors/lime_biasdetector.py"
-    classes:
-      - LimeBiasDetector
   - page: "biaslyze/bias_detectors/counterfactual_biasdetector.md"
     source: "biaslyze/bias_detectors/counterfactual_biasdetector.py"
     classes:
       - CounterfactualBiasDetector 
-  - page: "biaslyze/results/lime_detection_results.md"
-    source: "biaslyze/results/lime_detection_results.py"
+  - page: "biaslyze/bias_detectors/lime_biasdetector.md"
+    source: "biaslyze/bias_detectors/lime_biasdetector.py"
     classes:
-      - LimeDetectionResult
-      - LimeSampleResult
+      - LimeBiasDetector
   - page: "biaslyze/results/counterfactual_detection_results.md"
     source: "biaslyze/results/counterfactual_detection_results.py"
     classes:
       - CounterfactualDetectionResult
       - CounterfactualConceptResult
       - CounterfactualSample 
+  - page: "biaslyze/results/lime_detection_results.md"
+    source: "biaslyze/results/lime_detection_results.py"
+    classes:
+      - LimeDetectionResult
+      - LimeSampleResult
   - page: "biaslyze/concept_detectors.md"
     source: "biaslyze/concept_detectors.py"
     classes:
       - KeywordConceptDetector
+  - page: "biaslyze/text_representation.md"
+    source: "biaslyze/text_representation.py"
+    classes:
+      - Token
+      - TextRepresentation
+  - page: "biaslyze/concept_class.md"
+    source: "biaslyze/concept_class.py"
+    classes:
+      - Keyword
+      - Concept

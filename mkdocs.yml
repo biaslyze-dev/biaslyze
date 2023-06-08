@@ -17,11 +17,10 @@ nav:
       - LimeKeywordBiasDetector: biaslyze/bias_detectors/lime_biasdetector.md
     - Results:
       - CounterfactualDetectionResult: biaslyze/results/counterfactual_detection_results.md
-      - CounterfactualConceptResult: biaslyze/results/counterfactual_detection_results.md
-      - CounterfactualSample: biaslyze/results/counterfactual_detection_results.md
       - LimeDetectionResult: biaslyze/results/lime_detection_results.md
-      - LimeSampleResult: biaslyze/results/lime_detection_results.md
     - Concept detectors: biaslyze/concept_detectors.md
+    - TextRepresentation: biaslyze/text_representation.md
+    - Concept: biaslyze/concept_class.md
 
 theme:
   name: material

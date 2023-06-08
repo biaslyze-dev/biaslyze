@@ -3,8 +3,8 @@ This module contains the Concept class, which is used to represent a concept in 
 As well as Keyword Class, which is used to represent a keyword in the biaslyze package.
 """
 
-from typing import List, Tuple, Optional
 import random
+from typing import List, Optional, Tuple
 
 from biaslyze.concepts import CONCEPTS
 from biaslyze.text_representation import TextRepresentation, Token
@@ -86,10 +86,13 @@ class Concept:
         return present_keywords
 
     def get_counterfactual_texts(
-        self, keyword: Keyword, text_representation: TextRepresentation, n_texts: Optional[int] = None
+        self,
+        keyword: Keyword,
+        text_representation: TextRepresentation,
+        n_texts: Optional[int] = None,
     ) -> List[Tuple[str, Keyword]]:
         """Returns a counterfactual texts based on a specific keyword for the given text representation.
-        
+
         Args:
             keyword (Keyword): The keyword in the text to replace.
             text_representation (TextRepresentation): The text representation to replace the keyword in.
