@@ -111,6 +111,7 @@ class Concept:
                 for counterfactual_keyword in self.keywords:
                     # check if the keyword can be replaced by another keyword
                     if counterfactual_keyword.can_replace_token(token):
+                        # create the counterfactual text
                         counterfactual_text = (
                             text_representation.text[: token.start]
                             + counterfactual_keyword.get_keyword_in_style_of_token(
@@ -121,6 +122,7 @@ class Concept:
                         counterfactual_texts.append(
                             (counterfactual_text, counterfactual_keyword)
                         )
+                    # check if n_texts is reached and return the counterfactual texts
                     if len(counterfactual_texts) == n_texts:
                         return counterfactual_texts
         return counterfactual_texts

@@ -79,6 +79,7 @@ class CounterfactualBiasDetector:
         labels: Optional[List[str]] = None,
         concepts_to_consider: Optional[List[str]] = [],
         max_counterfactual_samples: Optional[int] = None,
+        max_counterfactual_samples_per_text: Optional[int] = None,
     ) -> List:
         """Detect potential bias in the model based on the given texts.
 
@@ -87,7 +88,8 @@ class CounterfactualBiasDetector:
             predict_func: Function to run the texts through the model and get probabilities as outputs.
             labels: Optional. Used to add labels to the counterfactual results.
             concepts_to_consider: If given, only the given concepts are considered.
-            max_counterfactual_samples: If given, only the given number of counterfactual samples are used for each concept.
+            max_counterfactual_samples: Optional. The maximum number of counterfactual samples to return. Defaults to None, which returns all possible counterfactual samples.
+            max_counterfactual_samples_per_text: Optional. The maximum number of counterfactual samples to return per text. Defaults to None, which returns all possible counterfactual samples.
 
         Returns:
             A [CounterfactualDetectionResult](/biaslyze/results/counterfactual_detection_results/) object.
@@ -108,6 +110,13 @@ class CounterfactualBiasDetector:
                 raise ValueError(
                     "max_counterfactual_samples must be a positive integer."
                 )
+        if max_counterfactual_samples_per_text:
+            if (not isinstance(max_counterfactual_samples_per_text, int)) or (
+                max_counterfactual_samples_per_text < 1
+            ):
+                raise ValueError(
+                    "max_counterfactual_samples_per_text must be a positive integer."
+                )
 
         # find bias relevant texts
         detected_texts = self.concept_detector.detect(texts)
@@ -123,6 +132,7 @@ class CounterfactualBiasDetector:
                 texts=detected_texts,
                 concept=concept,
                 labels=labels,
+                n_texts=max_counterfactual_samples_per_text,
             )
             if not counterfactual_samples:
                 logger.warning(f"No samples containing {concept} found. Skipping.")
@@ -135,7 +145,6 @@ class CounterfactualBiasDetector:
                     bias_keyword=keyword.text,
                     predict_func=predict_func,
                     samples=counterfactual_samples,
-                    max_counterfactual_samples=max_counterfactual_samples,
                 )
                 # add to score dict
                 score_dict[keyword.text] = counterfactual_scores
@@ -151,7 +160,11 @@ class CounterfactualBiasDetector:
                 ):
                     sample.score = score
 
-            score_df = pd.DataFrame(score_dict)
+            # create a dataframe from the score dict, allow for different lengths of scores
+            score_df = pd.DataFrame(
+                dict([(k, pd.Series(v)) for k, v in score_dict.items()])
+            )
+            # score_df = pd.DataFrame(score_dict)
             # remove words with exactly the same score
             omitted_keywords = score_df.loc[
                 :, score_df.T.duplicated().T
@@ -174,6 +187,7 @@ def _extract_counterfactual_concept_samples(
     concept: Concept,
     texts: List[str],
     labels: Optional[List[str]] = None,
+    n_texts: Optional[int] = None,
 ) -> List[CounterfactualSample]:
     """Extract counterfactual samples for a given concept from a list of texts.
 
@@ -185,6 +199,10 @@ def _extract_counterfactual_concept_samples(
         texts: The texts to extract counterfactual samples from.
         tokenizer: The tokenizer to use for tokenization.
         labels: Optional. Used to add labels to the counterfactual results.
+        n_texts: Optional. The number of counterfactual texts to return. Defaults to None, which returns all possible counterfactual texts.
+    
+    Returns:
+        A list of CounterfactualSample objects.
     """
     counterfactual_samples = []
     original_texts = []
@@ -197,7 +215,7 @@ def _extract_counterfactual_concept_samples(
             original_texts.append(text)
             for orig_keyword in present_keywords:
                 counterfactual_texts = concept.get_counterfactual_texts(
-                    orig_keyword, text_representation
+                    orig_keyword, text_representation, n_texts=n_texts
                 )
                 for counterfactual_text, counterfactual_keyword in counterfactual_texts:
                     counterfactual_samples.append(
@@ -221,7 +239,6 @@ def _calculate_counterfactual_scores(
     bias_keyword: str,
     predict_func: Callable,
     samples: List[CounterfactualSample],
-    max_counterfactual_samples: int = None,
     positive_classes: Optional[List] = None,
 ) -> np.ndarray:
     """Calculate the counterfactual score for a bias keyword given samples.
@@ -230,7 +247,6 @@ def _calculate_counterfactual_scores(
         bias_keyword: The keyword to calculate the counterfactual score for.
         predict_func: Function to run the texts through the model and get probabilities as outputs.
         samples: A list of CounterfactualSample objects.
-        max_counterfactual_samples: The maximum number of counterfactual samples to use.
         positive_classes: A list of classes that are considered positive.
 
     TODO: If `positive_classes` is given, all other classes are considered non-positive and positive and negative outcomes are compared.
@@ -253,13 +269,14 @@ def _calculate_counterfactual_scores(
     ]
 
     # if max_counterfactual_samples is given, only use a random sample of the counterfactual texts
-    if max_counterfactual_samples:
-        original_texts, counterfactual_texts = zip(
-            *random.sample(
-                list(zip(original_texts, counterfactual_texts)),
-                max_counterfactual_samples,
-            )
-        )
+    # if max_counterfactual_samples:
+    #     original_texts, counterfactual_texts = zip(
+    #         *random.sample(
+    #             list(zip(original_texts, counterfactual_texts)),
+    #             max_counterfactual_samples,
+    #         )
+    #     )
+
     # predict the scores for the original texts and the counterfactual texts
     original_scores = predict_func(original_texts)
     predicted_scores = predict_func(counterfactual_texts)
