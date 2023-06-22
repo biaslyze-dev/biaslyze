@@ -53,11 +53,12 @@ detection_res.report()
 detection_res.visualize_counterfactual_scores(concept="religion", top_n=10)
 ```
 
+You will get results as Boxplots, among others, indicating the impact of keywords and concepts on the prediction of your model.
 Example output:
 ![](resources/hatespeech_dl_scores_religion.png)
 
 
-You can see a more detailed example in the [tutorial](tutorials/tutorial-toxic-comments/).
+See more detailed examples in the [tutorial](tutorials/tutorial-toxic-comments/).
 
 
 ## Development setup
