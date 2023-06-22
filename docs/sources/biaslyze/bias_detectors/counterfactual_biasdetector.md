@@ -59,7 +59,7 @@ detection_res.visualize_counterfactual_score_by_sample_histogram(concepts=["reli
 
 
 ### .process
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/counterfactual_biasdetector.py/#L72)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/counterfactual_biasdetector.py/#L75)
 ```python
 .process(
    texts: List[str], predict_func: Callable[[List[str]], List[float]],
