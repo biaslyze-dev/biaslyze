@@ -162,7 +162,7 @@ Biaslyze takes keywords representing sensitive concepts and perturbates them wit
 
 
 ```python
-from biaslyze.bias_detectors import LimeBiasDetector, CounterfactualBiasDetector
+from biaslyze.bias_detectors import CounterfactualBiasDetector
 ```
 
 
