@@ -1,4 +1,4 @@
-The main algorithm we use implemented in the [CounterfactualBiasDetector](../biaslyze/bias_detectors/counterfactual_biasdetector/), is an algorithm designed to detect bias by replacing keywords associated with a protected concept and measuring the difference in outcomes for the model. The algorithm calculates a, so called counterfactual score for each keyword, providing insights into potential biases in NLP ML applications. Here we outline the steps and processes involved in implementing the algorithm.
+The main algorithm we use implemented in the [CounterfactualBiasDetector](../biaslyze/bias_detectors/counterfactual_biasdetector/), is an algorithm designed to detect bias by interchanging keywords associated with a protected concept and measuring the difference in outcomes for the model. The algorithm calculates a so called counterfactual score for each keyword, providing insights into potential biases in NLP ML applications. Here we outline the steps and processes involved in implementing the algorithm.
 
 ## Preparing the Dataset:
 Before applying the bias detection algorithm, you need to gather a dataset that reflects the real-world context in which your NLP ML model operates. Ensure that the dataset includes a diverse representation of examples and accounts for different perspectives related to the protected concept you aim to investigate.
@@ -34,7 +34,7 @@ Based on the differences observed in the model outcomes between the original and
                    |                                    |
                    |                                    |
                    V                                    V
-                   +------------+-----------------------+
+                   +------------------------------------+
                    |      Counterfactual Score          |
                    +------------------------------------+
 
@@ -43,4 +43,4 @@ Based on the differences observed in the model outcomes between the original and
 Analyze the counterfactual scores obtained for each keyword to gain insights into potential bias in the NLP ML application. Higher counterfactual scores indicate that the model is more sensitive to changes in that keyword, suggesting a higher degree of bias associated with it. By identifying specific keywords with significant counterfactual scores, you can focus on addressing and mitigating potential biases in your model.
 
 ## Conclusion:
-The algorithm described above provides a systematic approach for detecting bias in NLP ML applications. By replacing keywords associated with a protected concept and measuring the resulting differences in model outcomes, the algorithm enables the calculation of counterfactual scores. These scores help identify specific keywords that may contribute to biases in the application. By integrating this algorithm into your bias detection pipeline, you can enhance the fairness and inclusiveness of your NLP ML models.
+The algorithm described above provides a systematic approach for detecting bias in NLP ML applications. By interchanging keywords associated with a protected concept and measuring the resulting differences in model outcomes, the algorithm enables the calculation of counterfactual scores. These scores help identify specific keywords that may contribute to biases in the application. By integrating this algorithm into your bias detection pipeline and quality management process, you can enhance the fairness and inclusiveness of your NLP ML models.
