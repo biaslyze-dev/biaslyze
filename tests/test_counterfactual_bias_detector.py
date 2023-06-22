@@ -74,7 +74,7 @@ def test_process_positive():
         texts=["woman", "man"],
         predict_func=lambda x: np.array([[0.1, 0.9], [0.9, 0.1]]),
         concepts_to_consider=["gender"],
-        max_counterfactual_samples_per_keyword=1,
+        max_counterfactual_samples_per_text=1,
     )
 
     assert res is not None

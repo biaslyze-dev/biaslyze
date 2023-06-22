@@ -121,6 +121,12 @@ class CounterfactualBiasDetector:
         # find bias relevant texts
         detected_texts = self.concept_detector.detect(texts)
 
+        # limit the number of counterfactual samples per text if max_counterfactual_samples is given
+        if max_counterfactual_samples:
+            max_counterfactual_samples_per_text = max_counterfactual_samples // len(
+                detected_texts
+            )
+
         results = []
         for concept in self.concepts:
             if concepts_to_consider and concept.name not in concepts_to_consider:
@@ -170,6 +176,7 @@ class CounterfactualBiasDetector:
                 :, score_df.T.duplicated().T
             ].columns.tolist()
             score_df = score_df.loc[:, ~score_df.T.duplicated().T]
+
             results.append(
                 CounterfactualConceptResult(
                     concept=concept.name,
@@ -200,7 +207,7 @@ def _extract_counterfactual_concept_samples(
         tokenizer: The tokenizer to use for tokenization.
         labels: Optional. Used to add labels to the counterfactual results.
         n_texts: Optional. The number of counterfactual texts to return. Defaults to None, which returns all possible counterfactual texts.
-    
+
     Returns:
         A list of CounterfactualSample objects.
     """
