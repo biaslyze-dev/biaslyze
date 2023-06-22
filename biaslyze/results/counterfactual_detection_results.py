@@ -221,7 +221,7 @@ class CounterfactualDetectionResult:
                 all_scores.append(-1 * np.median(score.tolist()))
         if all_samples == []:
             raise ValueError(
-                f"No results found. Please make sure that the concepts are in the results."
+                "No results found. Please make sure that the concepts are in the results."
             )
 
         dashboard = _plot_histogram_dashboard(
