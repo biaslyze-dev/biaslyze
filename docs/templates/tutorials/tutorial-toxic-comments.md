@@ -21,7 +21,6 @@ import pandas as pd
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.pipeline import make_pipeline
-from sklearn.metrics import accuracy_score
 ```
 
 ## Load and prepare data
@@ -158,11 +157,11 @@ clf.fit(df.comment_text, df.target)
 ## Counterfactual token based bias detection
 
 Now that we have a model to test, lets evaluate it with the Biaslyze tool and test the sensible concepts for possible bias. 
-Biaslyze takes keywords representing sensitive concepts and perturbates them with the other keywords from the same concept to evaluate its significance for the models prediction.
+Biaslyze takes keywords representing sensitive concepts and perturbs them with the other keywords from the same concept to evaluate its significance for the models prediction.
 
 
 ```python
-from biaslyze.bias_detectors import LimeBiasDetector, CounterfactualBiasDetector
+from biaslyze.bias_detectors import CounterfactualBiasDetector
 ```
 
 
