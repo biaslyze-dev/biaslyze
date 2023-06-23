@@ -18,7 +18,7 @@
 
 Bias is often subtle and difficult to detect in NLP models, as the protected attributes are less obvious and can take many forms in language (e.g. proxies, double meanings, ambiguities etc.). Therefore, technical bias testing is a key step in avoiding algorithmically mediated discrimination. However, it is currently conducted too rarely due to the effort involved, missing resources or lack of awareness for the problem.
 
-Biaslyze helps to get started with the analysis of bias within NLP models and offers a concrete entry point for further impact assessments and mitigation measures. Especially for teams with limited resources, our toolbox offers a low-effort approach to bias testing in NLP use cases.
+Biaslyze helps to get started with the analysis of bias within NLP models and offers a concrete entry point for further impact assessments and mitigation measures. Especially for developers, researchers and teams with limited resources, our toolbox offers a low-effort approach to bias testing in NLP use cases.
 
 ## Installation
 
@@ -53,11 +53,12 @@ detection_res.report()
 detection_res.visualize_counterfactual_scores(concept="religion", top_n=10)
 ```
 
+You will get results as Boxplots, among others, indicating the impact of keywords and concepts on the prediction of your model.
 Example output:
 ![](resources/hatespeech_dl_scores_religion.png)
 
 
-You can see a more detailed example in the [tutorial](tutorials/tutorial-toxic-comments/).
+See more detailed examples in the [tutorial](tutorials/tutorial-toxic-comments/).
 
 
 ## Development setup
@@ -69,7 +70,7 @@ You can see a more detailed example in the [tutorial](tutorials/tutorial-toxic-c
 
 ### Adding concepts and keywords
 
-You can add concepts and new keywords for existing concepts by editing [concepts.py](https://github.com/biaslyze-dev/biaslyze/blob/keyword-based-targeted-lime/biaslyze/concepts.py).
+You can add concepts and new keywords for existing concepts by editing [concepts.py](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concepts.py).
 
 ## Preview/build the documentation with mkdocs
 

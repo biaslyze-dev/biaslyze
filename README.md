@@ -70,7 +70,7 @@ See more detailed examples in the [tutorial](tutorials/tutorial-toxic-comments/)
 
 ### Adding concepts and keywords
 
-You can add concepts and new keywords for existing concepts by editing [concepts.py](https://github.com/biaslyze-dev/biaslyze/blob/keyword-based-targeted-lime/biaslyze/concepts.py).
+You can add concepts and new keywords for existing concepts by editing [concepts.py](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concepts.py).
 
 ## Preview/build the documentation with mkdocs
 
