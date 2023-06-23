@@ -1,9 +1,11 @@
 """Tests for functions to help calculate counterfactual bias metrics."""
 import numpy as np
+
 from biaslyze.bias_detectors.counterfactual_biasdetector import (
-    _extract_counterfactual_concept_samples,
     _calculate_counterfactual_scores,
+    _extract_counterfactual_concept_samples,
 )
+from biaslyze.concept_class import Concept, Keyword
 from biaslyze.concepts import CONCEPTS
 
 
@@ -22,7 +24,14 @@ class MockTokenizer:
 
 def test_extract_counterfactual_concept_samples():
     """Test _extract_counterfactual_concept_samples"""
-    concept = "gender"
+    concept = Concept(
+        name="gender",
+        keywords=[
+            Keyword(text="she", function=["subject"], category="pronoun"),
+            Keyword(text="he", function=["subject"], category="pronoun"),
+            Keyword(text="they", function=["subject"], category="pronoun"),
+        ],
+    )
     texts = [
         "she is a doctor",
         "he is a nurse",
@@ -30,21 +39,25 @@ def test_extract_counterfactual_concept_samples():
         "they are a nurse",
     ]
 
-    tokenizer = MockTokenizer()
-
     counterfactual_samples = _extract_counterfactual_concept_samples(
         concept=concept,
         texts=texts,
-        tokenizer=tokenizer,
     )
 
-    assert len(counterfactual_samples) == len(texts) * len(CONCEPTS[concept])
+    assert len(counterfactual_samples) == len(texts) * len(concept.keywords)
 
 
 def test_calculate_counterfactual_score():
     """Test _calculate_counterfactual_scores."""
 
-    concept = "gender"
+    concept = Concept(
+        name="gender",
+        keywords=[
+            Keyword(text="she", function=["subject"], category="pronoun"),
+            Keyword(text="he", function=["subject"], category="pronoun"),
+            Keyword(text="they", function=["subject"], category="pronoun"),
+        ],
+    )
     texts = [
         "she is a doctor",
         "he is a nurse",
@@ -52,12 +65,9 @@ def test_calculate_counterfactual_score():
         "they are a nurse",
     ]
 
-    tokenizer = MockTokenizer()
-
     counterfactual_samples = _extract_counterfactual_concept_samples(
         concept=concept,
         texts=texts,
-        tokenizer=tokenizer,
     )
 
     predict_func = lambda x: np.array(

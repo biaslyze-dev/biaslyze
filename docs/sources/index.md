@@ -18,7 +18,7 @@
 
 Bias is often subtle and difficult to detect in NLP models, as the protected attributes are less obvious and can take many forms in language (e.g. proxies, double meanings, ambiguities etc.). Therefore, technical bias testing is a key step in avoiding algorithmically mediated discrimination. However, it is currently conducted too rarely due to the effort involved, missing resources or lack of awareness for the problem.
 
-Biaslyze helps to get started with the analysis of bias within NLP models and offers a concrete entry point for further impact assessments and mitigation measures. Especially for young developers, students and teams with limited resources, our toolbox offers a low-effort approach to bias testing in NLP use cases.
+Biaslyze helps to get started with the analysis of bias within NLP models and offers a concrete entry point for further impact assessments and mitigation measures. Especially for teams with limited resources, our toolbox offers a low-effort approach to bias testing in NLP use cases.
 
 ## Installation
 
