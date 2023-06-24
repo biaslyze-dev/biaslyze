@@ -20,6 +20,11 @@ Bias is often subtle and difficult to detect in NLP models, as the protected att
 
 Biaslyze helps to get started with the analysis of bias within NLP models and offers a concrete entry point for further impact assessments and mitigation measures. Especially for developers, researchers and teams with limited resources, our toolbox offers a low-effort approach to bias testing in NLP use cases.
 
+## Supported Models
+
+All text classification models with probability output are supported. This includes models from scikit-learn, tensorflow, pytorch, huggingface transformers and others. 
+See the tutorials section for examples.
+
 ## Installation
 
 Installation can be done using pypi:
