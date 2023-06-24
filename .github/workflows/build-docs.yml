@@ -3,6 +3,11 @@ on:
   push:
     branches:
       - main
+    paths:
+      - docs/**
+      - README.md
+      - mkdocs.yml
+      - mkgendocs.yml
 permissions:
   contents: write
 jobs:
@@ -22,4 +27,5 @@ jobs:
             mkdocs-material-
       - run: pip install mkdocs-material 
       - run: pip install material-plausible-plugin
-      - run: mkdocs gh-deploy --force
+      - run: mkdocs build
+      - run: mkdocs gh-deploy --force --clean
