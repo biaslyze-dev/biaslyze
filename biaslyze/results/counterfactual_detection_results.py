@@ -180,10 +180,10 @@ class CounterfactualDetectionResult:
         # plot
         ax = _plot_box_plot(counterfactual_df, top_n=top_n)
         ax.set_title(
-            f"Distribution of counterfactual scores for concept '{concept}' by original keyword\nsorted by median score"
+            f"Distribution of counterfactual scores for concept '{concept}' by original keyword\nsorted by median score\ndifference from zero indicates bias, positive values indicate bias towards the positive class"
         )
         ax.set_xlabel(
-            "Counterfactual scores - differences from zero indicate the direction of bias."
+            "Counterfactual scores - difference in probability of positive class from original sample."
         )
         plt.show()
 

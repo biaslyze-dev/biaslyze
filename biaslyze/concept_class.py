@@ -20,10 +20,10 @@ class Keyword:
         category (str): The category of the keyword.
     """
 
-    def __init__(self, text: str, function: List[str], category: str):
+    def __init__(self, text: str, functions: List[str], category: str):
         """The constructor for the Keyword class."""
         self.text = text
-        self.function = function
+        self.functions = functions
         self.category = category
 
     def __str__(self) -> str:
@@ -32,8 +32,16 @@ class Keyword:
     def __repr__(self) -> str:
         return f"Keyword({self.text}, {self.function}, {self.category})"
 
-    def can_replace_token(self, token: Token) -> bool:
-        """Returns True if the keyword can replace the given token."""
+    def can_replace_token(self, token: Token, respect_function: bool = False) -> bool:
+        """Returns True if the keyword can replace the given token.
+
+        Args:
+            token (Token): The token to replace.
+            respect_function (bool): Whether to respect the function of the keyword. Defaults to False.
+        """
+        if respect_function:
+            return True
+            # return token.function in self.functions
         return True
 
     def equal_to_token(self, token: Token) -> bool:
@@ -43,8 +51,24 @@ class Keyword:
         return False
 
     def get_keyword_in_style_of_token(self, token: Token) -> str:
-        """Returns the keyword text in the style of the given token."""
-        return self.text
+        """Returns the keyword text in the style of the given token.
+
+        Uses the shape of the token to determine the style.
+
+        Args:
+            token (Token): The token to get the style from.
+
+        Returns:
+            str: The keyword text in the style of the given token.
+        """
+        if "X" not in token.shape:
+            return self.text.lower()
+        elif "x" not in token.shape:
+            return self.text.upper()
+        elif token.shape[0] == "X":
+            return self.text.capitalize()
+        else:
+            return self.text
 
 
 class Concept:
@@ -68,9 +92,9 @@ class Concept:
         for keyword in keywords:
             keyword_list.append(
                 Keyword(
-                    keyword["keyword"],
-                    keyword["function"],
-                    keyword.get("category", None),
+                    text=keyword["keyword"],
+                    functions=keyword["function"],
+                    category=keyword.get("category", None),
                 )
             )
         return cls(name, keyword_list)
@@ -90,6 +114,7 @@ class Concept:
         keyword: Keyword,
         text_representation: TextRepresentation,
         n_texts: Optional[int] = None,
+        respect_function: bool = True,
     ) -> List[Tuple[str, Keyword]]:
         """Returns a counterfactual texts based on a specific keyword for the given text representation.
 
@@ -97,6 +122,7 @@ class Concept:
             keyword (Keyword): The keyword in the text to replace.
             text_representation (TextRepresentation): The text representation to replace the keyword in.
             n_texts (Optional[int]): The number of counterfactual texts to return. Defaults to None, which returns all possible counterfactual texts.
+            respect_function (bool): Whether to respect the function of the keyword. Defaults to True.
 
         Returns:
             List[Tuple[str, Keyword]]: A list of tuples containing the counterfactual text and the keyword that was replaced.
@@ -110,7 +136,9 @@ class Concept:
                 # create a counterfactual text for each keyword until n_texts is reached
                 for counterfactual_keyword in self.keywords:
                     # check if the keyword can be replaced by another keyword
-                    if counterfactual_keyword.can_replace_token(token):
+                    if counterfactual_keyword.can_replace_token(
+                        token, respect_function
+                    ):
                         # create the counterfactual text
                         counterfactual_text = (
                             text_representation.text[: token.start]
@@ -123,7 +151,7 @@ class Concept:
                             (counterfactual_text, counterfactual_keyword)
                         )
                     # check if n_texts is reached and return the counterfactual texts
-                    if len(counterfactual_texts) == n_texts:
+                    if n_texts and (len(counterfactual_texts) >= n_texts):
                         return counterfactual_texts
         return counterfactual_texts
 
