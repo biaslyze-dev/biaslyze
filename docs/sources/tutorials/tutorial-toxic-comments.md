@@ -6,7 +6,7 @@ The data consists of instances of 226235 online comments. You can get the data o
 
 Data source: [https://www.kaggle.com/c/jigsaw-toxic-comment-classification-challenge](https://www.kaggle.com/c/jigsaw-toxic-comment-classification-challenge)
 
-# Installation
+## Installation
 First install the Biaslyze python package using:
 
 
@@ -206,9 +206,9 @@ print(counterfactual_detection_results.concept_results[1].omitted_keywords)
     ['hers', 'herself', 'grandmothers', 'grandmas', 'sista', 'sistas', 'him', 'his', 'himself', 'daddies', 'grandfathers', 'grandpa', 'grandpas', 'them', 'themselves']
 
 
-# Lets look at some results
+## Lets look at some results
 
-## Counterfactual Score
+### Counterfactual Score
 The first plot below shows you the top $10$ keywords found within the concept "gender" according to the difference resulting from the replacement of counterfactuals with that keyword. 
 The counterfactual score is defined as the difference between the predicted probability score for the counterfactual text and the predicted probability score for the original text.
 
@@ -240,7 +240,7 @@ counterfactual_detection_results.visualize_counterfactual_scores(concept="religi
     
 
 
-## Key-sample replacement score (ksr-score)
+### Key-sample replacement score (ksr-score)
 This score looks at how the toxicity-probability changes for all samples with a certain keyword (y-axis) when it is replaced by the counterfactuals from its corresponding concept. This gives you a better look at the representation of a certain keyword within the samples. Once again looking at the keyword "mum" we can see that when it is replaced by counterfactuals the model will less likely predict the sample comment to be toxic.
 Seeing that many keywords representing females have a strong impact on the models toxicity-prediction we can now ask whether the model might be biased in this way and look into it further, potentially mitigating at some point.
 
@@ -267,7 +267,7 @@ counterfactual_detection_results.visualize_counterfactual_scores(concept="religi
     
 
 
-## Looking into the samples
+### Looking into the samples
 The next plot shows you the samples from concept "gender" with the bubble size representing the ksr-score. The color blue indicates a positive (likely toxic) score for a certain keyword and orange is a negative (less likely to be toxic) score of a keyword compared to the counterfactuals. Use it to review the samples content.
 
 

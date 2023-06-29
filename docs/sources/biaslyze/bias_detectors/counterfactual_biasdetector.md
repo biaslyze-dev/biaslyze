@@ -2,11 +2,12 @@
 
 
 ## CounterfactualBiasDetector
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/counterfactual_biasdetector.py/#L20)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/counterfactual_biasdetector.py/#L21)
 ```python 
 CounterfactualBiasDetector(
    use_tokenizer: bool = False,
-   concept_detector: KeywordConceptDetector = KeywordConceptDetector()
+   concept_detector: KeywordConceptDetector = KeywordConceptDetector(),
+   text_augmentor: CounterfactualTextAugmentor = CounterfactualTextAugmentor()
 )
 ```
 
@@ -52,6 +53,7 @@ detection_res.visualize_counterfactual_score_by_sample_histogram(concepts=["reli
 
 * **use_tokenizer**  : If keywords should only be searched in tokenized text. Can be useful for short keywords like 'she'.
 * **concept_detector**  : an instance of KeywordConceptDetector
+* **text_augmentor**  : an instance of CounterfactualTextAugmentor
 
 
 
@@ -59,12 +61,13 @@ detection_res.visualize_counterfactual_score_by_sample_histogram(concepts=["reli
 
 
 ### .process
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/counterfactual_biasdetector.py/#L75)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/counterfactual_biasdetector.py/#L79)
 ```python
 .process(
    texts: List[str], predict_func: Callable[[List[str]], List[float]],
    labels: Optional[List[str]] = None, concepts_to_consider: Optional[List[str]] = [],
-   max_counterfactual_samples: Optional[int] = None
+   max_counterfactual_samples: Optional[int] = None,
+   max_counterfactual_samples_per_text: Optional[int] = None
 )
 ```
 
@@ -78,7 +81,8 @@ Detect potential bias in the model based on the given texts.
 * **predict_func**  : Function to run the texts through the model and get probabilities as outputs.
 * **labels**  : Optional. Used to add labels to the counterfactual results.
 * **concepts_to_consider**  : If given, only the given concepts are considered.
-* **max_counterfactual_samples**  : If given, only the given number of counterfactual samples are used for each concept.
+* **max_counterfactual_samples**  : Optional. The maximum number of counterfactual samples to return. Defaults to None, which returns all possible counterfactual samples.
+* **max_counterfactual_samples_per_text**  : Optional. The maximum number of counterfactual samples to return per text. Defaults to None, which returns all possible counterfactual samples.
 
 
 **Returns**
