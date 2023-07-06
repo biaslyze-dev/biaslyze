@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+from biaslyze._plotly_dashboard import _plot_dashboard
 from biaslyze._plotting import _plot_box_plot, _plot_histogram_dashboard
 
 
@@ -116,6 +117,10 @@ class CounterfactualDetectionResult:
             print(
                 f"""Concept: {concept_result.concept}\t\tMax-Mean Counterfactual Score: {np.abs(concept_result.scores.mean()).max():.5f}\t\tMax-Std Counterfactual Score: {concept_result.scores.std().max():.5f}"""
             )
+
+    def dashboard(self, num_keywords: int = 10):
+        """Start a dash dashboard with interactive box plots."""
+        _plot_dashboard(self, num_keywords=num_keywords)
 
     def visualize_counterfactual_scores(
         self, concept: str, top_n: Optional[int] = None

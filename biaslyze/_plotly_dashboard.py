@@ -1,102 +1,211 @@
 """This file contains the new plotting with plotly and dash."""
 
+from collections import defaultdict
+
 import dash
-import json
-import dash_core_components as dcc
 import dash_html_components as html
-from dash.dependencies import Input, Output, State
+import pandas as pd
 import plotly.graph_objects as go
-
-concepts = ["Gender", "Religion", "Gender"]
-num_columns = 10
-
-# Prepare sample data
-religion_df = counterfactual_detection_results._get_result_by_concept(concept="religion")
-sort_index = religion_df.median().abs().sort_values(ascending=True)
-religion_df = religion_df[sort_index.index]
-
-gender_df = counterfactual_detection_results._get_result_by_concept(concept="gender")
-sort_index = gender_df.median().abs().sort_values(ascending=True)
-gender_df = gender_df[sort_index.index]
+from dash import dcc
+from dash.dependencies import Input, Output
 
 
-# create a dataframe of texts
-religion_text_dict ={
-    keyword: [f"{sample.orig_keyword}: {sample.text}" for sample in counterfactual_detection_results._get_counterfactual_samples_by_concept("religion") if sample.keyword == keyword]
-    for keyword in religion_df.columns
-}
-
-gender_text_dict ={
-    keyword: [(sample.orig_keyword, sample.text) for sample in counterfactual_detection_results._get_counterfactual_samples_by_concept("gender") if sample.keyword == keyword]
-    for keyword in gender_df.columns
-}
-
-dataframes = [(gender_df, gender_text_dict), (religion_df, religion_text_dict), (gender_df, gender_text_dict)]
+def _get_default_results(result, concept: str) -> pd.DataFrame:
+    dataf = result._get_result_by_concept(concept=concept)
+    sort_index = dataf.median().abs().sort_values(ascending=True)
+    return dataf[sort_index.index]
 
 
-app = dash.Dash(__name__)
+def _get_ksr_results(result, concept: str) -> pd.DataFrame:
+    dataf = result._get_result_by_concept(concept=concept)
+    samples = result._get_counterfactual_samples_by_concept(concept=concept)
+
+    # get the original samples
+    original_samples = [
+        sample for sample in samples if (sample.keyword == sample.orig_keyword)
+    ]
+
+    # get the counterfactual scores for each original sample
+    counterfactual_plot_dict = defaultdict(list)
+    for sample, (_, score) in zip(original_samples, dataf.iterrows()):
+        counterfactual_plot_dict[sample.orig_keyword].extend(score.tolist())
+
+    counterfactual_df = pd.DataFrame(
+        dict([(k, pd.Series(v)) for k, v in counterfactual_plot_dict.items()])
+    )
+    sort_index = counterfactual_df.median().abs().sort_values(ascending=True)
+    return counterfactual_df[sort_index.index]
 
 
-def generate_box_plot(data, num_columns):
-    df_subset = data[0].iloc[:, -num_columns:]
-    fig = go.Figure()
-    for column in df_subset.columns:
-        hover_text = [f'Value: {value:.3}<br>Original keyword: {data[1][column][i][0]}<br>Text: {data[1][column][i][1]}' for i, value in enumerate(df_subset[column])]
-        fig.add_trace(go.Box(x=df_subset[column], orientation='h', name=column, hovertext=hover_text))
-    fig.update_layout(showlegend=False)
-    return fig
+def _build_data_lookup(results):
+    concepts = [res.concept for res in results.concept_results]
 
-app.layout = html.Div([
-    html.Div(id='button-container', children=[
-        html.Button(f'{concepts[i]}', id={'type': 'dataframe-button', 'index': i}, n_clicks=0,
-                    style={'background-color': '#4CAF50', 'border': 'none', 'color': 'white', 'padding': '10px 24px', 'text-align': 'center', 'text-decoration': 'none', 'display': 'inline-block', 'font-size': '16px', 'margin': '4px 2px', 'cursor': 'pointer'})
-        for i in range(len(dataframes))
-    ], style={'margin-bottom': '20px'}),
-    dcc.Graph(id='box-plot'),
-    dcc.Store(id='selected-dataframe', data=0),
-    html.Div(id='selected-text')
-])
+    lookup = {}
+    for method in ["default", "ksr"]:
+        method_dict = {}
+        for concept in concepts:
+            scores = (
+                _get_default_results(results, concept=concept)
+                if (method == "default")
+                else _get_ksr_results(results, concept=concept)
+            )
+            samples = results._get_counterfactual_samples_by_concept(concept)
+            concept_dict = {
+                "data": scores,
+                "texts": {
+                    keyword: [
+                        sample.text for sample in samples if sample.keyword == keyword
+                    ]
+                    for keyword in scores.columns
+                },
+                "original_keyword": {
+                    keyword: [
+                        sample.orig_keyword
+                        for sample in samples
+                        if sample.keyword == keyword
+                    ]
+                    for keyword in scores.columns
+                },
+            }
 
-@app.callback(
-    Output('box-plot', 'figure'),
-    Output('selected-dataframe', 'data'),
-    [Input({'type': 'dataframe-button', 'index': i}, 'n_clicks') for i in range(len(dataframes))],
-    State('selected-dataframe', 'data'),
-    prevent_initial_callback=True
-)
-def update_box_plot(*button_clicks_and_selected_dataframe):
-    button_clicks = button_clicks_and_selected_dataframe[:-1]
-    selected_dataframe = button_clicks_and_selected_dataframe[-1]
+            method_dict[concept] = concept_dict
+        lookup[method] = method_dict
+    return lookup
 
-    if not any(button_clicks):
-        # No button click, use the default selected dataframe (first dataframe)
-        fig = generate_box_plot(dataframes[selected_dataframe], num_columns)
-        return fig, selected_dataframe
 
-    ctx = dash.callback_context
-    triggered_button_id = json.loads(ctx.triggered[0]['prop_id'].split('.')[0])
-    clicked_dataframe_index = triggered_button_id['index']
+def _plot_dashboard(results, num_keywords: int = 10):
+    """Plot a dashboard of the results as interactive boxplots.
 
-    selected_dataframe = int(clicked_dataframe_index)
-    fig = generate_box_plot(dataframes[selected_dataframe], num_columns)
-    return fig, selected_dataframe
+    Args:
+        results: The results.
+        num_keywords: The number of keywords to plot.
+    """
+    concepts = [res.concept for res in results.concept_results]
+    data_lookup = _build_data_lookup(results)
 
-@app.callback(
-    Output('selected-text', 'children'),
-    Input('box-plot', 'clickData')
-)
-def display_selected_text(click_data):
-    if click_data is not None:
-        selected_text = click_data['points'][0]['hovertext']
-        lines = selected_text.split("<br>")
-        return html.Div([
-            html.H4('Selected sample:'),
-            html.P(lines[0]),
-            html.P(lines[1]),
-            html.P(lines[2]),
-        ], style={'color': 'white', 'background-color': '#4CAF50', 'padding': '10px', 'border-radius': '5px'})
-    else:
-        return ''
+    app = dash.Dash(__name__)
 
-if __name__ == '__main__':
-    app.run_server(debug=True)
+    def generate_box_plot(dataf):
+        fig = go.Figure()
+        for keyword in dataf.columns:
+            hover_text = [f"Value: {value:.3}" for value in dataf[keyword]]
+            fig.add_trace(
+                go.Box(
+                    x=dataf[keyword],
+                    orientation="h",
+                    name=keyword,
+                    hovertext=hover_text,
+                )
+            )
+        fig.update_layout(showlegend=False)
+        return fig
+
+    app.layout = html.Div(
+        [
+            html.Div(
+                [
+                    html.H2("Counterfactual score"),
+                    dcc.RadioItems(
+                        options=[
+                            {"label": "Keyword-based (default)", "value": "default"},
+                            {"label": "Sample-based (ksr)", "value": "ksr"},
+                        ],
+                        value="default",
+                        inline=True,
+                        id="select-method",
+                    ),
+                    html.H4("Select concept:"),
+                    dcc.Dropdown(
+                        options=[
+                            {"label": concept, "value": idx}
+                            for idx, concept in enumerate(concepts)
+                        ],
+                        value=0,
+                        id="concept-dropdown",
+                        style={"color": "black"},
+                    ),
+                ],
+                style={
+                    "color": "white",
+                    "background-color": "#4CAF50",
+                    "padding": "10px",
+                    "border-radius": "5px",
+                },
+            ),
+            dcc.Graph(id="box-plot"),
+            html.Div(id="selected-text"),
+        ]
+    )
+
+    @app.callback(
+        Output("box-plot", "figure"),
+        Input("concept-dropdown", "value"),
+        Input("select-method", "value"),
+        prevent_initial_callback=True,
+    )
+    def update_box_plot(concept_idx, method):
+        if method in ["default", "ksr"]:
+            df = (
+                data_lookup[method][concepts[concept_idx]]["data"]
+                .iloc[:, -num_keywords:]
+                .dropna(how="all")
+            )
+        else:
+            raise ValueError(f"Unknown method '{method}'")
+        fig = generate_box_plot(df)
+        # Stylize graph
+        fig.update_layout(
+            template="plotly_white",
+            showlegend=False,
+            # width=100*4,
+            height=50 * num_keywords,
+            hoverlabel=dict(bgcolor="white", font_size=16, font_family="Rockwell"),
+        )
+        return fig
+
+    @app.callback(
+        Output("selected-text", "children"),
+        Input("box-plot", "clickData"),
+        Input("concept-dropdown", "value"),
+        Input("select-method", "value"),
+    )
+    def display_selected_text(click_data, concept_idx, method):
+        if click_data is not None:
+            keyword = click_data["points"][0]["y"]
+            value = click_data["points"][0]["x"]
+            index = click_data["points"][0]["pointIndex"]
+            try:
+                return html.Div(
+                    [
+                        html.H4("Selected sample:"),
+                        html.P(f"Keyword: {keyword}"),
+                        html.P(
+                            f"Original keyword: {data_lookup[method][concepts[concept_idx]]['original_keyword'][keyword][index]}"
+                        ),
+                        html.P(f"Score: {value:.3}"),
+                        html.P(f"Index: {index}"),
+                        html.P(
+                            f"Text: {data_lookup[method][concepts[concept_idx]]['texts'][keyword][index]}"
+                        ),
+                    ],
+                    style={
+                        "color": "white",
+                        "background-color": "#4CAF50",
+                        "padding": "10px",
+                        "border-radius": "5px",
+                    },
+                )
+            except KeyError:
+                return ""
+            except IndexError:
+                return ""
+        else:
+            return ""
+
+    app.run_server(
+        mode="inline",
+        port=8090,
+        dev_tools_ui=True,
+        dev_tools_hot_reload=True,
+        threaded=True,
+    )
