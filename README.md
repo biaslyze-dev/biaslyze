@@ -1,6 +1,6 @@
 
 <div align="center">
-  <img src="resources/biaslyze-logo-no-bg.png" alt="Biaslyze" height="80">
+  <img src="resources/biaslyze-logo-no-bg.png" alt="Biaslyze" height="220px">
   <h1>The NLP Bias Identification Toolkit</h1>
 </div>
 
