@@ -1,9 +1,10 @@
 
-<p align="center">
-  <h1>biaslyze - The NLP Bias Identification Toolkit</h1>
-</p>
+<div align="center">
+  <img src="resources/biaslyze-logo-no-bg.png" alt="Biaslyze" height="220px">
+  <h1>The NLP Bias Identification Toolkit</h1>
+</div>
 
-<p align="center">
+<div align="center">
     <a href="https://github.com/biaslyze-dev/biaslyze/blob/main/LICENSE">
         <img alt="licence" src="https://img.shields.io/github/license/biaslyze-dev/biaslyze">
     </a>
@@ -13,7 +14,7 @@
     <a href="https://pypi.org/project/biaslyze/">
         <img alt="pypi" src="https://img.shields.io/pypi/pyversions/biaslyze">
     </a>
-</p>
+</div>
 
 
 Bias is often subtle and difficult to detect in NLP models, as the protected attributes are less obvious and can take many forms in language (e.g. proxies, double meanings, ambiguities etc.). Therefore, technical bias testing is a key step in avoiding algorithmically mediated discrimination. However, it is currently conducted too rarely due to the effort involved, missing resources or lack of awareness for the problem.

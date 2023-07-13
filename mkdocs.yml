@@ -25,6 +25,8 @@ nav:
 
 theme:
   name: material
+  logo: resources/biaslyze-thumbnail.png
+  favicon: resources/biaslyze-thumbnail.png
   icon:
     repo: fontawesome/brands/git-alt
 
