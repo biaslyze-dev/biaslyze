@@ -1,12 +1,13 @@
 """This file contains the new plotting with plotly and dash."""
 
 from collections import defaultdict
-
-import dash
-import dash_html_components as html
 import pandas as pd
+
 import plotly.graph_objects as go
+from plotly.colors import n_colors
+import dash
 from dash import dcc
+import dash_html_components as html
 from dash.dependencies import Input, Output
 
 
@@ -85,9 +86,12 @@ def _plot_dashboard(results, num_keywords: int = 10):
 
     app = dash.Dash(__name__)
 
+    pink2blue_colormap = n_colors('rgb(0, 152, 218)','rgb(246, 173, 175)', num_keywords, colortype='rgb')
+
+
     def generate_box_plot(dataf):
         fig = go.Figure()
-        for keyword in dataf.columns:
+        for keyword, color in zip(dataf.columns, pink2blue_colormap):
             hover_text = [f"Value: {value:.3}" for value in dataf[keyword]]
             fig.add_trace(
                 go.Box(
@@ -95,9 +99,13 @@ def _plot_dashboard(results, num_keywords: int = 10):
                     orientation="h",
                     name=keyword,
                     hovertext=hover_text,
+                    marker=dict(color=color),
                 )
             )
-        fig.update_layout(showlegend=False)
+        fig.update_layout(
+            showlegend=False,
+            xaxis_title="Counterfactual Score - difference from zero indicates change of model prediction"
+        )
         return fig
 
     app.layout = html.Div(
@@ -127,10 +135,11 @@ def _plot_dashboard(results, num_keywords: int = 10):
                 ],
                 style={
                     "color": "white",
-                    "background-color": "#4CAF50",
+                    "background-color": "#3c9fca",
                     "padding": "10px",
                     "border-radius": "5px",
-                },
+                    "font-family": "Arial, sans-serif",
+                }
             ),
             dcc.Graph(id="box-plot"),
             html.Div(id="selected-text"),
@@ -178,21 +187,24 @@ def _plot_dashboard(results, num_keywords: int = 10):
                 return html.Div(
                     [
                         html.H4("Selected sample:"),
-                        html.P(f"Keyword: {keyword}"),
+                        html.Table([
+                            html.Tr([html.Th("Keyword"), html.Th("Original keyword"), html.Th("Score")]),
+                            html.Tr([
+                                html.Td(keyword),
+                                html.Td(data_lookup[method][concepts[concept_idx]]['original_keyword'][keyword][index]),
+                                html.Td(f"{value:.3}"),
+                            ])
+                        ], style={"padding": "0 0px", "border-collapse": "separate", "border-spacing": "30px 0px"}),
                         html.P(
-                            f"Original keyword: {data_lookup[method][concepts[concept_idx]]['original_keyword'][keyword][index]}"
-                        ),
-                        html.P(f"Score: {value:.3}"),
-                        html.P(f"Index: {index}"),
-                        html.P(
-                            f"Text: {data_lookup[method][concepts[concept_idx]]['texts'][keyword][index]}"
+                            f"{data_lookup[method][concepts[concept_idx]]['texts'][keyword][index]}"
                         ),
                     ],
                     style={
                         "color": "white",
-                        "background-color": "#4CAF50",
+                        "background-color": "#3c9fca",
                         "padding": "10px",
                         "border-radius": "5px",
+                        "font-family": "Arial, sans-serif",
                     },
                 )
             except KeyError:

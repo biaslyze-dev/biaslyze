@@ -1,6 +1,7 @@
 """This module contains classes to store and process the results of counterfactual bias detection runs."""
 from collections import defaultdict
 from typing import List, Optional
+import warnings
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -122,7 +123,7 @@ class CounterfactualDetectionResult:
         """Start a dash dashboard with interactive box plots."""
         _plot_dashboard(self, num_keywords=num_keywords)
 
-    def visualize_counterfactual_scores(
+    def __visualize_counterfactual_scores(
         self, concept: str, top_n: Optional[int] = None
     ):
         """
@@ -143,6 +144,7 @@ class CounterfactualDetectionResult:
         Raises:
             ValueError: If the concept is not found in the results.
         """
+        warnings.warn("This method is deprecated. Use dashboard() instead.", DeprecationWarning)
         dataf = self._get_result_by_concept(concept=concept)
         ax = _plot_box_plot(dataf, top_n=top_n)
         ax.set_title(
@@ -153,7 +155,7 @@ class CounterfactualDetectionResult:
         )
         plt.show()
 
-    def visualize_counterfactual_sample_scores(
+    def __visualize_counterfactual_sample_scores(
         self, concept: str, top_n: Optional[int] = None
     ):
         """Visualize the counterfactual scores given concept.
@@ -165,6 +167,7 @@ class CounterfactualDetectionResult:
             concept: The concept to visualize.
             top_n: If given, only the top n keywords are shown.
         """
+        warnings.warn("This method is deprecated. Use dashboard() instead.", DeprecationWarning)
         dataf = self._get_result_by_concept(concept=concept)
         samples = self._get_counterfactual_samples_by_concept(concept=concept)
 
@@ -192,7 +195,7 @@ class CounterfactualDetectionResult:
         )
         plt.show()
 
-    def visualize_counterfactual_score_by_sample_histogram(
+    def __visualize_counterfactual_score_by_sample_histogram(
         self, concepts: Optional[List[str]] = None
     ):
         """Visualize the counterfactual scores for each sample as a histogram.
@@ -203,6 +206,7 @@ class CounterfactualDetectionResult:
         Raises:
             ValueError: If no samples are found for the given concepts.
         """
+        warnings.warn("This method is deprecated. Use dashboard() instead.", DeprecationWarning)
         all_scores = []
         all_samples = []
         for concept_result in self.concept_results:
