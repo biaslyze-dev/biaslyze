@@ -244,7 +244,7 @@ def _plot_dashboard(results, num_keywords: int = 10):
                         (
                             "..."
                             + text[
-                                max(text.index(keyword) - 50, 0) : text.index(keyword)
+                                max(text.lower().index(keyword) - 50, 0) : text.lower().index(keyword)
                                 + len(keyword)
                                 + 50
                             ],
