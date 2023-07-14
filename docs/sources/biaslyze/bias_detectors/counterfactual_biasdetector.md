@@ -2,8 +2,7 @@
 
 
 ## CounterfactualBiasDetector
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/counterfactual_biasdetector.py/#L19)
-
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/counterfactual_biasdetector.py/#L20)
 ```python 
 CounterfactualBiasDetector(
    use_tokenizer: bool = False,
@@ -62,8 +61,7 @@ detection_res.visualize_counterfactual_score_by_sample_histogram(concepts=["reli
 
 
 ### .process
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/counterfactual_biasdetector.py/#L74)
-
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/counterfactual_biasdetector.py/#L78)
 ```python
 .process(
    texts: List[str], predict_func: Callable[[List[str]], List[float]],
