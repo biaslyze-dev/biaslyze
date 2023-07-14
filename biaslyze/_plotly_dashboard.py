@@ -1,6 +1,7 @@
 """This file contains the new plotting with plotly and dash."""
 
 from collections import defaultdict
+import numpy as np
 import pandas as pd
 
 import plotly.graph_objects as go
@@ -110,15 +111,18 @@ def _plot_dashboard(results, num_keywords: int = 10):
 
     def generate_histogram(dataf):
         fig = go.Figure()
-        for keyword, color in zip(dataf.columns, pink2blue_colormap):
-            fig.add_trace(
-                go.Histogram(
-                    x=dataf[keyword],
-                    name=keyword,
-                    marker=dict(color=color),
-                    nbinsx=10,
-                )
+        plot_data = []
+        for keyword in dataf.columns:
+            plot_data.extend(dataf[keyword].tolist())
+
+        fig.add_trace(
+            go.Histogram(
+                x=plot_data,
+                #name=keyword,
+                marker=dict(color=pink2blue_colormap[3]),
+                nbinsx=100,
             )
+        )
         fig.update_layout(
             showlegend=False,
             xaxis_title="Counterfactual Score",
@@ -196,13 +200,109 @@ def _plot_dashboard(results, num_keywords: int = 10):
         )
         return fig
 
+
     @app.callback(
         Output("selected-text", "children"),
         Input("box-plot", "clickData"),
+        Input("box-plot", "relayoutData"),
         Input("concept-dropdown", "value"),
         Input("select-method", "value"),
     )
-    def display_selected_text(click_data, concept_idx, method):
+    def display_selected_text(click_data, relayout_data, concept_idx, method):
+        if method == "histogram":
+            if relayout_data is not None and "xaxis.range[0]" in relayout_data:
+                range_start = relayout_data["xaxis.range[0]"]
+                range_end = relayout_data["xaxis.range[1]"]
+                df = (
+                    data_lookup[method][concepts[concept_idx]]["data"]
+                    .iloc[:, -num_keywords:]
+                    .dropna(how="all")
+                )
+                selected_texts = []
+                for keyword in df.columns:
+                    indices = np.where((df[keyword] >= range_start) & (df[keyword] <= range_end))[0]
+                    selected = [data_lookup[method][concepts[concept_idx]]["texts"][keyword][index] for index in indices if index < len(data_lookup[method][concepts[concept_idx]]["texts"][keyword])]
+
+                    selected_texts.extend(selected)
+                selected_texts_html = [html.P(text) for text in selected_texts]
+                if selected_texts_html:
+                    return html.Div(
+                        [
+                            html.H4("Selected samples:"),
+                            *selected_texts_html,
+                        ],
+                        style={
+                            "color": "white",
+                            "background-color": "#3c9fca",
+                            "padding": "10px",
+                            "border-radius": "5px",
+                            "font-family": "Arial, sans-serif",
+                        },
+                    )
+        else:
+            if click_data is not None:
+                keyword = click_data["points"][0]["y"]
+                value = click_data["points"][0]["x"]
+                index = click_data["points"][0]["pointIndex"]
+                try:
+                    return html.Div(
+                        [
+                            html.H4("Selected sample:"),
+                            html.Table(
+                                [
+                                    html.Tr(
+                                        [
+                                            html.Th("Keyword"),
+                                            html.Th("Original keyword"),
+                                            html.Th("Score"),
+                                        ]
+                                    ),
+                                    html.Tr(
+                                        [
+                                            html.Td(keyword),
+                                            html.Td(
+                                                data_lookup[method][concepts[concept_idx]][
+                                                    "original_keyword"
+                                                ][keyword][index]
+                                            ),
+                                            html.Td(f"{value:.3}"),
+                                        ]
+                                    ),
+                                ],
+                                style={
+                                    "padding": "0 0px",
+                                    "border-collapse": "separate",
+                                    "border-spacing": "30px 0px",
+                                },
+                            ),
+                            html.P(
+                                f"{data_lookup[method][concepts[concept_idx]]['texts'][keyword][index]}"
+                            ),
+                        ],
+                        style={
+                            "color": "white",
+                            "background-color": "#3c9fca",
+                            "padding": "10px",
+                            "border-radius": "5px",
+                            "font-family": "Arial, sans-serif",
+                        },
+                    )
+                except KeyError:
+                    return ""
+                except IndexError:
+                    return ""
+            else:
+                return ""
+        return ""
+
+
+    #@app.callback(
+    #    Output("selected-text", "children"),
+    #    Input("box-plot", "clickData"),
+    #    Input("concept-dropdown", "value"),
+    #    Input("select-method", "value"),
+    #)
+    def display_selected_text_old(click_data, concept_idx, method):
         if click_data is not None:
             keyword = click_data["points"][0]["y"]
             value = click_data["points"][0]["x"]
