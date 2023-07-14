@@ -1,15 +1,15 @@
 """This file contains the new plotting with plotly and dash."""
 
 from collections import defaultdict
+
+import dash
+import dash_html_components as html
 import numpy as np
 import pandas as pd
-
 import plotly.graph_objects as go
-from plotly.colors import n_colors
-import dash
-from dash import dcc
-import dash_html_components as html
+from dash import dash_table, dcc
 from dash.dependencies import Input, Output
+from plotly.colors import n_colors
 
 
 def _get_default_results(result, concept: str) -> pd.DataFrame:
@@ -87,8 +87,9 @@ def _plot_dashboard(results, num_keywords: int = 10):
 
     app = dash.Dash(__name__)
 
-    pink2blue_colormap = n_colors('rgb(0, 152, 218)','rgb(246, 173, 175)', num_keywords, colortype='rgb')
-
+    pink2blue_colormap = n_colors(
+        "rgb(0, 152, 218)", "rgb(246, 173, 175)", num_keywords, colortype="rgb"
+    )
 
     def generate_box_plot(dataf):
         fig = go.Figure()
@@ -105,7 +106,7 @@ def _plot_dashboard(results, num_keywords: int = 10):
             )
         fig.update_layout(
             showlegend=False,
-            xaxis_title="Counterfactual Score - difference from zero indicates change of model prediction"
+            xaxis_title="Counterfactual Score - difference from zero indicates change of model prediction",
         )
         return fig
 
@@ -118,7 +119,7 @@ def _plot_dashboard(results, num_keywords: int = 10):
         fig.add_trace(
             go.Histogram(
                 x=plot_data,
-                #name=keyword,
+                # name=keyword,
                 marker=dict(color=pink2blue_colormap[3]),
                 nbinsx=100,
             )
@@ -126,7 +127,7 @@ def _plot_dashboard(results, num_keywords: int = 10):
         fig.update_layout(
             showlegend=False,
             xaxis_title="Counterfactual Score",
-            yaxis_title="Frequency"
+            yaxis_title="Frequency",
         )
         return fig
 
@@ -162,7 +163,7 @@ def _plot_dashboard(results, num_keywords: int = 10):
                     "padding": "10px",
                     "border-radius": "5px",
                     "font-family": "Arial, sans-serif",
-                }
+                },
             ),
             dcc.Graph(id="box-plot"),
             html.Div(id="selected-text"),
@@ -200,7 +201,6 @@ def _plot_dashboard(results, num_keywords: int = 10):
         )
         return fig
 
-
     @app.callback(
         Output("selected-text", "children"),
         Input("box-plot", "clickData"),
@@ -218,26 +218,58 @@ def _plot_dashboard(results, num_keywords: int = 10):
                     .iloc[:, -num_keywords:]
                     .dropna(how="all")
                 )
-                selected_texts = []
+                selected = []
                 for keyword in df.columns:
-                    indices = np.where((df[keyword] >= range_start) & (df[keyword] <= range_end))[0]
-                    selected = [data_lookup[method][concepts[concept_idx]]["texts"][keyword][index] for index in indices if index < len(data_lookup[method][concepts[concept_idx]]["texts"][keyword])]
+                    indices = np.where(
+                        (df[keyword] >= range_start) & (df[keyword] <= range_end)
+                    )[0]
+                    concept_data = data_lookup[method][concepts[concept_idx]]
+                    selected_texts = [
+                        concept_data["texts"][keyword][index]
+                        for index in indices
+                        if index < len(concept_data["texts"][keyword])
+                    ]
+                    selected_original = [
+                        concept_data["original_keyword"][keyword][index]
+                        for index in indices
+                        if index < len(concept_data["original_keyword"][keyword])
+                    ]
+                    selected_score = [
+                        concept_data["data"][keyword][index]
+                        for index in indices
+                        if index < len(concept_data["data"][keyword])
+                    ]
 
-                    selected_texts.extend(selected)
-                selected_texts_html = [html.P(text) for text in selected_texts]
-                if selected_texts_html:
-                    return html.Div(
-                        [
-                            html.H4("Selected samples:"),
-                            *selected_texts_html,
+                    selected_data = [
+                        (
+                            "..."
+                            + text[
+                                max(text.index(keyword) - 50, 0) : text.index(keyword)
+                                + len(keyword)
+                                + 50
+                            ],
+                            original,
+                            keyword,
+                            f"{score:.3}",
+                        )
+                        for text, original, score in zip(
+                            selected_texts, selected_original, selected_score
+                        )
+                    ]
+                    selected.extend(selected_data)
+                if selected:
+                    return dash_table.DataTable(
+                        data=selected,
+                        columns=[
+                            {"id": idx, "name": name}
+                            for idx, name in enumerate(
+                                ["text", "original_keyword", "keyword", "score"]
+                            )
                         ],
-                        style={
-                            "color": "white",
-                            "background-color": "#3c9fca",
-                            "padding": "10px",
-                            "border-radius": "5px",
-                            "font-family": "Arial, sans-serif",
-                        },
+                        page_size=10,
+                        filter_action="native",
+                        sort_action="native",
+                        sort_mode="multi",
                     )
         else:
             if click_data is not None:
@@ -261,9 +293,9 @@ def _plot_dashboard(results, num_keywords: int = 10):
                                         [
                                             html.Td(keyword),
                                             html.Td(
-                                                data_lookup[method][concepts[concept_idx]][
-                                                    "original_keyword"
-                                                ][keyword][index]
+                                                data_lookup[method][
+                                                    concepts[concept_idx]
+                                                ]["original_keyword"][keyword][index]
                                             ),
                                             html.Td(f"{value:.3}"),
                                         ]
@@ -294,49 +326,6 @@ def _plot_dashboard(results, num_keywords: int = 10):
             else:
                 return ""
         return ""
-
-
-    #@app.callback(
-    #    Output("selected-text", "children"),
-    #    Input("box-plot", "clickData"),
-    #    Input("concept-dropdown", "value"),
-    #    Input("select-method", "value"),
-    #)
-    def display_selected_text_old(click_data, concept_idx, method):
-        if click_data is not None:
-            keyword = click_data["points"][0]["y"]
-            value = click_data["points"][0]["x"]
-            index = click_data["points"][0]["pointIndex"]
-            try:
-                return html.Div(
-                    [
-                        html.H4("Selected sample:"),
-                        html.Table([
-                            html.Tr([html.Th("Keyword"), html.Th("Original keyword"), html.Th("Score")]),
-                            html.Tr([
-                                html.Td(keyword),
-                                html.Td(data_lookup[method][concepts[concept_idx]]['original_keyword'][keyword][index]),
-                                html.Td(f"{value:.3}"),
-                            ])
-                        ], style={"padding": "0 0px", "border-collapse": "separate", "border-spacing": "30px 0px"}),
-                        html.P(
-                            f"{data_lookup[method][concepts[concept_idx]]['texts'][keyword][index]}"
-                        ),
-                    ],
-                    style={
-                        "color": "white",
-                        "background-color": "#3c9fca",
-                        "padding": "10px",
-                        "border-radius": "5px",
-                        "font-family": "Arial, sans-serif",
-                    },
-                )
-            except KeyError:
-                return ""
-            except IndexError:
-                return ""
-        else:
-            return ""
 
     app.run_server(
         mode="inline",
