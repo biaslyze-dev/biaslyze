@@ -42,7 +42,7 @@ def _build_data_lookup(results):
     concepts = [res.concept for res in results.concept_results]
 
     lookup = {}
-    for method in ["default", "ksr"]:
+    for method in ["default", "ksr", "histogram"]:
         method_dict = {}
         for concept in concepts:
             scores = (
@@ -108,6 +108,24 @@ def _plot_dashboard(results, num_keywords: int = 10):
         )
         return fig
 
+    def generate_histogram(dataf):
+        fig = go.Figure()
+        for keyword, color in zip(dataf.columns, pink2blue_colormap):
+            fig.add_trace(
+                go.Histogram(
+                    x=dataf[keyword],
+                    name=keyword,
+                    marker=dict(color=color),
+                    nbinsx=10,
+                )
+            )
+        fig.update_layout(
+            showlegend=False,
+            xaxis_title="Counterfactual Score",
+            yaxis_title="Frequency"
+        )
+        return fig
+
     app.layout = html.Div(
         [
             html.Div(
@@ -117,6 +135,7 @@ def _plot_dashboard(results, num_keywords: int = 10):
                         options=[
                             {"label": "Keyword-based (default)", "value": "default"},
                             {"label": "Sample-based (ksr)", "value": "ksr"},
+                            {"label": "Sample-based (histogram)", "value": "histogram"},
                         ],
                         value="default",
                         inline=True,
@@ -153,7 +172,7 @@ def _plot_dashboard(results, num_keywords: int = 10):
         prevent_initial_callback=True,
     )
     def update_box_plot(concept_idx, method):
-        if method in ["default", "ksr"]:
+        if method in ["default", "ksr", "histogram"]:
             df = (
                 data_lookup[method][concepts[concept_idx]]["data"]
                 .iloc[:, -num_keywords:]
@@ -161,7 +180,12 @@ def _plot_dashboard(results, num_keywords: int = 10):
             )
         else:
             raise ValueError(f"Unknown method '{method}'")
-        fig = generate_box_plot(df)
+
+        if method in ["default", "ksr"]:
+            fig = generate_box_plot(df)
+        elif method == "histogram":
+            fig = generate_histogram(df)
+
         # Stylize graph
         fig.update_layout(
             template="plotly_white",
