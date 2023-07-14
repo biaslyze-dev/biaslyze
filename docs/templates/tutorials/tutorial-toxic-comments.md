@@ -6,7 +6,7 @@ The data consists of instances of 226235 online comments. You can get the data o
 
 Data source: [https://www.kaggle.com/c/jigsaw-toxic-comment-classification-challenge](https://www.kaggle.com/c/jigsaw-toxic-comment-classification-challenge)
 
-## Installation
+# Installation
 First install the Biaslyze python package using:
 
 
@@ -206,86 +206,29 @@ print(counterfactual_detection_results.concept_results[1].omitted_keywords)
     ['hers', 'herself', 'grandmothers', 'grandmas', 'sista', 'sistas', 'him', 'his', 'himself', 'daddies', 'grandfathers', 'grandpa', 'grandpas', 'them', 'themselves']
 
 
-## Lets look at some results
+# Lets look at some results in our Dashboard
 
-### Counterfactual Score
-The first plot below shows you the top $10$ keywords found within the concept "gender" according to the difference resulting from the replacement of counterfactuals with that keyword. 
+## Counterfactual Score
+The first plot shows you the top $10$ keywords found within the concept "gender" and "religion" according to the difference resulting from the replacement of counterfactuals with that keyword. 
 The counterfactual score is defined as the difference between the predicted probability score for the counterfactual text and the predicted probability score for the original text.
 
 $$   
 \text{counterfactual_score} = P(\text{toxic} | \text{counterfactual_text}) - P(\text{toxic} | \text{original_text}).
 $$
 
-Therefore the further a samples score is from zero, the greater the change in the model's decision whether a comment is toxic or non-toxic when it is replaced by that keyword. In this case the positive class is "toxic" and the negative class is "non-toxic". As you can see replacing any other gender keyword with the word "mum" makes the samples classification more likely to be "toxic".
+Therefore the further a samples score is from zero, the greater the change in the model's decision on whether a comment is toxic or non-toxic when it is replaced by that keyword. In this case the positive class (1) is "toxic" and the negative class (-1) is "non-toxic". As you can see in the concept "gender" replacing any other gender keyword with the word "mum" makes the samples classification more likely to be "toxic".
 
 
-```python
-counterfactual_detection_results.visualize_counterfactual_scores(concept="gender", top_n=20)
-```
-
-
-    
-![png](res_tutorial-toxic-comments/output_19_0.png)
-    
-
-
-
-```python
-counterfactual_detection_results.visualize_counterfactual_scores(concept="religion", top_n=15)
-```
-
-
-    
-![png](res_tutorial-toxic-comments/output_20_0.png)
-    
-
-
-### Key-sample replacement score (ksr-score)
-This score looks at how the toxicity-probability changes for all samples with a certain keyword (y-axis) when it is replaced by the counterfactuals from its corresponding concept. This gives you a better look at the representation of a certain keyword within the samples. Once again looking at the keyword "mum" we can see that when it is replaced by counterfactuals the model will less likely predict the sample comment to be toxic.
+## Key-sample replacement score (ksr-score)
+The second score in the dashboard looks at how the toxicity-probability changes for all samples with a certain keyword (y-axis) when it is replaced by the counterfactuals from its corresponding concept. This gives you a better look at the representation of a certain keyword within the samples. Once again looking at the keyword "mum" we can see that when it is replaced by counterfactuals the model will less likely predict the sample comment to be toxic.
 Seeing that many keywords representing females have a strong impact on the models toxicity-prediction we can now ask whether the model might be biased in this way and look into it further, potentially mitigating at some point.
 
 
-
-```python
-counterfactual_detection_results.visualize_counterfactual_sample_scores(concept="gender", top_n=15)
-```
-
-
-    
-![png](res_tutorial-toxic-comments/output_22_0.png)
-    
+![gif](res_tutorial-toxic-comments/gender_religion_scores.gif)
 
 
 
-```python
-counterfactual_detection_results.visualize_counterfactual_scores(concept="religion", top_n=20)
-```
+## Looking into the samples
+The third plot shows you the samples from concept "gender" and their ksr-score as a histogram. By klicking on a bar you can see the samples with their score, the original and replaced keyword, as well as the relevant sample section. This should give you the possibility to further explore the samples, the keywords surrounding syntax and use within your data.
 
-
-    
-![png](res_tutorial-toxic-comments/output_23_0.png)
-    
-
-
-### Looking into the samples
-The next plot shows you the samples from concept "gender" with the bubble size representing the ksr-score. The color blue indicates a positive (likely toxic) score for a certain keyword and orange is a negative (less likely to be toxic) score of a keyword compared to the counterfactuals. Use it to review the samples content.
-
-
-```python
-from bokeh.io import show, output_notebook
-
-output_notebook()
-```
-
-
-```python
-viz = counterfactual_detection_results.visualize_counterfactual_score_by_sample(concept="gender")
-
-show(viz)
-```
-
-    Batches: 100%|██████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████████| 188/188 [05:45<00:00,  1.84s/it]
-    
-    
-![png](res_tutorial-toxic-comments/output_26_0.png)
-
+![gif](res_tutorial-toxic-comments/biaslyze-demo-histogram.gif)

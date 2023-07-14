@@ -55,13 +55,13 @@ detection_res = bias_detector.process(
 # see a summary of the detection
 detection_res.report()
 
-# visualize the counterfactual scores
-detection_res.visualize_counterfactual_scores(concept="religion", top_n=10)
+# lauch the dashboard visualize the counterfactual scores
+detection_res.dashboard(num_keywords=10)
 ```
 
 You will get results as Boxplots, among others, indicating the impact of keywords and concepts on the prediction of your model.
 Example output:
-![](resources/hatespeech_dl_scores_religion.png)
+![](resources/biaslyze-demo-box-plot.gif)
 
 
 See more detailed examples in the [tutorial](tutorials/tutorial-toxic-comments/).
