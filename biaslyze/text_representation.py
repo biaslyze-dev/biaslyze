@@ -6,7 +6,7 @@ import spacy
 from tqdm import tqdm
 
 SPACY_TOKENIZER = spacy.load(
-    "en_core_web_sm", disable=["parser", "tagger", "ner", "lemmatizer"]
+    "en_core_web_sm", disable=["parser", "ner", "lemmatizer"] # "tagger"
 )
 
 
@@ -18,6 +18,8 @@ class Token:
         start (int): The start index of the token in the text.
         end (int): The end index of the token in the text.
         whitespace_after (str): The whitespace after the token.
+        shape (str): The shape of the token as defined by spacy (e.g. Xxxx).
+        function (Optional[List[str]]): The possible functions of the token (e.g. ["name", "verb"]).
     """
 
     def __init__(
@@ -26,6 +28,7 @@ class Token:
         start: int,
         end: int,
         whitespace_after: str,
+        shape: str,
         function: Optional[List[str]] = None,
     ):
         """The constructor for the Token class."""
@@ -33,6 +36,7 @@ class Token:
         self.start = start
         self.end = end
         self.whitespace_after = whitespace_after
+        self.shape = shape
         self.function = function
 
 
@@ -61,7 +65,7 @@ class TextRepresentation:
 
         Should be extended to support more complex queries.
         """
-        return string in [token.text.lower() for token in self.tokens]
+        return string.lower() in [token.text.lower() for token in self.tokens]
 
     @classmethod
     def from_spacy_doc(cls, doc: spacy.tokens.Doc):
@@ -69,7 +73,14 @@ class TextRepresentation:
         tokens = []
         for token in doc:
             tokens.append(
-                Token(token.text, token.idx, token.idx + len(token), token.whitespace_)
+                Token(
+                    text=token.text,
+                    start=token.idx,
+                    end=token.idx + len(token),
+                    whitespace_after=token.whitespace_,
+                    shape=token.shape_,
+                    function=token.pos_,
+                )
             )
         return cls(doc.text, tokens)
 

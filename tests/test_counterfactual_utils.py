@@ -27,9 +27,9 @@ def test_extract_counterfactual_concept_samples():
     concept = Concept(
         name="gender",
         keywords=[
-            Keyword(text="she", function=["subject"], category="pronoun"),
-            Keyword(text="he", function=["subject"], category="pronoun"),
-            Keyword(text="they", function=["subject"], category="pronoun"),
+            Keyword(text="she", functions=["subject"], category="PRON"),
+            Keyword(text="he", functions=["subject"], category="PRON"),
+            Keyword(text="they", functions=["subject"], category="PRON"),
         ],
     )
     texts = [
@@ -53,9 +53,9 @@ def test_calculate_counterfactual_score():
     concept = Concept(
         name="gender",
         keywords=[
-            Keyword(text="she", function=["subject"], category="pronoun"),
-            Keyword(text="he", function=["subject"], category="pronoun"),
-            Keyword(text="they", function=["subject"], category="pronoun"),
+            Keyword(text="she", functions=["subject"], category="PRON"),
+            Keyword(text="he", functions=["subject"], category="PRON"),
+            Keyword(text="they", functions=["subject"], category="PRON"),
         ],
     )
     texts = [

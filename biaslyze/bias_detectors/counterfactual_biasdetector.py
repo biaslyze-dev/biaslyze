@@ -13,6 +13,7 @@ from biaslyze.results.counterfactual_detection_results import (
     CounterfactualDetectionResult,
     CounterfactualSample,
 )
+from biaslyze.augmentors import CounterfactualTextAugmentor
 from biaslyze.text_representation import TextRepresentation, process_texts_with_spacy
 
 
@@ -55,15 +56,18 @@ class CounterfactualBiasDetector:
     Attributes:
         use_tokenizer: If keywords should only be searched in tokenized text. Can be useful for short keywords like 'she'.
         concept_detector: an instance of KeywordConceptDetector
+        text_augmentor: an instance of CounterfactualTextAugmentor
     """
 
     def __init__(
         self,
         use_tokenizer: bool = False,
         concept_detector: KeywordConceptDetector = KeywordConceptDetector(),
+        text_augmentor: CounterfactualTextAugmentor = CounterfactualTextAugmentor(), 
     ):
         self.use_tokenizer = use_tokenizer
         self.concept_detector = concept_detector
+        self.text_augmentor = text_augmentor
 
         # overwrite use_tokenizer
         self.concept_detector.use_tokenizer = self.use_tokenizer
@@ -124,7 +128,7 @@ class CounterfactualBiasDetector:
         if max_counterfactual_samples:
             max_counterfactual_samples_per_text = max_counterfactual_samples // len(
                 detected_texts
-            )
+            ) + 1
 
         results = []
         for concept in self.concepts:
@@ -140,17 +144,23 @@ class CounterfactualBiasDetector:
                 n_texts=max_counterfactual_samples_per_text,
             )
             if not counterfactual_samples:
-                logger.warning(f"No samples containing {concept} found. Skipping.")
+                logger.warning(f"No samples containing {concept.name} found. Skipping.")
                 continue
 
             # calculate counterfactual scores for each keyword
             for keyword in tqdm(concept.keywords):
                 # get the counterfactual scores
-                counterfactual_scores = _calculate_counterfactual_scores(
-                    bias_keyword=keyword.text,
-                    predict_func=predict_func,
-                    samples=counterfactual_samples,
-                )
+                try:
+                    counterfactual_scores = _calculate_counterfactual_scores(
+                        bias_keyword=keyword.text,
+                        predict_func=predict_func,
+                        samples=counterfactual_samples,
+                    )
+                except ValueError:
+                    logger.warning(
+                        f"Could not calculate counterfactual scores for keyword {keyword.text}. Skipping."
+                    )
+                    continue
                 # add to score dict
                 score_dict[keyword.text] = counterfactual_scores
                 # add scores to samples
@@ -194,6 +204,7 @@ def _extract_counterfactual_concept_samples(
     texts: List[str],
     labels: Optional[List[str]] = None,
     n_texts: Optional[int] = None,
+    respect_function: bool = True,
 ) -> List[CounterfactualSample]:
     """Extract counterfactual samples for a given concept from a list of texts.
 
@@ -206,6 +217,7 @@ def _extract_counterfactual_concept_samples(
         tokenizer: The tokenizer to use for tokenization.
         labels: Optional. Used to add labels to the counterfactual results.
         n_texts: Optional. The number of counterfactual texts to return. Defaults to None, which returns all possible counterfactual texts.
+        respect_function: If True, only replace keywords with the same function.
 
     Returns:
         A list of CounterfactualSample objects.
@@ -213,15 +225,15 @@ def _extract_counterfactual_concept_samples(
     counterfactual_samples = []
     original_texts = []
     text_representations: List[TextRepresentation] = process_texts_with_spacy(texts)
-    for idx, (text, text_representation) in tqdm(
-        enumerate(zip(texts, text_representations)), total=len(texts)
+    for idx, text_representation in tqdm(
+        enumerate(text_representations), total=len(text_representations)
     ):
         present_keywords = concept.get_present_keywords(text_representation)
         if present_keywords:
-            original_texts.append(text)
+            original_texts.append(text_representation.text)
             for orig_keyword in present_keywords:
                 counterfactual_texts = concept.get_counterfactual_texts(
-                    orig_keyword, text_representation, n_texts=n_texts
+                    orig_keyword, text_representation, n_texts=n_texts, respect_function=respect_function
                 )
                 for counterfactual_text, counterfactual_keyword in counterfactual_texts:
                     counterfactual_samples.append(
@@ -232,7 +244,7 @@ def _extract_counterfactual_concept_samples(
                             concept=concept.name,
                             tokenized=text_representation,
                             label=labels[idx] if labels else None,
-                            source_text=text,
+                            source_text=text_representation.text,
                         )
                     )
     logger.info(
