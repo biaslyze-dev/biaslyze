@@ -1,5 +1,4 @@
 """Detect hints of bias by calculating counterfactual token scores for protected concepts."""
-import random
 from typing import Callable, List, Optional
 
 import numpy as np
