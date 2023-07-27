@@ -64,7 +64,7 @@ Example output:
 ![](resources/biaslyze-demo-box-plot.gif)
 
 
-See more detailed examples in the [tutorial](notebooks/notebooks/Tutorial_biaslyze_toxic-comments-usecase.ipynb).
+See more detailed examples in the [tutorial](https://biaslyze.org/tutorials/tutorial-toxic-comments/).
 
 
 ## Development setup
