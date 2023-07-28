@@ -46,34 +46,58 @@ class CounterfactualBiasDetector:
         # see a summary of the detection
         detection_res.report()
 
-        # visualize the counterfactual scores
-        detection_res.visualize_counterfactual_scores(concept="religion")
-
-        # visualize the counterfactual sample scores
-        detection_res.visualize_counterfactual_score_by_sample_histogram(concepts=["religion", "gender"])
+        # visualize the counterfactual scores as a dash dashboard
+        detection_res.dashboard()
         ```
 
     Attributes:
+        lang: The language of the texts. Decides which concepts and keywords to use.
         use_tokenizer: If keywords should only be searched in tokenized text. Can be useful for short keywords like 'she'.
         concept_detector: an instance of KeywordConceptDetector
-        text_augmentor: an instance of CounterfactualTextAugmentor
     """
 
     def __init__(
         self,
+        lang: str = "en",
         use_tokenizer: bool = False,
         concept_detector: KeywordConceptDetector = KeywordConceptDetector(),
-        text_augmentor: CounterfactualTextAugmentor = CounterfactualTextAugmentor(), 
     ):
+        lang = lang
         self.use_tokenizer = use_tokenizer
         self.concept_detector = concept_detector
-        self.text_augmentor = text_augmentor
 
         # overwrite use_tokenizer
         self.concept_detector.use_tokenizer = self.use_tokenizer
 
         # load the concepts
-        self.concepts = load_concepts()
+        self.concepts = load_concepts(lang=lang)
+    
+    def register_concept(self, concept: Concept):
+        """Register a new, custom concept to the detector.
+
+        Example usage:
+        ```python
+        names_concept = Concept.from_dict_keyword_list(
+            name="names",
+            lang="de",
+            keywords=[{"keyword": "Hans", "function": ["name"]}],
+        )
+        bias_detector = CounterfactualBiasDetector(lang="de")
+        bias_detector.register_concept(names_concept)
+        ```
+        
+        Args:
+            concept: The concept to register.
+
+        Raises:
+            ValueError: If concept is not a Concept object.
+            ValueError: If a concept with this name is already registered.
+        """
+        if not isinstance(concept, Concept):
+            raise ValueError("concept must be a Concept object.")
+        if concept.name in [c.name for c in self.concepts]:
+            raise ValueError(f"Concept {concept.name} already registered.")
+        self.concepts.append(concept)
 
     def process(
         self,

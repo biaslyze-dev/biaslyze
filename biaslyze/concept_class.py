@@ -6,7 +6,7 @@ As well as Keyword Class, which is used to represent a keyword in the biaslyze p
 import random
 from typing import List, Optional, Tuple
 
-from biaslyze.concepts import CONCEPTS
+from biaslyze.concepts import CONCEPTS_EN, CONCEPTS_DE
 from biaslyze.text_representation import TextRepresentation, Token
 
 
@@ -80,14 +80,31 @@ class Concept:
         keywords (List[Keyword]): The keywords of the concept.
     """
 
-    def __init__(self, name: str, keywords: List[Keyword]):
+    def __init__(self, name: str, lang: str, keywords: List[Keyword]):
         """The constructor for the Concept class."""
         self.name = name
+        self.lang = lang
         self.keywords = keywords
 
     @classmethod
-    def from_dict_keyword_list(cls, name: str, keywords: List[dict]):
-        """Constructs a Concept object from a list of dictionaries."""
+    def from_dict_keyword_list(cls, name: str, lang: str, keywords: List[dict]):
+        """Constructs a Concept object from a list of dictionaries.
+
+        Example usage:
+        ```python
+        names_concept = Concept.from_dict_keyword_list(
+            name="names",
+            lang="de",
+            keywords=[{"keyword": "Hans", "function": ["name"]}],
+        )
+        ```
+        
+        Args:
+            name (str): The name of the concept.
+            lang (str): The language of the concept.
+            keywords (List[dict]): A list of dictionaries containing the keywords of the concept.
+
+        """
         keyword_list = []
         for keyword in keywords:
             keyword_list.append(
@@ -97,7 +114,7 @@ class Concept:
                     category=keyword.get("category", None),
                 )
             )
-        return cls(name, keyword_list)
+        return cls(name, lang, keyword_list)
 
     def get_present_keywords(
         self, text_representation: TextRepresentation
@@ -156,16 +173,26 @@ class Concept:
         return counterfactual_texts
 
 
-def load_concepts() -> List[Concept]:
+def load_concepts(lang: str) -> List[Concept]:
     """Loads the concepts from the concepts.py file.
+
+    Args:
+        lang (str): The language of the concepts to load.
 
     TODO:
     - Make this load from a JSON file instead of a Python file.
-    - Accept a language parameter to load the concepts for a specific language.
     """
     concept_list = []
-    for concept_name, concept_keywords in CONCEPTS.items():
-        concept_list.append(
-            Concept.from_dict_keyword_list(concept_name, concept_keywords)
-        )
+    if lang == "en":
+        for concept_name, concept_keywords in CONCEPTS_EN.items():
+            concept_list.append(
+                Concept.from_dict_keyword_list(concept_name, lang, concept_keywords)
+            )
+    elif lang == "de":
+        for concept_name, concept_keywords in CONCEPTS_DE.items():
+            concept_list.append(
+                Concept.from_dict_keyword_list(concept_name, lang, concept_keywords)
+            )
+    else:
+        raise ValueError(f"Language {lang} not supported.")
     return concept_list
