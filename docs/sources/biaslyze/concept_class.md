@@ -85,7 +85,7 @@ Uses the shape of the token to determine the style.
 [source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L74)
 ```python 
 Concept(
-   name: str, keywords: List[Keyword]
+   name: str, lang: str, keywords: List[Keyword]
 )
 ```
 
@@ -105,18 +105,36 @@ A class used to represent a concept in the biaslyze package.
 
 
 ### .from_dict_keyword_list
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L89)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L90)
 ```python
 .from_dict_keyword_list(
-   cls, name: str, keywords: List[dict]
+   cls, name: str, lang: str, keywords: List[dict]
 )
 ```
 
 ---
 Constructs a Concept object from a list of dictionaries.
 
+Example usage:
+```python
+names_concept = Concept.from_dict_keyword_list(
+name="names",
+lang="de",
+keywords=[{"keyword": "Hans", "function": ["name"]}],
+---
+)
+```
+
+
+**Args**
+
+* **name** (str) : The name of the concept.
+* **lang** (str) : The language of the concept.
+* **keywords** (List[dict]) : A list of dictionaries containing the keywords of the concept.
+
+
 ### .get_present_keywords
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L102)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L119)
 ```python
 .get_present_keywords(
    text_representation: TextRepresentation
@@ -127,7 +145,7 @@ Constructs a Concept object from a list of dictionaries.
 Returns the keywords that are present in the given text.
 
 ### .get_counterfactual_texts
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L112)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L129)
 ```python
 .get_counterfactual_texts(
    keyword: Keyword, text_representation: TextRepresentation,
