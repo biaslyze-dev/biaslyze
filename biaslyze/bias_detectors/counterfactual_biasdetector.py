@@ -13,7 +13,6 @@ from biaslyze.results.counterfactual_detection_results import (
     CounterfactualDetectionResult,
     CounterfactualSample,
 )
-from biaslyze.augmentors import CounterfactualTextAugmentor
 from biaslyze.text_representation import TextRepresentation, process_texts_with_spacy
 
 
@@ -53,21 +52,16 @@ class CounterfactualBiasDetector:
     Attributes:
         lang: The language of the texts. Decides which concepts and keywords to use.
         use_tokenizer: If keywords should only be searched in tokenized text. Can be useful for short keywords like 'she'.
-        concept_detector: an instance of KeywordConceptDetector
     """
 
     def __init__(
         self,
         lang: str = "en",
         use_tokenizer: bool = False,
-        concept_detector: KeywordConceptDetector = KeywordConceptDetector(),
     ):
-        lang = lang
+        self.lang = lang
         self.use_tokenizer = use_tokenizer
-        self.concept_detector = concept_detector
-
-        # overwrite use_tokenizer
-        self.concept_detector.use_tokenizer = self.use_tokenizer
+        self.concept_detector = KeywordConceptDetector(lang=lang, use_tokenizer=use_tokenizer)
 
         # load the concepts
         self.concepts = load_concepts(lang=lang)
@@ -96,7 +90,7 @@ class CounterfactualBiasDetector:
         if not isinstance(concept, Concept):
             raise ValueError("concept must be a Concept object.")
         if concept.name in [c.name for c in self.concepts]:
-            raise ValueError(f"Concept {concept.name} already registered.")
+            raise ValueError(f"Concept '{concept.name}' already registered.")
         self.concepts.append(concept)
 
     def process(
@@ -123,6 +117,10 @@ class CounterfactualBiasDetector:
 
         Raises:
             ValueError: If texts or predict_func is not given.
+            ValueError: If concepts_to_consider is not a list.
+            ValueError: If max_counterfactual_samples is given but not a positive integer.
+            ValueError: If max_counterfactual_samples_per_text is given but not a positive integer.
+            ValueError: If concepts_to_consider contains a concept that is not registered.
         """
         if texts is None:
             raise ValueError("texts must be given.")
@@ -144,9 +142,13 @@ class CounterfactualBiasDetector:
                 raise ValueError(
                     "max_counterfactual_samples_per_text must be a positive integer."
                 )
+        if concepts_to_consider:
+            for c in concepts_to_consider:
+                if c not in [c.name for c in self.concepts]:
+                    raise ValueError(f"Concept '{c}' not found in language '{self.lang}'.")
 
         # find bias relevant texts
-        detected_texts = self.concept_detector.detect(texts)
+        detected_texts = self.concept_detector.detect(texts, concepts_to_consider=concepts_to_consider)
 
         # limit the number of counterfactual samples per text if max_counterfactual_samples is given
         if max_counterfactual_samples:
