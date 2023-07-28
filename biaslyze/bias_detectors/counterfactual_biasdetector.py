@@ -170,7 +170,7 @@ class CounterfactualBiasDetector:
                 n_texts=max_counterfactual_samples_per_text,
             )
             if not counterfactual_samples:
-                logger.warning(f"No samples containing {concept.name} found. Skipping.")
+                logger.warning(f"No samples containing '{concept.name}' found. Skipping.")
                 continue
 
             # calculate counterfactual scores for each keyword
