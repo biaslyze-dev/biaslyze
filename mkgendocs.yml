@@ -37,3 +37,7 @@ pages:
     classes:
       - Keyword
       - Concept
+  - page: "biaslyze/utils.md"
+    source: "biaslyze/utils.py"
+    functions:
+      - load_results

@@ -34,6 +34,14 @@ The result of a counterfactual bias detection run.
 ---
 Save the detection result to a file.
 
+Load again by
+
+```python
+from biaslyze.utils import load_results
+
+results = load_results(path)
+```
+
 
 **Args**
 
@@ -45,19 +53,8 @@ Save the detection result to a file.
 * **ValueError**  : If the path is not valid.
 
 
-### .from_saved
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L94)
-```python
-.from_saved(
-   cls, path: str
-)
-```
-
----
-Load a detection result from a save file.
-
 ### .report
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L135)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L137)
 ```python
 .report()
 ```
@@ -69,7 +66,7 @@ Details:
 For each concept, the maximum mean and maximum standard deviation of the counterfactual scores is shown.
 
 ### .dashboard
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L146)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L148)
 ```python
 .dashboard(
    num_keywords: int = 10
@@ -80,7 +77,7 @@ For each concept, the maximum mean and maximum standard deviation of the counter
 Start a dash dashboard with interactive box plots.
 
 ### .visualize_counterfactual_score_by_sample
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L276)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L278)
 ```python
 .visualize_counterfactual_score_by_sample(
    concept: str

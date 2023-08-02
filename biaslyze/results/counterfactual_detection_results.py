@@ -75,6 +75,14 @@ class CounterfactualDetectionResult:
 
     def save(self, path: str):
         """Save the detection result to a file.
+
+        Load again by
+
+        ```python
+        from biaslyze.utils import load_results
+
+        results = load_results(path)
+        ```
         
         Args:
             path (str): The path to save the result to.
@@ -89,12 +97,6 @@ class CounterfactualDetectionResult:
             warnings.warn(
                 "Could not save result. Please make sure that the path is valid."
             )
-    
-    @classmethod
-    def from_saved(cls, path: str):
-        """Load a detection result from a save file."""
-        with open(path, "rb") as f:
-            return dill.load(f)
 
     def _get_result_by_concept(self, concept: str) -> pd.DataFrame:
         """Get the result for a given concept.
