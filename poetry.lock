@@ -2253,7 +2253,7 @@ tqdm = "*"
 transformers = ">=4.6.0,<5.0.0"
 
 [[package]]
-name = "sentencepiece"f
+name = "sentencepiece"
 description = "SentencePiece python wrapper"
 category = "main"
 optional = false
