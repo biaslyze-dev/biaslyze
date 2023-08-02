@@ -16,6 +16,7 @@ nav:
     - How to identify bias in hate speech detection: tutorials/tutorial-toxic-comments.md
     - How to use counterfactual texts for bias mitigation: tutorials/tutorial-counterfactual-mitigation.md
   - API:
+    - Overview: api.md
     - Bias detectors : 
       - CounterfactualBiasDetector: biaslyze/bias_detectors/counterfactual_biasdetector.md
       - LimeKeywordBiasDetector: biaslyze/bias_detectors/lime_biasdetector.md
