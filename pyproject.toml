@@ -49,11 +49,11 @@ nvidia-nvtx-cu11 = "^11.8.86"
 triton = "^2.0.0.post1"
 dash = "^2.11.1"
 plotly = "^5.15.0"
+mkdocstrings = "^0.22.0"
 
 [tool.poetry.group.dev.dependencies]
 mkdocs-material = "^9.1.1"
 material-plausible-plugin = "^0.2.0"
-mkgendocs = "^0.9.2"
 Pillow = "^10.0.0"
 CairoSVG = "^2.7.0"
 black = "^23.1.0"

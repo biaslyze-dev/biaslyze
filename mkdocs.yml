@@ -69,6 +69,7 @@ markdown_extensions:
 plugins:
     - material-plausible
     - social
+    - mkdocstrings
 
 extra:
   analytics:

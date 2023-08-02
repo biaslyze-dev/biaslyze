@@ -6,11 +6,9 @@ jupyter:
 	poetry run jupyter lab
 
 doc-preview:
-	poetry run gendocs --config mkgendocs.yml
 	poetry run mkdocs serve --dirtyreload
 
 doc:
-	poetry run gendocs --config mkgendocs.yml
 	poetry run mkdocs build
 
 style:
