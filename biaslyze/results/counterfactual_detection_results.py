@@ -1,5 +1,6 @@
 """This module contains classes to store and process the results of counterfactual bias detection runs."""
 import warnings
+import dill
 from collections import defaultdict
 from typing import List, Optional
 
@@ -71,6 +72,29 @@ class CounterfactualDetectionResult:
 
     def __init__(self, concept_results: List[CounterfactualConceptResult]):
         self.concept_results = concept_results
+
+    def save(self, path: str):
+        """Save the detection result to a file.
+        
+        Args:
+            path (str): The path to save the result to.
+
+        Raises:
+            ValueError: If the path is not valid.
+        """
+        try:
+            with open(path, "wb") as f:
+                dill.dump(self, f)
+        except ValueError:
+            warnings.warn(
+                "Could not save result. Please make sure that the path is valid."
+            )
+    
+    @classmethod
+    def from_saved(cls, path: str):
+        """Load a detection result from a save file."""
+        with open(path, "rb") as f:
+            return dill.load(f)
 
     def _get_result_by_concept(self, concept: str) -> pd.DataFrame:
         """Get the result for a given concept.

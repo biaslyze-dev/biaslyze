@@ -49,6 +49,7 @@ nvidia-nvtx-cu11 = "^11.8.86"
 triton = "^2.0.0.post1"
 dash = "^2.11.1"
 plotly = "^5.15.0"
+dill = "^0.3.7"
 
 [tool.poetry.group.dev.dependencies]
 mkdocs-material = "^9.1.1"
