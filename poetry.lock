@@ -701,6 +701,17 @@ docs = ["sphinx (>=5)", "sphinx-autodoc-typehints", "sphinx-rtd-theme"]
 test = ["coverage", "mock (>=4)", "pytest (>=7)", "pytest-cov", "pytest-mock (>=3)"]
 
 [[package]]
+name = "griffe"
+version = "0.32.3"
+description = "Signatures for entire Python programs. Extract the structure, the frame, the skeleton of your project, to generate API documentation or find breaking changes in your API."
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+colorama = ">=0.4"
+
+[[package]]
 name = "hdbscan"
 version = "0.8.33"
 description = "Clustering based on density with variable density clusters"
@@ -1232,6 +1243,17 @@ docs = ["mdx-gh-links (>=0.2)", "mkdocs (>=1.0)", "mkdocs-nature (>=0.4)"]
 testing = ["coverage", "pyyaml"]
 
 [[package]]
+name = "markdown-callouts"
+version = "0.3.0"
+description = "Markdown extension: a classier syntax for admonitions"
+category = "main"
+optional = false
+python-versions = ">=3.6,<4.0"
+
+[package.dependencies]
+Markdown = ">=3.3.3,<4.0.0"
+
+[[package]]
 name = "MarkupSafe"
 version = "2.1.3"
 description = "Safely add untrusted strings to HTML/XML markup."
@@ -1378,12 +1400,41 @@ Markdown = ">=3.3"
 MarkupSafe = ">=1.1"
 mkdocs = ">=1.2"
 mkdocs-autorefs = ">=0.3.1"
+mkdocstrings-crystal = {version = ">=0.3.4", optional = true, markers = "extra == \"crystal\""}
+mkdocstrings-python = {version = ">=0.5.2", optional = true, markers = "extra == \"python\""}
 pymdown-extensions = ">=6.3"
 
 [package.extras]
 crystal = ["mkdocstrings-crystal (>=0.3.4)"]
 python = ["mkdocstrings-python (>=0.5.2)"]
 python-legacy = ["mkdocstrings-python-legacy (>=0.2.1)"]
+
+[[package]]
+name = "mkdocstrings-crystal"
+version = "0.3.6"
+description = "Crystal language doc generator for mkdocstrings"
+category = "main"
+optional = false
+python-versions = ">=3.7"
+
+[package.dependencies]
+jinja2 = ">=2.11.2"
+markdown-callouts = ">=0.1.0"
+markupsafe = ">=1.1.1"
+mkdocs-autorefs = ">=0.3.1"
+mkdocstrings = ">=0.19.0"
+
+[[package]]
+name = "mkdocstrings-python"
+version = "1.2.1"
+description = "A Python handler for mkdocstrings."
+category = "main"
+optional = false
+python-versions = ">=3.8"
+
+[package.dependencies]
+griffe = ">=0.30"
+mkdocstrings = ">=0.20"
 
 [[package]]
 name = "mpmath"
@@ -2949,7 +3000,7 @@ test = ["mypy", "pre-commit", "pytest", "pytest-asyncio", "websockets (>=10.0)"]
 [metadata]
 lock-version = "1.1"
 python-versions = "<3.11,>=3.10"
-content-hash = "dfb1c4222dc7b82fbddef02a770c4afb3802d6c307438324e661322b3101440d"
+content-hash = "55eb53bc9180c26008db6abcfeda4fe40d62913e82015869887d2ae66507c1bb"
 
 [metadata.files]
 aiofiles = [
@@ -3586,6 +3637,10 @@ graphviz = [
     {file = "graphviz-0.20.1-py3-none-any.whl", hash = "sha256:587c58a223b51611c0cf461132da386edd896a029524ca61a1462b880bf97977"},
     {file = "graphviz-0.20.1.zip", hash = "sha256:8c58f14adaa3b947daf26c19bc1e98c4e0702cdc31cf99153e6f06904d492bf8"},
 ]
+griffe = [
+    {file = "griffe-0.32.3-py3-none-any.whl", hash = "sha256:d9471934225818bf8f309822f70451cc6abb4b24e59e0bb27402a45f9412510f"},
+    {file = "griffe-0.32.3.tar.gz", hash = "sha256:14983896ad581f59d5ad7b6c9261ff12bdaa905acccc1129341d13e545da8521"},
+]
 hdbscan = [
     {file = "hdbscan-0.8.33-cp311-cp311-win_amd64.whl", hash = "sha256:314b586eeace80c96311c9acc6b2805f7c4fac434db55925a578c3c4d294118e"},
     {file = "hdbscan-0.8.33.tar.gz", hash = "sha256:57fabc5f0e45f48d2407b35c731192abc896376411fe7e4bb836ffa03d38f90d"},
@@ -3809,6 +3864,10 @@ Markdown = [
     {file = "Markdown-3.4.4-py3-none-any.whl", hash = "sha256:a4c1b65c0957b4bd9e7d86ddc7b3c9868fb9670660f6f99f6d1bca8954d5a941"},
     {file = "Markdown-3.4.4.tar.gz", hash = "sha256:225c6123522495d4119a90b3a3ba31a1e87a70369e03f14799ea9c0d7183a3d6"},
 ]
+markdown-callouts = [
+    {file = "markdown-callouts-0.3.0.tar.gz", hash = "sha256:21e99d72a879663343e232158413e12eeaa9fb78b90e669f41cdbf0962a364fb"},
+    {file = "markdown_callouts-0.3.0-py3-none-any.whl", hash = "sha256:6d58e8bd244366d2a5ca549b1971f4caac3036469c243856eb886364f71c013b"},
+]
 MarkupSafe = [
     {file = "MarkupSafe-2.1.3-cp310-cp310-macosx_10_9_universal2.whl", hash = "sha256:cd0f502fe016460680cd20aaa5a76d241d6f35a1c3350c474bac1273803893fa"},
     {file = "MarkupSafe-2.1.3-cp310-cp310-macosx_10_9_x86_64.whl", hash = "sha256:e09031c87a1e51556fdcb46e5bd4f59dfb743061cf93c4d6831bf894f125eb57"},
@@ -3939,6 +3998,14 @@ mkdocs-material-extensions = [
 mkdocstrings = [
     {file = "mkdocstrings-0.22.0-py3-none-any.whl", hash = "sha256:2d4095d461554ff6a778fdabdca3c00c468c2f1459d469f7a7f622a2b23212ba"},
     {file = "mkdocstrings-0.22.0.tar.gz", hash = "sha256:82a33b94150ebb3d4b5c73bab4598c3e21468c79ec072eff6931c8f3bfc38256"},
+]
+mkdocstrings-crystal = [
+    {file = "mkdocstrings_crystal-0.3.6-py3-none-any.whl", hash = "sha256:824bb305fda7de4760101f078ee586b536a89294b2e9a07f453fee61d3e4a665"},
+    {file = "mkdocstrings_crystal-0.3.6.tar.gz", hash = "sha256:37d3f6194ad65d996756cd23e548ffdbef8e18f7515ed9a2502b16d695597f04"},
+]
+mkdocstrings-python = [
+    {file = "mkdocstrings_python-1.2.1-py3-none-any.whl", hash = "sha256:7c08f33e9ba7b1655e9cf0608eba3ce7a9513bd8b42a68a8d24ffaf4a6a50cfc"},
+    {file = "mkdocstrings_python-1.2.1.tar.gz", hash = "sha256:ae40825b3b676a94626882901ed9c8fcf9a7f0330e466ffe37ce15c525987aa9"},
 ]
 mpmath = [
     {file = "mpmath-1.3.0-py3-none-any.whl", hash = "sha256:a0b2b9fe80bbcd81a6647ff13108738cfb482d481d826cc0e02f5b35e5c88d2c"},
