@@ -6,7 +6,7 @@ The data consists of instances of 226235 online comments. You can get the data o
 
 Data source: [https://www.kaggle.com/c/jigsaw-toxic-comment-classification-challenge](https://www.kaggle.com/c/jigsaw-toxic-comment-classification-challenge)
 
-# Installation
+## Installation
 First install the Biaslyze python package using:
 
 
@@ -206,9 +206,9 @@ print(counterfactual_detection_results.concept_results[1].omitted_keywords)
     ['hers', 'herself', 'grandmothers', 'grandmas', 'sista', 'sistas', 'him', 'his', 'himself', 'daddies', 'grandfathers', 'grandpa', 'grandpas', 'them', 'themselves']
 
 
-# Lets look at some results in our Dashboard
+## Lets look at some results in our Dashboard
 
-## Counterfactual Score
+### Counterfactual Score
 The first plot shows you the top $10$ keywords found within the concept "gender" and "religion" according to the difference resulting from the replacement of counterfactuals with that keyword. 
 The counterfactual score is defined as the difference between the predicted probability score for the counterfactual text and the predicted probability score for the original text.
 
@@ -219,7 +219,7 @@ $$
 Therefore the further a samples score is from zero, the greater the change in the model's decision on whether a comment is toxic or non-toxic when it is replaced by that keyword. In this case the positive class (1) is "toxic" and the negative class (-1) is "non-toxic". As you can see in the concept "gender" replacing any other gender keyword with the word "mum" makes the samples classification more likely to be "toxic".
 
 
-## Key-sample replacement score (ksr-score)
+### Key-sample replacement score (ksr-score)
 The second score in the dashboard looks at how the toxicity-probability changes for all samples with a certain keyword (y-axis) when it is replaced by the counterfactuals from its corresponding concept. This gives you a better look at the representation of a certain keyword within the samples. Once again looking at the keyword "mum" we can see that when it is replaced by counterfactuals the model will less likely predict the sample comment to be toxic.
 Seeing that many keywords representing females have a strong impact on the models toxicity-prediction we can now ask whether the model might be biased in this way and look into it further, potentially mitigating at some point.
 
@@ -228,7 +228,7 @@ Seeing that many keywords representing females have a strong impact on the model
 
 
 
-## Looking into the samples
+### Looking into the samples
 The third plot shows you the samples from concept "gender" and their ksr-score as a histogram. By klicking on a bar you can see the samples with their score, the original and replaced keyword, as well as the relevant sample section. This should give you the possibility to further explore the samples, the keywords surrounding syntax and use within your data.
 
 ![gif](res_tutorial-toxic-comments/biaslyze-demo-histogram.gif)

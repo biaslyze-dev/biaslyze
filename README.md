@@ -55,7 +55,7 @@ detection_res = bias_detector.process(
 # see a summary of the detection
 detection_res.report()
 
-# lauch the dashboard visualize the counterfactual scores
+# launch the dashboard visualize the counterfactual scores
 detection_res.dashboard(num_keywords=10)
 ```
 
@@ -64,7 +64,7 @@ Example output:
 ![](resources/biaslyze-demo-box-plot.gif)
 
 
-See more detailed examples in the [tutorial](tutorials/tutorial-toxic-comments/).
+See more detailed examples in the [tutorial](https://biaslyze.org/tutorials/tutorial-toxic-comments/).
 
 
 ## Development setup
@@ -96,7 +96,7 @@ For linting we are running ruff: `make lint`
 
 ## Contributing
 
-Follow the google style guide for python: https://google.github.io/styleguide/pyguide.html
+Follow the Google style guide for Python: https://google.github.io/styleguide/pyguide.html
 
 This project uses black, isort and ruff to enforce style. Apply it by running `make style` and `make lint`.
 
