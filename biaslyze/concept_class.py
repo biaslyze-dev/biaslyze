@@ -1,7 +1,4 @@
-"""
-This module contains the Concept class, which is used to represent a concept in the biaslyze package.
-As well as Keyword Class, which is used to represent a keyword in the biaslyze package.
-"""
+"""This module contains the Concept and a Keyword class, which is used to represent a concept or respectively a keyword in the biaslyze package."""
 
 import random
 from typing import List, Optional, Tuple
@@ -74,6 +71,23 @@ class Keyword:
 class Concept:
     """
     A class used to represent a concept in the biaslyze package.
+
+    Currently the following concepts are supported:
+
+    in English:
+
+    - gender
+    - religion
+    - ethnicity
+    - gendered_words
+    - nationality
+    
+    in German:
+
+    - gender
+    - religion
+
+    You can find out more here: [concepts.py](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concepts.py).
 
     Attributes:
         name (str): The name of the concept.
