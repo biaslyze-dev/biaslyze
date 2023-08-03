@@ -8,10 +8,6 @@ pages:
     source: "biaslyze/bias_detectors/counterfactual_biasdetector.py"
     classes:
       - CounterfactualBiasDetector 
-  - page: "biaslyze/bias_detectors/lime_biasdetector.md"
-    source: "biaslyze/bias_detectors/lime_biasdetector.py"
-    classes:
-      - LimeBiasDetector
   - page: "biaslyze/results/counterfactual_detection_results.md"
     source: "biaslyze/results/counterfactual_detection_results.py"
     classes:
