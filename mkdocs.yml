@@ -14,15 +14,19 @@ nav:
   - FAQ: faq.md
   - Tutorials:
     - How to identify bias in hate speech detection: tutorials/tutorial-toxic-comments.md
+    - How to work with custom concepts: tutorials/tutorial-working-with-custom-concepts.md
     - How to use counterfactual texts for bias mitigation: tutorials/tutorial-counterfactual-mitigation.md
   - API:
+    - Overview: api.md
     - Bias detectors : 
       - CounterfactualBiasDetector: biaslyze/bias_detectors/counterfactual_biasdetector.md
     - Results:
       - CounterfactualDetectionResult: biaslyze/results/counterfactual_detection_results.md
+    - Concepts: 
+      - Concept: biaslyze/concept_class.md
     - Concept detectors: biaslyze/concept_detectors.md
     - TextRepresentation: biaslyze/text_representation.md
-    - Concept: biaslyze/concept_class.md
+    - Utils: biaslyze/utils.md
 
 theme:
   name: material

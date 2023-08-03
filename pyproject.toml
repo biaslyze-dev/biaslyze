@@ -32,6 +32,7 @@ matplotlib = "^3.7.1"
 spacy = "^3.5.0"
 dash = "^2.11.1"
 plotly = "^5.15.0"
+dill = "^0.3.7"
 
 [tool.poetry.group.dev.dependencies]
 mkdocs-material = "^9.1.1"

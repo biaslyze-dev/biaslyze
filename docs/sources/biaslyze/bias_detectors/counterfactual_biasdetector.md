@@ -2,12 +2,10 @@
 
 
 ## CounterfactualBiasDetector
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/counterfactual_biasdetector.py/#L20)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/counterfactual_biasdetector.py/#L19)
 ```python 
 CounterfactualBiasDetector(
-   use_tokenizer: bool = False,
-   concept_detector: KeywordConceptDetector = KeywordConceptDetector(),
-   text_augmentor: CounterfactualTextAugmentor = CounterfactualTextAugmentor()
+   lang: str = 'en', use_tokenizer: bool = False
 )
 ```
 
@@ -41,27 +39,58 @@ detection_res = bias_detector.process(
 # see a summary of the detection
 detection_res.report()
 
-# visualize the counterfactual scores
-detection_res.visualize_counterfactual_scores(concept="religion")
-
-# visualize the counterfactual sample scores
-detection_res.visualize_counterfactual_score_by_sample_histogram(concepts=["religion", "gender"])
+# visualize the counterfactual scores as a dash dashboard
+detection_res.dashboard()
 ```
 
 
 **Attributes**
 
+* **lang**  : The language of the texts. Decides which concepts and keywords to use.
 * **use_tokenizer**  : If keywords should only be searched in tokenized text. Can be useful for short keywords like 'she'.
-* **concept_detector**  : an instance of KeywordConceptDetector
-* **text_augmentor**  : an instance of CounterfactualTextAugmentor
 
 
 
 **Methods:**
 
 
+### .register_concept
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/counterfactual_biasdetector.py/#L69)
+```python
+.register_concept(
+   concept: Concept
+)
+```
+
+---
+Register a new, custom concept to the detector.
+
+Example usage:
+```python
+names_concept = Concept.from_dict_keyword_list(
+name="names",
+lang="de",
+keywords=[{"keyword": "Hans", "function": ["name"]}],
+---
+)
+bias_detector = CounterfactualBiasDetector(lang="de")
+bias_detector.register_concept(names_concept)
+```
+
+
+**Args**
+
+* **concept**  : The concept to register.
+
+
+**Raises**
+
+* **ValueError**  : If concept is not a Concept object.
+* **ValueError**  : If a concept with this name is already registered.
+
+
 ### .process
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/counterfactual_biasdetector.py/#L78)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/counterfactual_biasdetector.py/#L96)
 ```python
 .process(
    texts: List[str], predict_func: Callable[[List[str]], List[float]],
@@ -93,4 +122,8 @@ A [CounterfactualDetectionResult](/biaslyze/results/counterfactual_detection_res
 **Raises**
 
 * **ValueError**  : If texts or predict_func is not given.
+* **ValueError**  : If concepts_to_consider is not a list.
+* **ValueError**  : If max_counterfactual_samples is given but not a positive integer.
+* **ValueError**  : If max_counterfactual_samples_per_text is given but not a positive integer.
+* **ValueError**  : If concepts_to_consider contains a concept that is not registered.
 

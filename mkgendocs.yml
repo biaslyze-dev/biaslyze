@@ -19,6 +19,11 @@ pages:
     classes:
       - LimeDetectionResult
       - LimeSampleResult
+  - page: "biaslyze/concept_class.md"
+    source: "biaslyze/concept_class.py"
+    classes:
+      - Concept
+      - Keyword
   - page: "biaslyze/concept_detectors.md"
     source: "biaslyze/concept_detectors.py"
     classes:
@@ -28,8 +33,7 @@ pages:
     classes:
       - Token
       - TextRepresentation
-  - page: "biaslyze/concept_class.md"
-    source: "biaslyze/concept_class.py"
-    classes:
-      - Keyword
-      - Concept
+  - page: "biaslyze/utils.md"
+    source: "biaslyze/utils.py"
+    functions:
+      - load_results
