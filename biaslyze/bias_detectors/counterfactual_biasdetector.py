@@ -13,7 +13,6 @@ from biaslyze.results.counterfactual_detection_results import (
     CounterfactualDetectionResult,
     CounterfactualSample,
 )
-from biaslyze.augmentors import CounterfactualTextAugmentor
 from biaslyze.text_representation import TextRepresentation, process_texts_with_spacy
 
 
@@ -46,34 +45,53 @@ class CounterfactualBiasDetector:
         # see a summary of the detection
         detection_res.report()
 
-        # visualize the counterfactual scores
-        detection_res.visualize_counterfactual_scores(concept="religion")
-
-        # visualize the counterfactual sample scores
-        detection_res.visualize_counterfactual_score_by_sample_histogram(concepts=["religion", "gender"])
+        # visualize the counterfactual scores as a dash dashboard
+        detection_res.dashboard()
         ```
 
     Attributes:
+        lang: The language of the texts. Decides which concepts and keywords to use.
         use_tokenizer: If keywords should only be searched in tokenized text. Can be useful for short keywords like 'she'.
-        concept_detector: an instance of KeywordConceptDetector
-        text_augmentor: an instance of CounterfactualTextAugmentor
     """
 
     def __init__(
         self,
+        lang: str = "en",
         use_tokenizer: bool = False,
-        concept_detector: KeywordConceptDetector = KeywordConceptDetector(),
-        text_augmentor: CounterfactualTextAugmentor = CounterfactualTextAugmentor(), 
     ):
+        self.lang = lang
         self.use_tokenizer = use_tokenizer
-        self.concept_detector = concept_detector
-        self.text_augmentor = text_augmentor
-
-        # overwrite use_tokenizer
-        self.concept_detector.use_tokenizer = self.use_tokenizer
+        self.concept_detector = KeywordConceptDetector(lang=lang, use_tokenizer=use_tokenizer)
 
         # load the concepts
-        self.concepts = load_concepts()
+        self.concepts = load_concepts(lang=lang)
+    
+    def register_concept(self, concept: Concept):
+        """Register a new, custom concept to the detector.
+
+        Example usage:
+        ```python
+        names_concept = Concept.from_dict_keyword_list(
+            name="names",
+            lang="de",
+            keywords=[{"keyword": "Hans", "function": ["name"]}],
+        )
+        bias_detector = CounterfactualBiasDetector(lang="de")
+        bias_detector.register_concept(names_concept)
+        ```
+        
+        Args:
+            concept: The concept to register.
+
+        Raises:
+            ValueError: If concept is not a Concept object.
+            ValueError: If a concept with this name is already registered.
+        """
+        if not isinstance(concept, Concept):
+            raise ValueError("concept must be a Concept object.")
+        if concept.name in [c.name for c in self.concepts]:
+            raise ValueError(f"Concept '{concept.name}' already registered.")
+        self.concepts.append(concept)
 
     def process(
         self,
@@ -99,6 +117,10 @@ class CounterfactualBiasDetector:
 
         Raises:
             ValueError: If texts or predict_func is not given.
+            ValueError: If concepts_to_consider is not a list.
+            ValueError: If max_counterfactual_samples is given but not a positive integer.
+            ValueError: If max_counterfactual_samples_per_text is given but not a positive integer.
+            ValueError: If concepts_to_consider contains a concept that is not registered.
         """
         if texts is None:
             raise ValueError("texts must be given.")
@@ -120,9 +142,13 @@ class CounterfactualBiasDetector:
                 raise ValueError(
                     "max_counterfactual_samples_per_text must be a positive integer."
                 )
+        if concepts_to_consider:
+            for c in concepts_to_consider:
+                if c not in [c.name for c in self.concepts]:
+                    raise ValueError(f"Concept '{c}' not found in language '{self.lang}'.")
 
         # find bias relevant texts
-        detected_texts = self.concept_detector.detect(texts)
+        detected_texts = self.concept_detector.detect(texts, concepts_to_consider=concepts_to_consider)
 
         # limit the number of counterfactual samples per text if max_counterfactual_samples is given
         if max_counterfactual_samples:
@@ -144,7 +170,7 @@ class CounterfactualBiasDetector:
                 n_texts=max_counterfactual_samples_per_text,
             )
             if not counterfactual_samples:
-                logger.warning(f"No samples containing {concept.name} found. Skipping.")
+                logger.warning(f"No samples containing '{concept.name}' found. Skipping.")
                 continue
 
             # calculate counterfactual scores for each keyword

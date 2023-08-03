@@ -46,6 +46,7 @@ def test_concept_init():
     """Test the Concept class constructor."""
     concept = Concept(
         name="gender",
+        lang="en",
         keywords=[
             Keyword(text="she", functions=["subject"], category="PRON"),
             Keyword(text="he", functions=["subject"], category="PRON"),
@@ -69,6 +70,7 @@ def test_concept_get_present_keywords():
     """Test the Concept class get_present_keywords method."""
     concept = Concept(
         name="gender",
+        lang="en",
         keywords=[
             Keyword(text="she", functions=["subject"], category="PRON"),
             Keyword(text="he", functions=["subject"], category="PRON"),
@@ -111,6 +113,7 @@ def test_concept_get_counterfactual_texts():
 
     concept = Concept(
         name="gender",
+        lang="en",
         keywords=[
             Keyword(text="he", functions=["subject"], category="PRON"),
             Keyword(text="her", functions=["object"], category="PRON"),
@@ -138,7 +141,7 @@ def test_concept_from_dict_keyword_list():
         {"keyword": "his", "function": ["possessive"], "category": "PRON"},
     ]
 
-    concept = Concept.from_dict_keyword_list(name=concept_name, keywords=keyword_list)
+    concept = Concept.from_dict_keyword_list(name=concept_name, lang="en", keywords=keyword_list)
 
     assert len(concept.keywords) == 4
     assert concept.name == concept_name

@@ -211,7 +211,7 @@ Here we only look at the religion concept for demonstration purposes.
 
 
 ```python
-counterfactual_detection_results.visualize_counterfactual_scores(concept="religion", top_n=20)
+counterfactual_detection_results.dashboard()
 ```
 
 
@@ -293,7 +293,7 @@ Notice, that the mitigation procedure reduced the accuracy a bit.
 
 ```python
 # evaulate the bias again
-mitigaed_counterfactual_detection_results = bias_detector.process(
+mitigated_counterfactual_detection_results = bias_detector.process(
     texts=train_df.comment_text.sample(10000),
     labels=None,
     predict_func=mitigated_clf.predict_proba,
@@ -315,7 +315,7 @@ mitigaed_counterfactual_detection_results = bias_detector.process(
 
 
 ```python
-mitigaed_counterfactual_detection_results.visualize_counterfactual_scores(concept="religion", top_n=20)
+mitigated_counterfactual_detection_results.dashboard()
 ```
 
 
