@@ -4,11 +4,6 @@ from typing import List, Optional
 import numpy as np
 import pandas as pd
 import yaml
-from bokeh.layouts import column
-from bokeh.models import ColumnDataSource, DataTable, TableColumn
-from bokeh.palettes import Spectral
-from bokeh.plotting import figure
-from bokeh.themes import Theme
 
 
 def _plot_box_plot(dataf: pd.DataFrame, top_n: Optional[int] = None):
@@ -65,6 +60,11 @@ def _plot_histogram_dashboard(
         use_position: If True, use the normalized position for plotting.
         score_version: The name of the score version.
     """
+    from bokeh.layouts import column
+    from bokeh.models import ColumnDataSource, DataTable, TableColumn
+    from bokeh.palettes import Spectral
+    from bokeh.plotting import figure
+    from bokeh.themes import Theme
 
     # dataframe used for plotting
     plot_dataf = pd.DataFrame(
