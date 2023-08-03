@@ -6,7 +6,6 @@ from biaslyze.bias_detectors.counterfactual_biasdetector import (
     _extract_counterfactual_concept_samples,
 )
 from biaslyze.concept_class import Concept, Keyword
-from biaslyze.concepts import CONCEPTS
 
 
 # create a mock token class with a text attribute
@@ -26,6 +25,7 @@ def test_extract_counterfactual_concept_samples():
     """Test _extract_counterfactual_concept_samples"""
     concept = Concept(
         name="gender",
+        lang="en",
         keywords=[
             Keyword(text="she", functions=["subject"], category="PRON"),
             Keyword(text="he", functions=["subject"], category="PRON"),
@@ -52,6 +52,7 @@ def test_calculate_counterfactual_score():
 
     concept = Concept(
         name="gender",
+        lang="en",
         keywords=[
             Keyword(text="she", functions=["subject"], category="PRON"),
             Keyword(text="he", functions=["subject"], category="PRON"),

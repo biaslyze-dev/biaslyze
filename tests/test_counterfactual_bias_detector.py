@@ -4,6 +4,7 @@ import numpy as np
 import pytest
 
 from biaslyze.bias_detectors import CounterfactualBiasDetector
+from biaslyze.concept_class import Concept
 
 
 def test_process():
@@ -79,3 +80,17 @@ def test_process_positive():
 
     assert res is not None
     assert len(res._get_counterfactual_samples_by_concept("gender")) == 2
+
+
+def test_register_concepts():
+    """Test the register concepts method of CounterfactualBiasDetector."""
+    bias_detector = CounterfactualBiasDetector(lang="de")
+    n_concepts = len(bias_detector.concepts)
+    names_concept = Concept.from_dict_keyword_list(
+        name="names",
+        lang="de",
+        keywords=[{"keyword": "Hans", "function": ["name"]}],
+    )
+    bias_detector.register_concept(names_concept)
+
+    assert len(bias_detector.concepts) == n_concepts + 1

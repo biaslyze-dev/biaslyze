@@ -8,7 +8,7 @@ from loguru import logger
 from tqdm import tqdm
 
 from biaslyze.concept_detectors import KeywordConceptDetector
-from biaslyze.concepts import CONCEPTS
+from biaslyze.concepts import CONCEPTS_EN as CONCEPTS
 from biaslyze.results.lime_detection_results import (
     LimeDetectionResult,
     LimeSampleResult,
