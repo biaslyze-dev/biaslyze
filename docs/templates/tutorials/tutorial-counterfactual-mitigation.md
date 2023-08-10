@@ -1,6 +1,6 @@
 # Tutorial: Use counterfactual texts to mitigate bias
 
-In this notebook you will see how to test a NLP model with for possible bias biaslyze and then use the counterfactual samples to mitigate the bias. We revisit the task from the [previous tutorial on bias detection](../../tutorials/tutorial-toxic-comments/), make sure to check it out first.
+In this notebook you will see how to use biaslyze to test a NLP model for possible bias and then use the counterfactual samples to mitigate it. We revisit the task from the [previous tutorial on bias detection](../../tutorials/tutorial-toxic-comments/), make sure to check it out first.
 
 ## Installation
 First install the biaslyze python package from pypi using:
