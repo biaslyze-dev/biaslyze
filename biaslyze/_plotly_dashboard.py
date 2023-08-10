@@ -75,12 +75,13 @@ def _build_data_lookup(results):
     return lookup
 
 
-def _plot_dashboard(results, num_keywords: int = 10):
+def _plot_dashboard(results, num_keywords: int = 10, port: int = 8090):
     """Plot a dashboard of the results as interactive boxplots.
 
     Args:
         results: The results.
         num_keywords: The number of keywords to plot.
+        port: The port to run the dashboard on.
     """
     concepts = [res.concept for res in results.concept_results]
     data_lookup = _build_data_lookup(results)
@@ -329,7 +330,7 @@ def _plot_dashboard(results, num_keywords: int = 10):
 
     app.run_server(
         mode="inline",
-        port=8090,
+        port=port,
         dev_tools_ui=True,
         dev_tools_hot_reload=True,
         threaded=True,

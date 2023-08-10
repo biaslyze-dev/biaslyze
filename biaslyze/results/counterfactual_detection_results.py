@@ -10,6 +10,7 @@ import pandas as pd
 
 from biaslyze._plotly_dashboard import _plot_dashboard
 from biaslyze._plotting import _plot_box_plot, _plot_histogram_dashboard
+from biaslyze.utils import is_port_in_use
 
 
 class CounterfactualSample:
@@ -145,9 +146,19 @@ class CounterfactualDetectionResult:
                 f"""Concept: {concept_result.concept}\t\tMax-Mean Counterfactual Score: {np.abs(concept_result.scores.mean()).max():.5f}\t\tMax-Std Counterfactual Score: {concept_result.scores.std().max():.5f}"""
             )
 
-    def dashboard(self, num_keywords: int = 10):
-        """Start a dash dashboard with interactive box plots."""
-        _plot_dashboard(self, num_keywords=num_keywords)
+    def dashboard(self, num_keywords: int = 10, port: int = 8090):
+        """Start a dash dashboard with interactive box plots.
+        
+        Args:
+            num_keywords: The number of keywords per concept to show in the dashboard.
+            port: The port to run the dashboard on.
+        """
+        if is_port_in_use(port):
+            warnings.warn(
+                f"Port {port} is already in use. Using {port+1} instead."
+            )
+            port += 1
+        _plot_dashboard(self, num_keywords=num_keywords, port=port)
 
     def __visualize_counterfactual_scores(
         self, concept: str, top_n: Optional[int] = None
