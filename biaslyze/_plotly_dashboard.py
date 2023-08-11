@@ -120,7 +120,6 @@ def _plot_dashboard(results, num_keywords: int = 10, port: int = 8090):
         fig.add_trace(
             go.Histogram(
                 x=plot_data,
-                # name=keyword,
                 marker=dict(color=pink2blue_colormap[3]),
                 nbinsx=100,
             )
@@ -197,7 +196,7 @@ def _plot_dashboard(results, num_keywords: int = 10, port: int = 8090):
             template="plotly_white",
             showlegend=False,
             # width=100*4,
-            height=50 * num_keywords,
+            height=45 * num_keywords,
             hoverlabel=dict(bgcolor="white", font_size=16, font_family="Rockwell"),
         )
         return fig

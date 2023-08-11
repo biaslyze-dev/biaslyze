@@ -153,12 +153,14 @@ class CounterfactualDetectionResult:
             num_keywords: The number of keywords per concept to show in the dashboard.
             port: The port to run the dashboard on.
         """
-        if is_port_in_use(port):
+        next_free_port = 0
+        while is_port_in_use(port+next_free_port):
+            next_free_port += 1
+        if next_free_port > 0:
             warnings.warn(
-                f"Port {port} is already in use. Using {port+1} instead."
+                f"Port {port} is already in use. Using next free port {port+next_free_port} instead."
             )
-            port += 1
-        _plot_dashboard(self, num_keywords=num_keywords, port=port)
+        _plot_dashboard(self, num_keywords=num_keywords, port=port+next_free_port)
 
     def __visualize_counterfactual_scores(
         self, concept: str, top_n: Optional[int] = None
