@@ -155,7 +155,7 @@ hate_clf = HateSpeechClf()
 
 
 
-Now we can check the model for bias indications within the relevant concepts provided by biaslyze. If you want to work with your own concepts or add to the given ones, please check out the tutorial on [how to use custom concepts](https://www.biaslyze.org/tutorials/tutorial-working-with-custom-concepts/). 
+Now we can check the model for bias indications within the relevant concepts provided by biaslyze. If you want to work with your own concepts or add to the given ones, please check out the tutorial on [how to use custom concepts](../../tutorials/tutorial-working-with-custom-concepts/). 
 
 
 ```python

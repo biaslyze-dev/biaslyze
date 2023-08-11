@@ -171,7 +171,7 @@ print("Test accuracy: {:.2%}".format(score))
 
 ## Counterfactual token based bias detection
 
-Now that we have a model to test, lets evaluate it with the Biaslyze tool and test for bias with regards to the concept 'religion'. 
+Now that we have a model to test, lets evaluate it with the biaslyze tool and test for bias with regards to the concept 'religion'. 
 
 
 ```python
