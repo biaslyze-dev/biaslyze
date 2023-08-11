@@ -2,7 +2,7 @@
 
 
 ## CounterfactualDetectionResult
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L66)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L67)
 ```python 
 CounterfactualDetectionResult(
    concept_results: List[CounterfactualConceptResult]
@@ -24,7 +24,7 @@ The result of a counterfactual bias detection run.
 
 
 ### .save
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L76)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L77)
 ```python
 .save(
    path: str
@@ -54,7 +54,7 @@ results = load_results(path)
 
 
 ### .report
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L137)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L138)
 ```python
 .report()
 ```
@@ -66,32 +66,28 @@ Details:
 For each concept, the maximum mean and maximum standard deviation of the counterfactual scores is shown.
 
 ### .dashboard
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L148)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L149)
 ```python
 .dashboard(
-   num_keywords: int = 10
+   num_keywords: int = 10, port: int = 8090
 )
 ```
 
 ---
 Start a dash dashboard with interactive box plots.
 
-### .visualize_counterfactual_score_by_sample
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L278)
-```python
-.visualize_counterfactual_score_by_sample(
-   concept: str
-)
-```
 
----
-Visualize the counterfactual scores for each sample for a given concept.
+**Args**
+
+* **num_keywords**  : The number of keywords per concept to show in the dashboard.
+* **port**  : The port to run the dashboard on.
+
 
 ----
 
 
 ## CounterfactualConceptResult
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L50)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L51)
 ```python 
 CounterfactualConceptResult(
    concept: str, scores: pd.DataFrame, omitted_keywords: List[str],
@@ -107,7 +103,7 @@ The result of a counterfactual bias detection run for a single concept.
 
 
 ## CounterfactualSample
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L15)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L16)
 ```python 
 CounterfactualSample(
    text: str, orig_keyword: str, keyword: str, concept: str, tokenized: List[str],
