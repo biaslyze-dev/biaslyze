@@ -1,11 +1,9 @@
-# How to use biaslyze to test pretrained hate speech detection models
-Data source for training: 
-[https://www.kaggle.com/c/jigsaw-toxic-comment-classification-challenge](https://www.kaggle.com/c/jigsaw-toxic-comment-classification-challenge)
+# Tutorial: How to use biaslyze to test pre-trained hate speech detection models
 
-You can also use biaslyze to test pretrained models for bias indications. This notebook will show you how using a hate speech classifier model from hugging face.
+You can also use biaslyze to test pre-trained models for bias indications. This notebook will show you how using a hate speech classifier model from huggingface.
 
 
-# Installation
+## Installation
 Start by installing the biaslyze python package from pypi using: 
 
 
@@ -23,6 +21,8 @@ from sklearn.metrics import accuracy_score
 ```
 
 ## Load and prepare data
+
+To test the model, we need to use some data. We use the dataset from [https://www.kaggle.com/c/jigsaw-toxic-comment-classification-challenge](https://www.kaggle.com/c/jigsaw-toxic-comment-classification-challenge).
 
 
 ```python
@@ -122,13 +122,9 @@ df = pd.read_csv("../data/toxic-comments/train.csv"); df.head()
 
 
 
-## Test a pretrained hate speech detection model
+## Test a pre-trained hate speech detection model
 
-Get a pretrained model of your choice that you want to check for possible bias. In this case we will test Hugging Face's HateXplain model. This binary model classifies text as "Abusive" (Hatespeech and Offensive) or "Normal" text.
-
-model source: [https://huggingface.co/Hate-speech-CNERG/bert-base-uncased-hatexplain-rationale-two](https://huggingface.co/Hate-speech-CNERG/bert-base-uncased-hatexplain-rationale-two)
-
-repo: [https://github.com/hate-alert/HateXplain](https://github.com/hate-alert/HateXplain)
+Get a pre-trained model of your choice that you want to check for possible bias. In this case we will test the [HateXplain model](https://huggingface.co/Hate-speech-CNERG/bert-base-uncased-hatexplain-rationale-two) which we can get from huggingface hub. This binary model classifies text as "Abusive" (Hatespeech and Offensive) or "Normal" text.
 
 
 ```python
@@ -138,9 +134,7 @@ from biaslyze.bias_detectors import CounterfactualBiasDetector
 ```
 
 
-The given classification model works with labels and scores but since we want to assess the variance between the predicted probability scores of the counterfactual text and the original text we need to translate the models results into a matrix first.
-
-
+To make biaslyze work with the model we need to wrap it in a class that has a `predict_proba` method. The method should take a list of texts, run it through the pre-trained model and return a numpy array of shape (n_samples, n_classes) with the predicted probabilities for each class. In this case we have two classes: "Normal" and "Abusive". 
 
 
 ```python
@@ -161,7 +155,7 @@ hate_clf = HateSpeechClf()
 
 
 
-Now we can check the model for bias indications within the relevant concepts provided by biaslyze. If you want to work with your own concepts or add to the given ones, please check out the tutorial on [how to use custom concepts](../../tutorials/tutorial-working-with-custom-concepts/). 
+Now we can check the model for bias indications within the relevant concepts provided by biaslyze. If you want to work with your own concepts or add to the given ones, please check out the tutorial on [how to use custom concepts](https://www.biaslyze.org/tutorials/tutorial-working-with-custom-concepts/). 
 
 
 ```python
@@ -193,17 +187,20 @@ counterfactual_detection_results = bias_detector.process(
 
 CONTENT WARNING: Be aware that this section contains content that is disturbing, offensive, and can propagate historical and current stereotypes.
 
-The keyword-based scores show relatively low deviation from our zero value, which indicates that the individual keywords do not have a lot of impact on the prediction of the model. "Transgender" is the only exception here. It is therefore advisable to take a look at the corresponding samples and the ksr-score in order to understand how this outlier is caused. We can see that "transgender" does not appear among the top 50 scores of the ksr-scores, which could indicate a representation problem causing this keyword to perform differently. It is possible that the keyword does not appear in the dictionary.
-
-Overall, there is no clear evidence that a keyword or concept impacts the prediction of the model strongly and that there is a corresponding bias. 
-However, it is important to note that a full assessment of whether the model is biased is highly dependent on the application context which must always be taken into account when interpreting the results.
+Now we can look at the resulting scores.
 
 
 ```python
 counterfactual_detection_results.dashboard(num_keywords = 10)
 ```
+
 ![png](res_tutorial-hugging-hatexplain/tut-hatexplain-counterfact_score.png)
 
 ![png](res_tutorial-hugging-hatexplain/tut-hatexplain-ksr_score.png)
 
 ![png](res_tutorial-hugging-hatexplain/tut-hatexplain-hist.png)
+
+The keyword-based scores show relatively low deviation from our zero value, which indicates that the individual keywords do not have a lot of impact on the prediction of the model. "Transgender" is the only exception here. It is therefore advisable to take a look at the corresponding samples and the ksr-score in order to understand how this outlier is caused. We can see that "transgender" does not appear among the top 50 scores of the ksr-scores, which could indicate a representation problem causing this keyword to perform differently. It is possible that the keyword does not appear in the dictionary.
+
+Overall, there is no clear evidence that a keyword or concept impacts the prediction of the model strongly and that there is a corresponding bias. 
+However, it is important to note that a full assessment of whether the model is biased is highly dependent on the application context which must always be taken into account when interpreting the results.
