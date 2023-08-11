@@ -16,6 +16,7 @@ nav:
     - How to identify bias in hate speech detection: tutorials/tutorial-toxic-comments.md
     - How to work with custom concepts: tutorials/tutorial-working-with-custom-concepts.md
     - How to use counterfactual texts for bias mitigation: tutorials/tutorial-counterfactual-mitigation.md
+    - How to use biaslyze to test pretrained hate speech detection models: tutorials/tutorial-hugging-hatexplain.md
   - API:
     - Overview: api.md
     - Bias detectors : 
