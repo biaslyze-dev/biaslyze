@@ -13,7 +13,7 @@ from plotly.colors import n_colors
 
 
 def _get_default_results(
-    result: CounterfactualDetectionResults, concept: str
+    result, concept: str
 ) -> pd.DataFrame:
     dataf = result._get_result_by_concept(concept=concept)
     sort_index = dataf.median().abs().sort_values(ascending=True)
