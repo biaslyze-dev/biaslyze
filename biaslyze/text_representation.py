@@ -30,7 +30,7 @@ class Token:
         end: int,
         whitespace_after: str,
         shape: str,
-        function: Optional[List[str]] = None,
+        function: Optional[str] = None,
     ):
         """Initialize a Token."""
         self.text = text

@@ -98,11 +98,11 @@ class CounterfactualBiasDetector:
         self,
         texts: List[str],
         predict_func: Callable[[List[str]], List[float]],
-        labels: Optional[List[str]] = None,
+        labels: Optional[List[str|int]] = None,
         concepts_to_consider: Optional[List[str]] = [],
         max_counterfactual_samples: Optional[int] = None,
         max_counterfactual_samples_per_text: Optional[int] = None,
-    ) -> List:
+    ) -> CounterfactualDetectionResult:
         """Detect potential bias in the model based on the given texts.
 
         Args:
@@ -229,7 +229,7 @@ class CounterfactualBiasDetector:
 def _extract_counterfactual_concept_samples(
     concept: Concept,
     texts: List[str],
-    labels: Optional[List[str]] = None,
+    labels: Optional[List[str|int]] = None,
     n_texts: Optional[int] = None,
     respect_function: bool = True,
 ) -> List[CounterfactualSample]:
@@ -339,8 +339,8 @@ def _calculate_counterfactual_scores(
         # sum up the scores for the positive classes and take the difference
         try:
             score_diffs = (
-                np.array(predicted_scores[:, positive_classes]).sum(axis=1),
-                -np.array(original_scores[:, positive_classes]).sum(axis=1),
+                np.array(predicted_scores[:, positive_classes]).sum(axis=1)
+                -np.array(original_scores[:, positive_classes]).sum(axis=1)
             )
         except IndexError:
             raise IndexError(

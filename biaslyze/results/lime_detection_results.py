@@ -105,9 +105,9 @@ class LimeDetectionResult:
             concepts.extend(sample.bias_concepts)
             reasons.extend(sample.bias_reasons)
 
-        concepts_stats = Counter()
+        concepts_stats: Counter = Counter()
         concepts_stats.update(concepts)
-        reasons_stats = Counter()
+        reasons_stats: Counter = Counter()
         reasons_stats.update(reasons)
         representation_string = f"""Detected {len(self.biased_samples)} samples with potential issues.
     Potentially problematic concepts detected: {concepts_stats.most_common(10)}

@@ -55,11 +55,11 @@ class KeywordConceptDetector:
         ]
         for text in tqdm(texts):
             if self.use_tokenizer:
-                text_representation = [
+                text_representation: List[str] = [
                     token.text.lower() for token in self._tokenizer(text)
                 ]
             else:
-                text_representation = text.lower()
+                text_representation: str = text.lower()
             if any(keyword in text_representation for keyword in concept_keywords):
                 detected_texts.append(text)
         logger.info(f"Done. Found {len(detected_texts)} texts with protected concepts.")

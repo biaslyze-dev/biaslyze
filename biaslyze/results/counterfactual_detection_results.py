@@ -8,6 +8,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+from biaslyze.text_representation import TextRepresentation
 from biaslyze._plotly_dashboard import _plot_dashboard
 from biaslyze._plotting import _plot_box_plot, _plot_histogram_dashboard
 from biaslyze.utils import is_port_in_use
@@ -22,6 +23,7 @@ class CounterfactualSample:
         keyword: The keyword that replaced the original keyword.
         concept: The concept that was detected in the text.
         tokenized: The tokenized text in spacy representation.
+        score: The counterfactual score of the sample.
         label: The label of the original text.
         source_text: The source text from which the text was derived.
     """
@@ -32,9 +34,10 @@ class CounterfactualSample:
         orig_keyword: str,
         keyword: str,
         concept: str,
-        tokenized: List[str],
-        label: int = None,
-        source_text: str = None,
+        tokenized: TextRepresentation,
+        score: Optional[float] = None,
+        label: Optional[int|str] = None,
+        source_text: Optional[str] = None,
     ):
         """Initialize the CounterfactualSample."""
         self.text = text
@@ -42,6 +45,7 @@ class CounterfactualSample:
         self.keyword = keyword
         self.concept = concept
         self.tokenized = tokenized
+        self.score = score
         self.label = label
         self.source_text = source_text
 
@@ -65,7 +69,7 @@ class CounterfactualConceptResult:
         concept: str,
         scores: pd.DataFrame,
         omitted_keywords: List[str],
-        counterfactual_samples: List[CounterfactualSample] = None,
+        counterfactual_samples: Optional[List[CounterfactualSample]] = None,
     ):
         """Initialize the CounterfactualConceptResult."""
         self.concept = concept
@@ -129,7 +133,7 @@ class CounterfactualDetectionResult:
 
     def _get_counterfactual_samples_by_concept(
         self, concept: str
-    ) -> List[CounterfactualSample]:
+    ) -> List[CounterfactualSample] | None:
         """Get all counterfactual samples for a given concept.
 
         Args:
@@ -218,12 +222,20 @@ class CounterfactualDetectionResult:
         Args:
             concept: The concept to visualize.
             top_n: If given, only the top n keywords are shown.
+        
+        Raises:
+            ValueError: If the concept is not found in the results or if no counterfactual samples are found for the concept.
         """
         warnings.warn(
             "This method is deprecated. Use dashboard() instead.", DeprecationWarning
         )
         dataf = self._get_result_by_concept(concept=concept)
         samples = self._get_counterfactual_samples_by_concept(concept=concept)
+
+        if samples is None:
+            raise ValueError(f"No counterfactual samples found for concept {concept}.")
+        if dataf is None:
+            raise ValueError(f"No counterfactual scores found for concept {concept}.")
 
         # get the original samples
         original_samples = [
@@ -271,6 +283,10 @@ class CounterfactualDetectionResult:
                 continue
             dataf = concept_result.scores.copy()
             samples = concept_result.counterfactual_samples
+            if samples is None:
+                raise ValueError(
+                    f"No counterfactual samples found for concept {concept_result.concept}."
+                )
 
             # get the original samples
             original_samples = [

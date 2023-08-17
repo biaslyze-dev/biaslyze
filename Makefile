@@ -21,7 +21,7 @@ style:
 	poetry run black .
 
 typing:
-	poetry run mypy biaslyze/
+	poetry run mypy --disable-error-code=import biaslyze/
 
 lint:
 	poetry run ruff biaslyze/ --ignore E501

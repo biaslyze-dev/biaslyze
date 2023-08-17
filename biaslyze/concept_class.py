@@ -26,11 +26,11 @@ class Keyword:
 
     def __str__(self) -> str:
         """Return a string representation of the Keyword."""
-        return f"Keyword({self.text}, {self.function}, {self.category})"
+        return f"Keyword({self.text}, {self.functions}, {self.category})"
 
     def __repr__(self) -> str:
         """Return a string representation of the Keyword."""
-        return f"Keyword({self.text}, {self.function}, {self.category})"
+        return f"Keyword({self.text}, {self.functions}, {self.category})"
 
     def can_replace_token(self, token: Token, respect_function: bool = False) -> bool:
         """Check if the keyword can replace the given token.
