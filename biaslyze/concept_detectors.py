@@ -5,7 +5,8 @@ import spacy
 from loguru import logger
 from tqdm import tqdm
 
-from biaslyze.concepts import CONCEPTS_EN, CONCEPTS_DE
+from biaslyze.concepts.concepts_en import CONCEPTS_EN
+from biaslyze.concepts.concepts_de import CONCEPTS_DE
 
 
 class KeywordConceptDetector:

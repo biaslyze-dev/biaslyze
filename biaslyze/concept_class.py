@@ -4,7 +4,8 @@ import random
 from typing import List, Optional, Tuple
 from typing_extensions import Self
 
-from biaslyze.concepts import CONCEPTS_EN, CONCEPTS_DE
+from biaslyze.concepts.concepts_de import CONCEPTS_DE
+from biaslyze.concepts.concepts_en import CONCEPTS_EN
 from biaslyze.text_representation import TextRepresentation, Token
 
 
