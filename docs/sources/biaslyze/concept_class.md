@@ -2,7 +2,7 @@
 
 
 ## Concept
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L71)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L84)
 ```python 
 Concept(
    name: str, lang: str, keywords: List[Keyword]
@@ -34,6 +34,7 @@ You can find out more here: [concepts.py](https://github.com/biaslyze-dev/biasly
 **Attributes**
 
 * **name** (str) : The name of the concept.
+* **lang** (str) : The language of the concept.
 * **keywords** (List[Keyword]) : The keywords of the concept.
 
 
@@ -42,7 +43,7 @@ You can find out more here: [concepts.py](https://github.com/biaslyze-dev/biasly
 
 
 ### .from_dict_keyword_list
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L104)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L118)
 ```python
 .from_dict_keyword_list(
    cls, name: str, lang: str, keywords: List[dict]
@@ -50,7 +51,7 @@ You can find out more here: [concepts.py](https://github.com/biaslyze-dev/biasly
 ```
 
 ---
-Constructs a Concept object from a list of dictionaries.
+Construct a Concept object from a list of dictionaries.
 
 Example usage:
 ```python
@@ -71,7 +72,7 @@ keywords=[{"keyword": "Hans", "function": ["name"]}],
 
 
 ### .get_present_keywords
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L133)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L147)
 ```python
 .get_present_keywords(
    text_representation: TextRepresentation
@@ -79,10 +80,10 @@ keywords=[{"keyword": "Hans", "function": ["name"]}],
 ```
 
 ---
-Returns the keywords that are present in the given text.
+Return the keywords that are present in the given text.
 
 ### .get_counterfactual_texts
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L143)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L157)
 ```python
 .get_counterfactual_texts(
    keyword: Keyword, text_representation: TextRepresentation,
@@ -91,7 +92,7 @@ Returns the keywords that are present in the given text.
 ```
 
 ---
-Returns a counterfactual texts based on a specific keyword for the given text representation.
+Return a counterfactual texts based on a specific keyword for the given text representation.
 
 
 **Args**
@@ -111,7 +112,7 @@ Returns a counterfactual texts based on a specific keyword for the given text re
 
 
 ## Keyword
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L10)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L11)
 ```python 
 Keyword(
    text: str, functions: List[str], category: str
@@ -135,7 +136,7 @@ A class used to represent a keyword in the biaslyze package.
 
 
 ### .can_replace_token
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L32)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L35)
 ```python
 .can_replace_token(
    token: Token, respect_function: bool = False
@@ -143,7 +144,7 @@ A class used to represent a keyword in the biaslyze package.
 ```
 
 ---
-Returns True if the keyword can replace the given token.
+Check if the keyword can replace the given token.
 
 
 **Args**
@@ -152,8 +153,13 @@ Returns True if the keyword can replace the given token.
 * **respect_function** (bool) : Whether to respect the function of the keyword. Defaults to False.
 
 
+**Returns**
+
+* **bool**  : True if the keyword can replace the token, False otherwise.
+
+
 ### .equal_to_token
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L44)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L50)
 ```python
 .equal_to_token(
    token: Token
@@ -161,10 +167,21 @@ Returns True if the keyword can replace the given token.
 ```
 
 ---
-Returns True if the given token is equal to the keyword.
+Check if the keyword is equal to the given token.
+
+
+**Args**
+
+* **token** (Token) : The token to compare to.
+
+
+**Returns**
+
+* **bool**  : True if the keyword is equal to the token, False otherwise.
+
 
 ### .get_keyword_in_style_of_token
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L50)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L63)
 ```python
 .get_keyword_in_style_of_token(
    token: Token
@@ -172,7 +189,7 @@ Returns True if the given token is equal to the keyword.
 ```
 
 ---
-Returns the keyword text in the style of the given token.
+Return the keyword text in the style of the given token.
 
 Uses the shape of the token to determine the style.
 

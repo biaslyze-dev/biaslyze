@@ -36,6 +36,7 @@ class CounterfactualSample:
         label: int = None,
         source_text: str = None,
     ):
+        """Initialize the CounterfactualSample."""
         self.text = text
         self.orig_keyword = orig_keyword
         self.keyword = keyword
@@ -45,11 +46,19 @@ class CounterfactualSample:
         self.source_text = source_text
 
     def __repr__(self):
+        """Return a string representation of the CounterfactualSample."""
         return f"concept={self.concept}; keyword={self.keyword}; text={self.text}"
 
 
 class CounterfactualConceptResult:
-    """The result of a counterfactual bias detection run for a single concept."""
+    """The result of a counterfactual bias detection run for a single concept.
+    
+    Attributes:
+        concept: The concept for which the result was calculated.
+        scores: The scores for the different keywords.
+        omitted_keywords: The keywords that were omitted from the analysis.
+        counterfactual_samples: The counterfactual samples that were generated.
+    """
 
     def __init__(
         self,
@@ -58,6 +67,7 @@ class CounterfactualConceptResult:
         omitted_keywords: List[str],
         counterfactual_samples: List[CounterfactualSample] = None,
     ):
+        """Initialize the CounterfactualConceptResult."""
         self.concept = concept
         self.scores = scores
         self.omitted_keywords = omitted_keywords
@@ -72,6 +82,7 @@ class CounterfactualDetectionResult:
     """
 
     def __init__(self, concept_results: List[CounterfactualConceptResult]):
+        """Initialize the CounterfactualDetectionResult."""
         self.concept_results = concept_results
 
     def save(self, path: str):

@@ -2,7 +2,7 @@
 
 
 ## CounterfactualDetectionResult
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L67)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L77)
 ```python 
 CounterfactualDetectionResult(
    concept_results: List[CounterfactualConceptResult]
@@ -24,7 +24,7 @@ The result of a counterfactual bias detection run.
 
 
 ### .save
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L77)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L88)
 ```python
 .save(
    path: str
@@ -54,7 +54,7 @@ results = load_results(path)
 
 
 ### .report
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L138)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L149)
 ```python
 .report()
 ```
@@ -66,7 +66,7 @@ Details:
 For each concept, the maximum mean and maximum standard deviation of the counterfactual scores is shown.
 
 ### .dashboard
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L149)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L160)
 ```python
 .dashboard(
    num_keywords: int = 10, port: int = 8090
@@ -87,7 +87,7 @@ Start a dash dashboard with interactive box plots.
 
 
 ## CounterfactualConceptResult
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L51)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/counterfactual_detection_results.py/#L53)
 ```python 
 CounterfactualConceptResult(
    concept: str, scores: pd.DataFrame, omitted_keywords: List[str],
@@ -98,6 +98,15 @@ CounterfactualConceptResult(
 
 ---
 The result of a counterfactual bias detection run for a single concept.
+
+
+**Attributes**
+
+* **concept**  : The concept for which the result was calculated.
+* **scores**  : The scores for the different keywords.
+* **omitted_keywords**  : The keywords that were omitted from the analysis.
+* **counterfactual_samples**  : The counterfactual samples that were generated.
+
 
 ----
 

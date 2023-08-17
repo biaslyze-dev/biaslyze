@@ -59,6 +59,7 @@ class CounterfactualBiasDetector:
         lang: str = "en",
         use_tokenizer: bool = False,
     ):
+        """Initialize the CounterfactualBiasDetector."""
         self.lang = lang
         self.use_tokenizer = use_tokenizer
         self.concept_detector = KeywordConceptDetector(lang=lang, use_tokenizer=use_tokenizer)

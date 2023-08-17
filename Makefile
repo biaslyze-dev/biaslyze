@@ -5,17 +5,23 @@ install:
 jupyter:
 	poetry run jupyter lab
 
-doc-preview:
+doc-check:
+	poetry run pydocstyle biaslyze/
+
+doc-preview: doc-check
 	poetry run gendocs --config mkgendocs.yml
 	poetry run mkdocs serve --dirtyreload
 
-doc:
+doc: doc-check
 	poetry run gendocs --config mkgendocs.yml
 	poetry run mkdocs build
 
 style:
 	poetry run isort .
 	poetry run black .
+
+typing:
+	poetry run mypy biaslyze/
 
 lint:
 	poetry run ruff biaslyze/ --ignore E501

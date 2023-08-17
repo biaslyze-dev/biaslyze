@@ -51,6 +51,7 @@ class LimeBiasDetector:
         use_tokenizer: bool = False,
         concept_detector: KeywordConceptDetector = KeywordConceptDetector(),
     ):
+        """Initialize the LimeBiasDetector."""
         self.use_tokenizer = use_tokenizer
         self.concept_detector = concept_detector
 

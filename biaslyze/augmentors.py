@@ -4,9 +4,8 @@ from typing import List, Optional, Union
 
 
 class CounterfactualTextAugmentor:
-    """Class for augmenting text data with counterfactuals.
-        
-    """
+    """Class for augmenting text data with counterfactuals."""
 
     def __init__(self) -> None:
+        """Initialize a CounterfactualTextAugmentor."""
         pass

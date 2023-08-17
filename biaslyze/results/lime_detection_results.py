@@ -33,6 +33,7 @@ class LimeSampleResult:
         score: float,
         metrics: Dict = None,
     ):
+        """Initialize the LimeSampleResult."""
         self.text = text
         self.bias_concepts = bias_concepts
         self.bias_reasons = bias_reasons
@@ -43,6 +44,7 @@ class LimeSampleResult:
         self.metrics = metrics
 
     def __repr__(self) -> str:
+        """Return a string representation of the LimeSampleResult."""
         return f"''{self.text}'' might contain bias {self.bias_concepts}; reasons: {self.bias_reasons}"
 
 
@@ -54,6 +56,7 @@ class LimeDetectionResult:
     """
 
     def __init__(self, biased_samples: List[LimeSampleResult]):
+        """Initialize the LimeDetectionResult."""
         self.biased_samples = biased_samples
 
     def summary(self):
@@ -121,7 +124,6 @@ class LimeDetectionResult:
         Args:
             use_position: If True, use the normalized position for plotting.
         """
-
         dashboard = _plot_histogram_dashboard(
             texts=[sample.text for sample in self.biased_samples],
             concepts=[sample.bias_concepts for sample in self.biased_samples],

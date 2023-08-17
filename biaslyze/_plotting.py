@@ -16,7 +16,6 @@ def _plot_box_plot(dataf: pd.DataFrame, top_n: Optional[int] = None):
     Returns:
         A matplotlib axis.
     """
-
     # sort the dataframe by median absolute value
     sort_index = dataf.median().abs().sort_values(ascending=True)
     sorted_dataf = dataf[sort_index.index]
@@ -131,7 +130,7 @@ def _plot_histogram_dashboard(
 
         # update function for selection in histogram
         def update(attr, old, new):
-            """Callback used for plot update when lasso selecting"""
+            """Update the plot when lasso selecting."""
             if new:
                 new_min_score, new_max_score = (
                     total_range[new[0]],

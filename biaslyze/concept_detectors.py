@@ -20,6 +20,7 @@ class KeywordConceptDetector:
     """
 
     def __init__(self, lang: str = "en", use_tokenizer: bool = False):
+        """Initialize the KeywordConceptDetector."""
         lang = lang
         self.use_tokenizer = use_tokenizer
         self._tokenizer = spacy.load(
