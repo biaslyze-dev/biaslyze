@@ -2,6 +2,7 @@
 
 import random
 from typing import List, Optional, Tuple
+
 from typing_extensions import Self
 
 from biaslyze.concepts.concepts_de import CONCEPTS_DE
@@ -35,7 +36,7 @@ class Keyword:
 
     def can_replace_token(self, token: Token, respect_function: bool = False) -> bool:
         """Check if the keyword can replace the given token.
-        
+
         Args:
             token (Token): The token to replace.
             respect_function (bool): Whether to respect the function of the keyword. Defaults to False.
@@ -95,7 +96,7 @@ class Concept:
     - ethnicity
     - gendered_words
     - nationality
-    
+
     in German:
 
     - gender
@@ -127,7 +128,7 @@ class Concept:
             keywords=[{"keyword": "Hans", "function": ["name"]}],
         )
         ```
-        
+
         Args:
             name (str): The name of the concept.
             lang (str): The language of the concept.

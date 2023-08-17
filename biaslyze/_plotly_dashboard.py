@@ -1,19 +1,20 @@
 """This file contains the new plotting with plotly and dash."""
 
 from collections import defaultdict
-from typing import List, Dict, Any
+from typing import Any, Dict, List
 
 import dash
-import dash_html_components as html
 import numpy as np
 import pandas as pd
 import plotly.graph_objects as go
-from dash import dash_table, dcc
+from dash import dash_table, dcc, html
 from dash.dependencies import Input, Output
 from plotly.colors import n_colors
 
 
-def _get_default_results(result, concept: str) -> pd.DataFrame:
+def _get_default_results(
+    result: CounterfactualDetectionResults, concept: str
+) -> pd.DataFrame:
     dataf = result._get_result_by_concept(concept=concept)
     sort_index = dataf.median().abs().sort_values(ascending=True)
     return dataf[sort_index.index]
@@ -42,13 +43,13 @@ def _get_ksr_results(result, concept: str) -> pd.DataFrame:
 
 def _build_data_lookup(results) -> Dict[str, Dict[str, Dict[str, Any]]]:
     """Build a lookup dictionary for the data.
-    
+
     Example output:
     {
         "default": {
             "concept1": {
                 "data": pd.DataFrame,
-                "texts": { 
+                "texts": {
                     "keyword1": [str, str, ...],
                     "keyword2": [str, str, ...],
                     ...
@@ -145,9 +146,11 @@ def _build_data_lookup(results) -> Dict[str, Dict[str, Dict[str, Any]]]:
     return lookup
 
 
-def _prepare_histogram_display_data(range_start: int, range_end: int, concept_data: pd.DataFrame, num_keywords: int):
+def _prepare_histogram_display_data(
+    range_start: int, range_end: int, concept_data: pd.DataFrame, num_keywords: int
+):
     """Prepare the data for the histogram display.
-    
+
     Args:
         range_start: The start of the range to filter the data.
         range_end: The end of the range to filter the data.
@@ -156,23 +159,17 @@ def _prepare_histogram_display_data(range_start: int, range_end: int, concept_da
 
     Returns:
         A list of tuples of the form (keyword, original_keyword, score, text).
-    
+
     Raises:
         ValueError: If the range is invalid.
     """
     if range_start >= range_end:
         raise ValueError("range_start must be less than range_end.")
 
-    df = (
-        concept_data["data"]
-        .iloc[:, -num_keywords:]
-        .dropna(how="all")
-    )
+    df = concept_data["data"].iloc[:, -num_keywords:].dropna(how="all")
     selected = []
     for keyword in df.columns:
-        indices = np.where(
-            (df[keyword] >= range_start) & (df[keyword] <= range_end)
-        )[0]
+        indices = np.where((df[keyword] >= range_start) & (df[keyword] <= range_end))[0]
         selected_texts = [
             concept_data["texts"][keyword][index]
             for index in indices
@@ -193,7 +190,9 @@ def _prepare_histogram_display_data(range_start: int, range_end: int, concept_da
             (
                 "..."
                 + text[
-                    max(text.lower().index(keyword) - 50, 0) : text.lower().index(keyword)
+                    max(text.lower().index(keyword) - 50, 0) : text.lower().index(
+                        keyword
+                    )
                     + len(keyword)
                     + 50
                 ],
@@ -211,7 +210,7 @@ def _prepare_histogram_display_data(range_start: int, range_end: int, concept_da
 
 def _generate_box_plot(dataf: pd.DataFrame, colormap: List[str]) -> go.Figure:
     """Generate a box plot of the data.
-    
+
     Args:
         dataf: The data to plot.
         colormap: The colormap to use.
@@ -240,7 +239,7 @@ def _generate_box_plot(dataf: pd.DataFrame, colormap: List[str]) -> go.Figure:
 
 def _generate_histogram(dataf: pd.DataFrame, colormap: List[str]) -> go.Figure:
     """Generate a histogram of the data.
-    
+
     Args:
         dataf: The data to plot.
         colormap: The colormap to use.
@@ -365,7 +364,7 @@ def _plot_dashboard(results, num_keywords: int = 10, port: int = 8090):
     )
     def display_selected_text(click_data, relayout_data, concept_idx, method):
         """Display selected text for the respective plots.
-        
+
         For plot method `histogram` this resolves to creating a data table with all texts in the selected window.
         For plot method `default` and `ksr` this resolves to displaying the text of the selected sample in the boxplot.
         """
@@ -374,7 +373,12 @@ def _plot_dashboard(results, num_keywords: int = 10, port: int = 8090):
             if relayout_data is not None and "xaxis.range[0]" in relayout_data:
                 range_start = relayout_data["xaxis.range[0]"]
                 range_end = relayout_data["xaxis.range[1]"]
-                selected = _prepare_histogram_display_data(range_start=range_start, range_end=range_end, data=display_data, num_keywords=num_keywords)
+                selected = _prepare_histogram_display_data(
+                    range_start=range_start,
+                    range_end=range_end,
+                    data=display_data,
+                    num_keywords=num_keywords,
+                )
                 if selected:
                     return dash_table.DataTable(
                         data=selected,
@@ -395,11 +399,18 @@ def _plot_dashboard(results, num_keywords: int = 10, port: int = 8090):
                 value = click_data["points"][0]["x"]
                 index = click_data["points"][0]["pointIndex"]
                 try:
-                    raw_text = display_data['texts'][keyword][index]
+                    raw_text = display_data["texts"][keyword][index]
                     text_with_highlights = (
-                        raw_text[:raw_text.lower().index(keyword)]
-                        + "<b>" + raw_text[raw_text.lower().index(keyword):raw_text.lower().index(keyword) + len(keyword)] + "</b>"
-                        + raw_text[raw_text.lower().index(keyword) + len(keyword):]
+                        raw_text[: raw_text.lower().index(keyword)]
+                        + "<b>"
+                        + raw_text[
+                            raw_text.lower()
+                            .index(keyword) : raw_text.lower()
+                            .index(keyword)
+                            + len(keyword)
+                        ]
+                        + "</b>"
+                        + raw_text[raw_text.lower().index(keyword) + len(keyword) :]
                     )
                     return html.Div(
                         [
@@ -416,7 +427,11 @@ def _plot_dashboard(results, num_keywords: int = 10, port: int = 8090):
                                     html.Tr(
                                         [
                                             html.Td(keyword),
-                                            html.Td(display_data["original_keyword"][keyword][index]),
+                                            html.Td(
+                                                display_data["original_keyword"][
+                                                    keyword
+                                                ][index]
+                                            ),
                                             html.Td(f"{value:.3}"),
                                         ]
                                     ),
@@ -445,7 +460,6 @@ def _plot_dashboard(results, num_keywords: int = 10, port: int = 8090):
                 except IndexError:
                     return ""
         return ""
-
 
     app.run_server(
         mode="inline",

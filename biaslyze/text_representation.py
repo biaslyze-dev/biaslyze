@@ -1,13 +1,13 @@
 """This module contains the TextRepresentation class, which is used to represent a text in the biaslyze package."""
 
 from typing import List, Optional
-from typing_extensions import Self
 
 import spacy
 from tqdm import tqdm
+from typing_extensions import Self
 
 SPACY_TOKENIZER = spacy.load(
-    "en_core_web_sm", disable=["parser", "ner", "lemmatizer"] # "tagger"
+    "en_core_web_sm", disable=["parser", "ner", "lemmatizer"]  # "tagger"
 )
 
 
@@ -72,7 +72,7 @@ class TextRepresentation:
     @classmethod
     def from_spacy_doc(cls, doc: spacy.tokens.Doc) -> Self:
         """Construct a TextRepresentation object from a spacy doc.
-        
+
         Args:
             doc (spacy.tokens.Doc): The spacy doc to construct the TextRepresentation from.
 
@@ -96,7 +96,7 @@ class TextRepresentation:
 
 def process_texts_with_spacy(texts: List[str]) -> List[TextRepresentation]:
     """Process the given texts with spacy.
-    
+
     Args:
         texts (List[str]): The texts to process.
 

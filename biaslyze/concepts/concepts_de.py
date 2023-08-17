@@ -56,5 +56,5 @@ CONCEPTS_DE = {
         {"keyword": "islamischen", "function": ["ADJ"], "category": "religion"},
         {"keyword": "islamischer", "function": ["ADJ"], "category": "religion"},
         {"keyword": "islamisches", "function": ["ADJ"], "category": "religion"},
-    ],        
+    ],
 }

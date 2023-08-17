@@ -1,16 +1,16 @@
 """This module contains classes to store and process the results of counterfactual bias detection runs."""
 import warnings
-import dill
 from collections import defaultdict
 from typing import List, Optional
 
+import dill
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-from biaslyze.text_representation import TextRepresentation
 from biaslyze._plotly_dashboard import _plot_dashboard
 from biaslyze._plotting import _plot_box_plot, _plot_histogram_dashboard
+from biaslyze.text_representation import TextRepresentation
 from biaslyze.utils import is_port_in_use
 
 
@@ -36,7 +36,7 @@ class CounterfactualSample:
         concept: str,
         tokenized: TextRepresentation,
         score: Optional[float] = None,
-        label: Optional[int|str] = None,
+        label: Optional[int | str] = None,
         source_text: Optional[str] = None,
     ):
         """Initialize the CounterfactualSample."""
@@ -56,7 +56,7 @@ class CounterfactualSample:
 
 class CounterfactualConceptResult:
     """The result of a counterfactual bias detection run for a single concept.
-    
+
     Attributes:
         concept: The concept for which the result was calculated.
         scores: The scores for the different keywords.
@@ -99,7 +99,7 @@ class CounterfactualDetectionResult:
 
         results = load_results(path)
         ```
-        
+
         Args:
             path (str): The path to save the result to.
 
@@ -163,19 +163,19 @@ class CounterfactualDetectionResult:
 
     def dashboard(self, num_keywords: int = 10, port: int = 8090):
         """Start a dash dashboard with interactive box plots.
-        
+
         Args:
             num_keywords: The number of keywords per concept to show in the dashboard.
             port: The port to run the dashboard on.
         """
         next_free_port = 0
-        while is_port_in_use(port+next_free_port):
+        while is_port_in_use(port + next_free_port):
             next_free_port += 1
         if next_free_port > 0:
             warnings.warn(
                 f"Port {port} is already in use. Using next free port {port+next_free_port} instead."
             )
-        _plot_dashboard(self, num_keywords=num_keywords, port=port+next_free_port)
+        _plot_dashboard(self, num_keywords=num_keywords, port=port + next_free_port)
 
     def __visualize_counterfactual_scores(
         self, concept: str, top_n: Optional[int] = None
@@ -222,7 +222,7 @@ class CounterfactualDetectionResult:
         Args:
             concept: The concept to visualize.
             top_n: If given, only the top n keywords are shown.
-        
+
         Raises:
             ValueError: If the concept is not found in the results or if no counterfactual samples are found for the concept.
         """
@@ -314,6 +314,7 @@ class CounterfactualDetectionResult:
         )
 
         return dashboard
+
 
 #    def visualize_counterfactual_score_by_sample(self, concept: str):
 #        """Visualize the counterfactual scores for each sample for a given concept."""

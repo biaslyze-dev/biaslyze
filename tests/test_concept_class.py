@@ -141,7 +141,9 @@ def test_concept_from_dict_keyword_list():
         {"keyword": "his", "function": ["possessive"], "category": "PRON"},
     ]
 
-    concept = Concept.from_dict_keyword_list(name=concept_name, lang="en", keywords=keyword_list)
+    concept = Concept.from_dict_keyword_list(
+        name=concept_name, lang="en", keywords=keyword_list
+    )
 
     assert len(concept.keywords) == 4
     assert concept.name == concept_name

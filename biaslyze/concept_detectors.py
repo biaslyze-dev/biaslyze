@@ -5,8 +5,8 @@ import spacy
 from loguru import logger
 from tqdm import tqdm
 
-from biaslyze.concepts.concepts_en import CONCEPTS_EN
 from biaslyze.concepts.concepts_de import CONCEPTS_DE
+from biaslyze.concepts.concepts_en import CONCEPTS_EN
 
 
 class KeywordConceptDetector:
@@ -15,7 +15,7 @@ class KeywordConceptDetector:
     Attributes:
         lang: The language of the text. Currently only 'en' and 'de' are supported.
         use_tokenizer: If keywords should only be searched in tokenized text. Can be useful for short keywords like 'she'.
-    
+
     Raises:
         ValueError: If the language is not supported.
     """
@@ -34,7 +34,9 @@ class KeywordConceptDetector:
         else:
             raise ValueError(f"Language {lang} not supported.")
 
-    def detect(self, texts: List[str], concepts_to_consider: Optional[List[str]] = None) -> List[str]:
+    def detect(
+        self, texts: List[str], concepts_to_consider: Optional[List[str]] = None
+    ) -> List[str]:
         """Detect concepts present in texts.
 
         Returns a list of texts with the concept present.
