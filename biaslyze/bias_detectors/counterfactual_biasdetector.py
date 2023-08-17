@@ -284,7 +284,7 @@ def _calculate_counterfactual_scores(
     bias_keyword: str,
     predict_func: Callable,
     samples: List[CounterfactualSample],
-    positive_classes: Optional[List] = None,
+    positive_classes: Optional[List[int]] = None,
 ) -> np.ndarray:
     """Calculate the counterfactual score for a bias keyword given samples.
 
