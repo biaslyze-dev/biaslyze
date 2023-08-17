@@ -3,7 +3,10 @@
 import random
 from typing import List, Optional, Tuple
 
-from biaslyze.concepts import CONCEPTS_EN, CONCEPTS_DE
+from typing_extensions import Self
+
+from biaslyze.concepts.concepts_de import CONCEPTS_DE
+from biaslyze.concepts.concepts_en import CONCEPTS_EN
 from biaslyze.text_representation import TextRepresentation, Token
 
 
@@ -18,23 +21,28 @@ class Keyword:
     """
 
     def __init__(self, text: str, functions: List[str], category: str):
-        """The constructor for the Keyword class."""
+        """Initialize a Keyword."""
         self.text = text
         self.functions = functions
         self.category = category
 
     def __str__(self) -> str:
-        return f"Keyword({self.text}, {self.function}, {self.category})"
+        """Return a string representation of the Keyword."""
+        return f"Keyword({self.text}, {self.functions}, {self.category})"
 
     def __repr__(self) -> str:
-        return f"Keyword({self.text}, {self.function}, {self.category})"
+        """Return a string representation of the Keyword."""
+        return f"Keyword({self.text}, {self.functions}, {self.category})"
 
     def can_replace_token(self, token: Token, respect_function: bool = False) -> bool:
-        """Returns True if the keyword can replace the given token.
+        """Check if the keyword can replace the given token.
 
         Args:
             token (Token): The token to replace.
             respect_function (bool): Whether to respect the function of the keyword. Defaults to False.
+
+        Returns:
+            bool: True if the keyword can replace the token, False otherwise.
         """
         if respect_function:
             return True
@@ -42,13 +50,20 @@ class Keyword:
         return True
 
     def equal_to_token(self, token: Token) -> bool:
-        """Returns True if the given token is equal to the keyword."""
+        """Check if the keyword is equal to the given token.
+
+        Args:
+            token (Token): The token to compare to.
+
+        Returns:
+            bool: True if the keyword is equal to the token, False otherwise.
+        """
         if self.text.lower() == token.text.lower():
             return True
         return False
 
     def get_keyword_in_style_of_token(self, token: Token) -> str:
-        """Returns the keyword text in the style of the given token.
+        """Return the keyword text in the style of the given token.
 
         Uses the shape of the token to determine the style.
 
@@ -81,7 +96,7 @@ class Concept:
     - ethnicity
     - gendered_words
     - nationality
-    
+
     in German:
 
     - gender
@@ -91,18 +106,19 @@ class Concept:
 
     Attributes:
         name (str): The name of the concept.
+        lang (str): The language of the concept.
         keywords (List[Keyword]): The keywords of the concept.
     """
 
     def __init__(self, name: str, lang: str, keywords: List[Keyword]):
-        """The constructor for the Concept class."""
+        """Initialize a Concept."""
         self.name = name
         self.lang = lang
         self.keywords = keywords
 
     @classmethod
-    def from_dict_keyword_list(cls, name: str, lang: str, keywords: List[dict]):
-        """Constructs a Concept object from a list of dictionaries.
+    def from_dict_keyword_list(cls, name: str, lang: str, keywords: List[dict]) -> Self:
+        """Construct a Concept object from a list of dictionaries.
 
         Example usage:
         ```python
@@ -112,7 +128,7 @@ class Concept:
             keywords=[{"keyword": "Hans", "function": ["name"]}],
         )
         ```
-        
+
         Args:
             name (str): The name of the concept.
             lang (str): The language of the concept.
@@ -133,7 +149,7 @@ class Concept:
     def get_present_keywords(
         self, text_representation: TextRepresentation
     ) -> List[Keyword]:
-        """Returns the keywords that are present in the given text."""
+        """Return the keywords that are present in the given text."""
         present_keywords = []
         for keyword in self.keywords:
             if keyword.text in text_representation:
@@ -147,7 +163,7 @@ class Concept:
         n_texts: Optional[int] = None,
         respect_function: bool = True,
     ) -> List[Tuple[str, Keyword]]:
-        """Returns a counterfactual texts based on a specific keyword for the given text representation.
+        """Return a counterfactual texts based on a specific keyword for the given text representation.
 
         Args:
             keyword (Keyword): The keyword in the text to replace.
@@ -188,10 +204,16 @@ class Concept:
 
 
 def load_concepts(lang: str) -> List[Concept]:
-    """Loads the concepts from the concepts.py file.
+    """Load the concepts from the concepts.py file.
 
     Args:
         lang (str): The language of the concepts to load.
+
+    Returns:
+        List[Concept]: A list of Concept objects.
+
+    Raises:
+        ValueError: If the language is not supported.
 
     TODO:
     - Make this load from a JSON file instead of a Python file.

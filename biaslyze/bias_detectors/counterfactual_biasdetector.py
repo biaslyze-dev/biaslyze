@@ -59,13 +59,16 @@ class CounterfactualBiasDetector:
         lang: str = "en",
         use_tokenizer: bool = False,
     ):
+        """Initialize the CounterfactualBiasDetector."""
         self.lang = lang
         self.use_tokenizer = use_tokenizer
-        self.concept_detector = KeywordConceptDetector(lang=lang, use_tokenizer=use_tokenizer)
+        self.concept_detector = KeywordConceptDetector(
+            lang=lang, use_tokenizer=use_tokenizer
+        )
 
         # load the concepts
         self.concepts = load_concepts(lang=lang)
-    
+
     def register_concept(self, concept: Concept):
         """Register a new, custom concept to the detector.
 
@@ -79,7 +82,7 @@ class CounterfactualBiasDetector:
         bias_detector = CounterfactualBiasDetector(lang="de")
         bias_detector.register_concept(names_concept)
         ```
-        
+
         Args:
             concept: The concept to register.
 
@@ -97,11 +100,11 @@ class CounterfactualBiasDetector:
         self,
         texts: List[str],
         predict_func: Callable[[List[str]], List[float]],
-        labels: Optional[List[str]] = None,
+        labels: Optional[List[str | int]] = None,
         concepts_to_consider: Optional[List[str]] = [],
         max_counterfactual_samples: Optional[int] = None,
         max_counterfactual_samples_per_text: Optional[int] = None,
-    ) -> List:
+    ) -> CounterfactualDetectionResult:
         """Detect potential bias in the model based on the given texts.
 
         Args:
@@ -145,16 +148,20 @@ class CounterfactualBiasDetector:
         if concepts_to_consider:
             for c in concepts_to_consider:
                 if c not in [c.name for c in self.concepts]:
-                    raise ValueError(f"Concept '{c}' not found in language '{self.lang}'.")
+                    raise ValueError(
+                        f"Concept '{c}' not found in language '{self.lang}'."
+                    )
 
         # find bias relevant texts
-        detected_texts = self.concept_detector.detect(texts, concepts_to_consider=concepts_to_consider)
+        detected_texts = self.concept_detector.detect(
+            texts, concepts_to_consider=concepts_to_consider
+        )
 
         # limit the number of counterfactual samples per text if max_counterfactual_samples is given
         if max_counterfactual_samples:
-            max_counterfactual_samples_per_text = max_counterfactual_samples // len(
-                detected_texts
-            ) + 1
+            max_counterfactual_samples_per_text = (
+                max_counterfactual_samples // len(detected_texts) + 1
+            )
 
         results = []
         for concept in self.concepts:
@@ -170,7 +177,9 @@ class CounterfactualBiasDetector:
                 n_texts=max_counterfactual_samples_per_text,
             )
             if not counterfactual_samples:
-                logger.warning(f"No samples containing '{concept.name}' found. Skipping.")
+                logger.warning(
+                    f"No samples containing '{concept.name}' found. Skipping."
+                )
                 continue
 
             # calculate counterfactual scores for each keyword
@@ -228,7 +237,7 @@ class CounterfactualBiasDetector:
 def _extract_counterfactual_concept_samples(
     concept: Concept,
     texts: List[str],
-    labels: Optional[List[str]] = None,
+    labels: Optional[List[str | int]] = None,
     n_texts: Optional[int] = None,
     respect_function: bool = True,
 ) -> List[CounterfactualSample]:
@@ -259,7 +268,10 @@ def _extract_counterfactual_concept_samples(
             original_texts.append(text_representation.text)
             for orig_keyword in present_keywords:
                 counterfactual_texts = concept.get_counterfactual_texts(
-                    orig_keyword, text_representation, n_texts=n_texts, respect_function=respect_function
+                    orig_keyword,
+                    text_representation,
+                    n_texts=n_texts,
+                    respect_function=respect_function,
                 )
                 for counterfactual_text, counterfactual_keyword in counterfactual_texts:
                     counterfactual_samples.append(
@@ -283,7 +295,7 @@ def _calculate_counterfactual_scores(
     bias_keyword: str,
     predict_func: Callable,
     samples: List[CounterfactualSample],
-    positive_classes: Optional[List] = None,
+    positive_classes: Optional[List[int]] = None,
 ) -> np.ndarray:
     """Calculate the counterfactual score for a bias keyword given samples.
 
@@ -337,10 +349,9 @@ def _calculate_counterfactual_scores(
     if positive_classes:
         # sum up the scores for the positive classes and take the difference
         try:
-            score_diffs = (
-                np.array(predicted_scores[:, positive_classes]).sum(axis=1),
-                -np.array(original_scores[:, positive_classes]).sum(axis=1),
-            )
+            score_diffs = np.array(predicted_scores[:, positive_classes]).sum(
+                axis=1
+            ) - np.array(original_scores[:, positive_classes]).sum(axis=1)
         except IndexError:
             raise IndexError(
                 f"Positive classes {positive_classes} not found in predictions."

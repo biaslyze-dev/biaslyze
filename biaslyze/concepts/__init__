@@ -1,0 +1,3 @@
+"""The concepts module contains the concepts used in the biaslyze package."""
+from .concepts_de import CONCEPTS_DE # noqa
+from .concepts_en import CONCEPTS_EN # noqa

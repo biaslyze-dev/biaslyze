@@ -55,7 +55,7 @@ detection_res.dashboard()
 
 
 ### .register_concept
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/counterfactual_biasdetector.py/#L69)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/counterfactual_biasdetector.py/#L70)
 ```python
 .register_concept(
    concept: Concept
@@ -90,11 +90,12 @@ bias_detector.register_concept(names_concept)
 
 
 ### .process
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/counterfactual_biasdetector.py/#L96)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/bias_detectors/counterfactual_biasdetector.py/#L97)
 ```python
 .process(
    texts: List[str], predict_func: Callable[[List[str]], List[float]],
-   labels: Optional[List[str]] = None, concepts_to_consider: Optional[List[str]] = [],
+   labels: Optional[List[str|int]] = None,
+   concepts_to_consider: Optional[List[str]] = [],
    max_counterfactual_samples: Optional[int] = None,
    max_counterfactual_samples_per_text: Optional[int] = None
 )

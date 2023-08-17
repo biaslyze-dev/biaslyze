@@ -4,9 +4,10 @@ from typing import List, Optional
 
 import spacy
 from tqdm import tqdm
+from typing_extensions import Self
 
 SPACY_TOKENIZER = spacy.load(
-    "en_core_web_sm", disable=["parser", "ner", "lemmatizer"] # "tagger"
+    "en_core_web_sm", disable=["parser", "ner", "lemmatizer"]  # "tagger"
 )
 
 
@@ -29,9 +30,9 @@ class Token:
         end: int,
         whitespace_after: str,
         shape: str,
-        function: Optional[List[str]] = None,
+        function: Optional[str] = None,
     ):
-        """The constructor for the Token class."""
+        """Initialize a Token."""
         self.text = text
         self.start = start
         self.end = end
@@ -49,27 +50,35 @@ class TextRepresentation:
     """
 
     def __init__(self, text: str, tokens: List[Token]):
-        """The constructor for the TextRepresentation class."""
+        """Initialize a TextRepresentation."""
         self.text = text
         self.tokens = tokens
 
     def __str__(self) -> str:
+        """Return a string representation of the TextRepresentation."""
         return f"TextRepresentation({self.text}, {self.tokens})"
 
     def __repr__(self) -> str:
+        """Return a string representation of the TextRepresentation."""
         return f"TextRepresentation({self.text}, {self.tokens})"
 
     def __contains__(self, string: str) -> bool:
-        """
-        Returns True if the given string is contained in the text representation.
+        """Check if the given string is contained in the text representation.
 
         Should be extended to support more complex queries.
         """
         return string.lower() in [token.text.lower() for token in self.tokens]
 
     @classmethod
-    def from_spacy_doc(cls, doc: spacy.tokens.Doc):
-        """Constructs a TextRepresentation object from a spacy doc."""
+    def from_spacy_doc(cls, doc: spacy.tokens.Doc) -> Self:
+        """Construct a TextRepresentation object from a spacy doc.
+
+        Args:
+            doc (spacy.tokens.Doc): The spacy doc to construct the TextRepresentation from.
+
+        Returns:
+            TextRepresentation: The constructed TextRepresentation.
+        """
         tokens = []
         for token in doc:
             tokens.append(
@@ -86,7 +95,14 @@ class TextRepresentation:
 
 
 def process_texts_with_spacy(texts: List[str]) -> List[TextRepresentation]:
-    """Processes the given texts with spacy."""
+    """Process the given texts with spacy.
+
+    Args:
+        texts (List[str]): The texts to process.
+
+    Returns:
+        List[TextRepresentation]: The processed texts as TextRepresentation objects.
+    """
     # spacy_text_representations = SPACY_TOKENIZER.pipe(texts)
     return [
         TextRepresentation.from_spacy_doc(doc)

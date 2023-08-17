@@ -5,7 +5,8 @@ import spacy
 from loguru import logger
 from tqdm import tqdm
 
-from biaslyze.concepts import CONCEPTS_EN, CONCEPTS_DE
+from biaslyze.concepts.concepts_de import CONCEPTS_DE
+from biaslyze.concepts.concepts_en import CONCEPTS_EN
 
 
 class KeywordConceptDetector:
@@ -14,12 +15,13 @@ class KeywordConceptDetector:
     Attributes:
         lang: The language of the text. Currently only 'en' and 'de' are supported.
         use_tokenizer: If keywords should only be searched in tokenized text. Can be useful for short keywords like 'she'.
-    
+
     Raises:
         ValueError: If the language is not supported.
     """
 
     def __init__(self, lang: str = "en", use_tokenizer: bool = False):
+        """Initialize the KeywordConceptDetector."""
         lang = lang
         self.use_tokenizer = use_tokenizer
         self._tokenizer = spacy.load(
@@ -32,7 +34,9 @@ class KeywordConceptDetector:
         else:
             raise ValueError(f"Language {lang} not supported.")
 
-    def detect(self, texts: List[str], concepts_to_consider: Optional[List[str]] = None) -> List[str]:
+    def detect(
+        self, texts: List[str], concepts_to_consider: Optional[List[str]] = None
+    ) -> List[str]:
         """Detect concepts present in texts.
 
         Returns a list of texts with the concept present.
@@ -54,11 +58,11 @@ class KeywordConceptDetector:
         ]
         for text in tqdm(texts):
             if self.use_tokenizer:
-                text_representation = [
+                text_representation: List[str] = [
                     token.text.lower() for token in self._tokenizer(text)
                 ]
             else:
-                text_representation = text.lower()
+                text_representation: str = text.lower()
             if any(keyword in text_representation for keyword in concept_keywords):
                 detected_texts.append(text)
         logger.info(f"Done. Found {len(detected_texts)} texts with protected concepts.")
