@@ -75,7 +75,7 @@ See more detailed examples in the [tutorial](https://biaslyze.org/tutorials/tuto
 
 ### Adding concepts and keywords
 
-You can add concepts and new keywords for existing concepts by editing [concepts.py](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concepts.py).
+You can add concepts and new keywords for existing concepts by editing the concept files in [concepts](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concepts/).
 A tutorial on how to create custom concepts and work with them can be found [here](https://biaslyze.org/tutorials/tutorial-working-with-custom-concepts/).
 
 ## Preview/build the documentation with mkdocs

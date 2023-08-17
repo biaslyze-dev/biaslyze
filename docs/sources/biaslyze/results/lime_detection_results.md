@@ -91,8 +91,8 @@ Content of the dashboard:
 [source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/results/lime_detection_results.py/#L9)
 ```python 
 LimeSampleResult(
-   text: str, bias_concepts: List[str], bias_reasons: List[str],
-   top_words: List[str], num_tokens: List[str], keyword_position: int, score: float,
+   text: str, bias_concepts: List[str], bias_reasons: List[Sequence[str]|None],
+   top_words: List[str], num_tokens: int, keyword_position: int, score: float,
    metrics: Optional[Dict] = None
 )
 ```
