@@ -23,8 +23,7 @@ Biaslyze helps to get started with the analysis of bias within NLP models and of
 
 ## Supported Models
 
-All text classification models with probability output are supported. This includes models from scikit-learn, tensorflow, pytorch, huggingface transformers and others. 
-See the tutorials section for examples.
+All text classification models with probability output are supported. This includes models from scikit-learn, tensorflow, pytorch, huggingface transformers and custom models. The bias detection requires you to pass a `predict_proba` function similar to what you would get on scikit-learn models. You can find a tutorial on how to do that for pre-trained transformer models [here](https://biaslyze.org/tutorials/tutorial-hugging-hatexplain/). 
 
 ## Installation
 
@@ -77,6 +76,7 @@ See more detailed examples in the [tutorial](https://biaslyze.org/tutorials/tuto
 ### Adding concepts and keywords
 
 You can add concepts and new keywords for existing concepts by editing [concepts.py](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concepts.py).
+A tutorial on how to create custom concepts and work with them can be found [here](https://biaslyze.org/tutorials/tutorial-working-with-custom-concepts/).
 
 ## Preview/build the documentation with mkdocs
 
