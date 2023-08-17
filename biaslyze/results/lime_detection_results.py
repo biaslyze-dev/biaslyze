@@ -1,7 +1,7 @@
 """Classes to return results of the different steps."""
 from collections import Counter, defaultdict
 from pprint import pprint
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from biaslyze._plotting import _plot_histogram_dashboard
 
@@ -31,7 +31,7 @@ class LimeSampleResult:
         num_tokens: List[str],
         keyword_position: int,
         score: float,
-        metrics: Dict = None,
+        metrics: Optional[Dict] = None,
     ):
         """Initialize the LimeSampleResult."""
         self.text = text
