@@ -6,7 +6,7 @@
 ```python 
 Token(
    text: str, start: int, end: int, whitespace_after: str, shape: str,
-   function: Optional[List[str]] = None
+   function: Optional[str] = None
 )
 ```
 

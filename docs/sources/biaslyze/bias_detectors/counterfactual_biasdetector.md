@@ -94,7 +94,8 @@ bias_detector.register_concept(names_concept)
 ```python
 .process(
    texts: List[str], predict_func: Callable[[List[str]], List[float]],
-   labels: Optional[List[str]] = None, concepts_to_consider: Optional[List[str]] = [],
+   labels: Optional[List[str|int]] = None,
+   concepts_to_consider: Optional[List[str]] = [],
    max_counterfactual_samples: Optional[int] = None,
    max_counterfactual_samples_per_text: Optional[int] = None
 )

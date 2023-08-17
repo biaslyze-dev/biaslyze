@@ -93,7 +93,7 @@ Content of the dashboard:
 LimeSampleResult(
    text: str, bias_concepts: List[str], bias_reasons: List[str],
    top_words: List[str], num_tokens: List[str], keyword_position: int, score: float,
-   metrics: Dict = None
+   metrics: Optional[Dict] = None
 )
 ```
 
