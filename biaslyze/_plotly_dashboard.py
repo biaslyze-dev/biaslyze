@@ -123,7 +123,7 @@ def _build_data_lookup(results) -> Dict[str, Dict[str, Dict[str, Any]]]:
                 else _get_ksr_results(results, concept=concept)
             )
             samples = results._get_counterfactual_samples_by_concept(concept)
-            concept_dict = {
+            method_dict[concept] = {
                 "data": scores,
                 "texts": {
                     keyword: [
@@ -141,7 +141,6 @@ def _build_data_lookup(results) -> Dict[str, Dict[str, Dict[str, Any]]]:
                 },
             }
 
-            method_dict[concept] = concept_dict
         lookup[method] = method_dict
     return lookup
 
@@ -397,8 +396,10 @@ def _plot_dashboard(results, num_keywords: int = 10, port: int = 8090):
                 index = click_data["points"][0]["pointIndex"]
                 try:
                     raw_text = display_data['texts'][keyword][index]
-                    text_with_highlights = raw_text.replace(
-                        keyword, f"<span style='background-color: #FFFF00'>{keyword}</span>"
+                    text_with_highlights = (
+                        raw_text[:raw_text.lower().index(keyword)]
+                        + "<b>" + raw_text[raw_text.lower().index(keyword):raw_text.lower().index(keyword) + len(keyword)] + "</b>"
+                        + raw_text[raw_text.lower().index(keyword) + len(keyword):]
                     )
                     return html.Div(
                         [
@@ -426,8 +427,9 @@ def _plot_dashboard(results, num_keywords: int = 10, port: int = 8090):
                                     "border-spacing": "30px 0px",
                                 },
                             ),
-                            html.P(
-                                f"{text_with_highlights}"
+                            dcc.Markdown(
+                                f"{text_with_highlights}",
+                                dangerously_allow_html=True,
                             ),
                         ],
                         style={
