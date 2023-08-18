@@ -61,8 +61,6 @@ CONCEPTS_DE = {
     "gender": [
         {"keyword": "sie", "function": ["PRON"], "category": "female"},
         {"keyword": "er", "function": ["PRON"], "category": "male"},
-        {"keyword": "they", "function": ["PRON"], "category": "neutral"},
-        {"keyword": "them", "function": ["PRON"], "category": "neutral"},
         {"keyword": "ze", "function": ["PRON"], "category": "neutral"},
         {"keyword": "xe", "function": ["PRON"], "category": "neutral"},
         {"keyword": "mann", "function": ["NOUN"], "category": "male"},
@@ -77,7 +75,18 @@ CONCEPTS_DE = {
         {"keyword": "jungs", "function": ["NOUN"], "category": "male"},
         {"keyword": "mädchen", "function": ["NOUN"], "category": "female"},
         {"keyword": "sein", "function": ["PRON"], "category": "male"},
+        {"keyword": "seine", "function": ["PRON"], "category": "male"},
+        {"keyword": "ihre", "function": ["PRON"], "category": "female"},
+        {"keyword": "ihr", "function": ["PRON"], "category": "female"},
     ],
-    "nationality": [],
+    "nationality": [
+        {"keyword": "deutsch", "function": ["ADJ"], "category": "nationality"},
+        {"keyword": "deutsche", "function": ["ADJ"], "category": "nationality"},
+        {"keyword": "deutschen", "function": ["ADJ"], "category": "nationality"},
+        {"keyword": "deutscher", "function": ["ADJ"], "category": "nationality"},
+        {"keyword": "deutsches", "function": ["ADJ"], "category": "nationality"},
+        {"keyword": "deutschland", "function": ["NOUN"], "category": "country"},
+        {"keyword": "englisch", "function": ["ADJ"], "category": "nationality"},
+    ],
     "ethnicity": [],
 }
