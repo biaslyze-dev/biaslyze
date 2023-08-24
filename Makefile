@@ -2,6 +2,9 @@ install:
 	poetry install --with dev,docs
 	poetry run python -m spacy download en_core_web_sm
 
+export:
+	poetry export -f requirements.txt --output requirements.txt --with dev --without-hashes
+
 jupyter:
 	poetry run jupyter lab
 
