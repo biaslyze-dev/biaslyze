@@ -1,4 +1,4 @@
-from .counterfactual_detection_results import (  # noqq
+from .counterfactual_detection_results import (  # noqa
     CounterfactualConceptResult,
     CounterfactualDetectionResult,
     CounterfactualSample,
