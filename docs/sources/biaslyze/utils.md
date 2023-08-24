@@ -2,7 +2,7 @@
 
 
 ### load_results
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/utils.py/#L6)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/utils.py/#L7)
 ```python
 .load_results(
    path: str

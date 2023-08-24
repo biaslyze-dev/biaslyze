@@ -8,7 +8,7 @@ from tqdm import tqdm
 
 from biaslyze.concept_class import Concept, load_concepts
 from biaslyze.concept_detectors import KeywordConceptDetector
-from biaslyze.results.counterfactual_detection_results import (
+from biaslyze.results import (
     CounterfactualConceptResult,
     CounterfactualDetectionResult,
     CounterfactualSample,

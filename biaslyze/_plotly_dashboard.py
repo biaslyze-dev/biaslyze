@@ -1,7 +1,6 @@
 """This file contains the new plotting with plotly and dash."""
-
+from typing import List, Tuple, Dict, Any
 from collections import defaultdict
-from typing import Any, Dict, List
 
 import dash
 import numpy as np
@@ -15,12 +14,32 @@ from plotly.colors import n_colors
 def _get_default_results(
     result, concept: str
 ) -> pd.DataFrame:
+    """Get the counterfactual scores (default) for each original sample.
+
+    Args:
+        result: An instance of CounterfactualDetectionResults.
+        concept: The concept to get the results for.
+
+    Returns:
+        A DataFrame with the counterfactual scores for each original sample.
+    """
     dataf = result._get_result_by_concept(concept=concept)
     sort_index = dataf.median().abs().sort_values(ascending=True)
     return dataf[sort_index.index]
 
 
-def _get_ksr_results(result, concept: str) -> pd.DataFrame:
+def _get_ksr_results(
+    result, concept: str
+) -> pd.DataFrame:
+    """Get the counterfactual scores (ksr) for each original sample.
+
+    Args:
+        result: An instance of CounterfactualDetectionResults.
+        concept: The concept to get the results for.
+
+    Returns:
+        A DataFrame with the counterfactual scores for each original sample.
+    """
     dataf = result._get_result_by_concept(concept=concept)
     samples = result._get_counterfactual_samples_by_concept(concept=concept)
 
@@ -148,7 +167,7 @@ def _build_data_lookup(results) -> Dict[str, Dict[str, Dict[str, Any]]]:
 
 def _prepare_histogram_display_data(
     range_start: int, range_end: int, concept_data: pd.DataFrame, num_keywords: int
-):
+) -> List[Tuple[str, str, float, str]]:
     """Prepare the data for the histogram display.
 
     Args:
