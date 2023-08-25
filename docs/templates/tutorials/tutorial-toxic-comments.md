@@ -208,6 +208,14 @@ print(counterfactual_detection_results.concept_results[1].omitted_keywords)
 
 ## Lets look at some results in our Dashboard
 
+To display the results as a dashboard with different plots just run the next cell.
+
+```python
+counterfactual_detection_results.dashboard(num_keywords=10)
+```
+
+See the gifs below for a short demo of the dashboard.
+
 ### Counterfactual Score
 The first plot shows you the top $10$ keywords found within the concept "gender" and "religion" according to the difference resulting from the replacement of counterfactuals with that keyword. 
 The counterfactual score is defined as the difference between the predicted probability score for the counterfactual text and the predicted probability score for the original text.
