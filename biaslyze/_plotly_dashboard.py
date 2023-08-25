@@ -1,6 +1,6 @@
 """This file contains the new plotting with plotly and dash."""
-from typing import List, Tuple, Dict, Any
 from collections import defaultdict
+from typing import Any, Dict, List, Tuple
 
 import dash
 import numpy as np
@@ -11,9 +11,7 @@ from dash.dependencies import Input, Output
 from plotly.colors import n_colors
 
 
-def _get_default_results(
-    result, concept: str
-) -> pd.DataFrame:
+def _get_default_results(result, concept: str) -> pd.DataFrame:
     """Get the counterfactual scores (default) for each original sample.
 
     Args:
@@ -28,9 +26,7 @@ def _get_default_results(
     return dataf[sort_index.index]
 
 
-def _get_ksr_results(
-    result, concept: str
-) -> pd.DataFrame:
+def _get_ksr_results(result, concept: str) -> pd.DataFrame:
     """Get the counterfactual scores (ksr) for each original sample.
 
     Args:

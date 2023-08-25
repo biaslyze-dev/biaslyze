@@ -264,27 +264,28 @@ def _extract_counterfactual_concept_samples(
         enumerate(text_representations), total=len(text_representations)
     ):
         present_keywords = concept.get_present_keywords(text_representation)
-        if present_keywords:
-            original_texts.append(text_representation.text)
-            for orig_keyword in present_keywords:
-                counterfactual_texts = concept.get_counterfactual_texts(
-                    orig_keyword,
-                    text_representation,
-                    n_texts=n_texts,
-                    respect_function=respect_function,
-                )
-                for counterfactual_text, counterfactual_keyword in counterfactual_texts:
-                    counterfactual_samples.append(
-                        CounterfactualSample(
-                            text=counterfactual_text,
-                            orig_keyword=orig_keyword.text,
-                            keyword=counterfactual_keyword.text,
-                            concept=concept.name,
-                            tokenized=text_representation,
-                            label=labels[idx] if labels else None,
-                            source_text=text_representation.text,
-                        )
+        if not present_keywords:
+            continue
+        original_texts.append(text_representation.text)
+        for orig_keyword in present_keywords:
+            counterfactual_texts = concept.get_counterfactual_texts(
+                orig_keyword,
+                text_representation,
+                n_texts=n_texts,
+                respect_function=respect_function,
+            )
+            for counterfactual_text, counterfactual_keyword in counterfactual_texts:
+                counterfactual_samples.append(
+                    CounterfactualSample(
+                        text=counterfactual_text,
+                        orig_keyword=orig_keyword.text,
+                        keyword=counterfactual_keyword.text,
+                        concept=concept.name,
+                        tokenized=text_representation,
+                        label=labels[idx] if labels else None,
+                        source_text=text_representation.text,
                     )
+                )
     logger.info(
         f"Extracted {len(counterfactual_samples)} counterfactual sample texts for concept {concept.name} from {len(original_texts)} original texts."
     )

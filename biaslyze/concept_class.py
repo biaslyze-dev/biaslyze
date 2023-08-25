@@ -45,8 +45,7 @@ class Keyword:
             bool: True if the keyword can replace the token, False otherwise.
         """
         if respect_function:
-            return True
-            # return token.function in self.functions
+            return token.function in self.functions
         return True
 
     def equal_to_token(self, token: Token) -> bool:
