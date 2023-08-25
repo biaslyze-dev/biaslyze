@@ -27,9 +27,9 @@ def test_extract_counterfactual_concept_samples():
         name="gender",
         lang="en",
         keywords=[
-            Keyword(text="she", functions=["subject"], category="PRON"),
-            Keyword(text="he", functions=["subject"], category="PRON"),
-            Keyword(text="they", functions=["subject"], category="PRON"),
+            Keyword(text="she", functions=["PRON"], category="female"),
+            Keyword(text="he", functions=["PRON"], category="male"),
+            Keyword(text="they", functions=["PRON"], category="neutral"),
         ],
     )
     texts = [
@@ -54,9 +54,9 @@ def test_calculate_counterfactual_score():
         name="gender",
         lang="en",
         keywords=[
-            Keyword(text="she", functions=["subject"], category="PRON"),
-            Keyword(text="he", functions=["subject"], category="PRON"),
-            Keyword(text="they", functions=["subject"], category="PRON"),
+            Keyword(text="she", functions=["PRON"], category="female"),
+            Keyword(text="he", functions=["PRON"], category="male"),
+            Keyword(text="they", functions=["PRON"], category="neutral"),
         ],
     )
     texts = [

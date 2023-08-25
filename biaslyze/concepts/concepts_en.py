@@ -1378,7 +1378,11 @@ CONCEPTS_EN = {
             "function": ["NOUN", "PROPN"],
             "category": "christianity",
         },
-        {"keyword": "christianity", "function": ["NOUN", "PROPN"], "category": "christianity"},
+        {
+            "keyword": "christianity",
+            "function": ["NOUN", "PROPN"],
+            "category": "christianity",
+        },
         {
             "keyword": "christians",
             "function": ["NOUN", "PROPN"],
