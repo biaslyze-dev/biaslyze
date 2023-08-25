@@ -104,6 +104,7 @@ class CounterfactualBiasDetector:
         concepts_to_consider: Optional[List[str]] = [],
         max_counterfactual_samples: Optional[int] = None,
         max_counterfactual_samples_per_text: Optional[int] = None,
+        resprect_function: bool = True,
     ) -> CounterfactualDetectionResult:
         """Detect potential bias in the model based on the given texts.
 
@@ -114,6 +115,7 @@ class CounterfactualBiasDetector:
             concepts_to_consider: If given, only the given concepts are considered.
             max_counterfactual_samples: Optional. The maximum number of counterfactual samples to return. Defaults to None, which returns all possible counterfactual samples.
             max_counterfactual_samples_per_text: Optional. The maximum number of counterfactual samples to return per text. Defaults to None, which returns all possible counterfactual samples.
+            resprect_function: If True, only replace keywords with the same function. Defaults to True.
 
         Returns:
             A [CounterfactualDetectionResult](/biaslyze/results/counterfactual_detection_results/) object.
@@ -175,6 +177,7 @@ class CounterfactualBiasDetector:
                 concept=concept,
                 labels=labels,
                 n_texts=max_counterfactual_samples_per_text,
+                respect_function=resprect_function,
             )
             if not counterfactual_samples:
                 logger.warning(

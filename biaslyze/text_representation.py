@@ -40,6 +40,14 @@ class Token:
         self.shape = shape
         self.function = function
 
+    def __str__(self) -> str:
+        """Return a string representation of the Token."""
+        return f"Token({self.text}, {self.start}, {self.end}, {self.whitespace_after}, {self.shape}, {self.function})"
+
+    def __repr__(self) -> str:
+        """Return a string representation of the Token."""
+        return f"Token({self.text}, {self.start}, {self.end}, {self.whitespace_after}, {self.shape}, {self.function})"
+
 
 class TextRepresentation:
     """A class used to represent a text in the biaslyze package.

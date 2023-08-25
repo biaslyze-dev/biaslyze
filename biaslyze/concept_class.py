@@ -44,8 +44,13 @@ class Keyword:
         Returns:
             bool: True if the keyword can replace the token, False otherwise.
         """
+        # map some POS tags to the same category
+        pos_map = {
+            "ADV": "ADJ",
+            "PROPN": "NOUN",
+        }
         if respect_function:
-            return token.function in self.functions
+            return pos_map.get(token.function, token.function) in self.functions
         return True
 
     def equal_to_token(self, token: Token) -> bool:

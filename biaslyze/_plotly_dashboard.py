@@ -391,7 +391,7 @@ def _plot_dashboard(results, num_keywords: int = 10, port: int = 8090):
                 selected = _prepare_histogram_display_data(
                     range_start=range_start,
                     range_end=range_end,
-                    data=display_data,
+                    concept_data=display_data,
                     num_keywords=num_keywords,
                 )
                 if selected:
