@@ -97,7 +97,8 @@ bias_detector.register_concept(names_concept)
    labels: Optional[List[str|int]] = None,
    concepts_to_consider: Optional[List[str]] = [],
    max_counterfactual_samples: Optional[int] = None,
-   max_counterfactual_samples_per_text: Optional[int] = None
+   max_counterfactual_samples_per_text: Optional[int] = None,
+   resprect_function: bool = True
 )
 ```
 
@@ -113,6 +114,7 @@ Detect potential bias in the model based on the given texts.
 * **concepts_to_consider**  : If given, only the given concepts are considered.
 * **max_counterfactual_samples**  : Optional. The maximum number of counterfactual samples to return. Defaults to None, which returns all possible counterfactual samples.
 * **max_counterfactual_samples_per_text**  : Optional. The maximum number of counterfactual samples to return per text. Defaults to None, which returns all possible counterfactual samples.
+* **resprect_function**  : If True, only replace keywords with the same function. Defaults to True.
 
 
 **Returns**

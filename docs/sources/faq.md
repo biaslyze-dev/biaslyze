@@ -18,7 +18,7 @@ Biaslyze will not make any statements about whether a model is biased or not. It
 
 ## What Biaslyze can do
 Biaslyze can evaluate the importance of certain sensitive attributes in a model and show you indications for bias. The attributes which are in many cases under the protection of anti-discrimination laws are among others gender, nationality and religion. Biaslyze can help you notice and start assessing or possibly mitigating sources of bias.
-Please also look at the [tutorial](tutorials/tutorial-toxic-comments/) to get a sense of how Biaslyze works.
+Please also look at the [tutorial](https://biaslyze.org/tutorials/tutorial-toxic-comments/) to get a sense of how Biaslyze works.
 
 
 ## Purpose

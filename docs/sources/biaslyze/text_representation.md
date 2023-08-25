@@ -29,7 +29,7 @@ A class used to represent a token in the biaslyze package.
 
 
 ## TextRepresentation
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/text_representation.py/#L44)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/text_representation.py/#L52)
 ```python 
 TextRepresentation(
    text: str, tokens: List[Token]
@@ -52,7 +52,7 @@ A class used to represent a text in the biaslyze package.
 
 
 ### .from_spacy_doc
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/text_representation.py/#L73)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/text_representation.py/#L81)
 ```python
 .from_spacy_doc(
    cls, doc: spacy.tokens.Doc

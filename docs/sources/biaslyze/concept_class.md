@@ -2,7 +2,7 @@
 
 
 ## Concept
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L86)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L90)
 ```python 
 Concept(
    name: str, lang: str, keywords: List[Keyword]
@@ -43,7 +43,7 @@ You can find out more here: [concepts.py](https://github.com/biaslyze-dev/biasly
 
 
 ### .from_dict_keyword_list
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L120)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L124)
 ```python
 .from_dict_keyword_list(
    cls, name: str, lang: str, keywords: List[dict]
@@ -72,7 +72,7 @@ keywords=[{"keyword": "Hans", "function": ["name"]}],
 
 
 ### .get_present_keywords
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L149)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L153)
 ```python
 .get_present_keywords(
    text_representation: TextRepresentation
@@ -83,7 +83,7 @@ keywords=[{"keyword": "Hans", "function": ["name"]}],
 Return the keywords that are present in the given text.
 
 ### .get_counterfactual_texts
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L159)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L163)
 ```python
 .get_counterfactual_texts(
    keyword: Keyword, text_representation: TextRepresentation,
@@ -159,7 +159,7 @@ Check if the keyword can replace the given token.
 
 
 ### .equal_to_token
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L52)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L56)
 ```python
 .equal_to_token(
    token: Token
@@ -181,7 +181,7 @@ Check if the keyword is equal to the given token.
 
 
 ### .get_keyword_in_style_of_token
-[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L65)
+[source](https://github.com/biaslyze-dev/biaslyze/blob/main/biaslyze/concept_class.py/#L69)
 ```python
 .get_keyword_in_style_of_token(
    token: Token
