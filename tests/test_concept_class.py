@@ -101,24 +101,24 @@ def test_concept_get_counterfactual_texts():
     text_representation = TextRepresentation(
         text="She is a doctor.",
         tokens=[
-            Token(text="She", start=0, end=3, whitespace_after=" ", shape="Xxx"),
-            Token(text="is", start=4, end=6, whitespace_after=" ", shape="xx"),
-            Token(text="a", start=7, end=8, whitespace_after=" ", shape="x"),
-            Token(text="doctor", start=9, end=15, whitespace_after="", shape="xxxxx"),
-            Token(text=".", start=15, end=16, whitespace_after="", shape="."),
+            Token(text="She", start=0, end=3, whitespace_after=" ", shape="Xxx", function="PRON"),
+            Token(text="is", start=4, end=6, whitespace_after=" ", shape="xx", function="VERB"),
+            Token(text="a", start=7, end=8, whitespace_after=" ", shape="x", function="DET"),
+            Token(text="doctor", start=9, end=15, whitespace_after="", shape="xxxxx", function="NOUN"),
+            Token(text=".", start=15, end=16, whitespace_after="", shape=".", function="PUNCT"),
         ],
     )
 
-    keyword = Keyword(text="she", functions=["subject"], category="PRON")
+    keyword = Keyword(text="she", functions=["PRON"], category="female")
 
     concept = Concept(
         name="gender",
         lang="en",
         keywords=[
-            Keyword(text="he", functions=["subject"], category="PRON"),
-            Keyword(text="her", functions=["object"], category="PRON"),
-            Keyword(text="his", functions=["possessive"], category="PRON"),
-            Keyword(text="him", functions=["object"], category="PRON"),
+            Keyword(text="he", functions=["PRON"], category="male"),
+            Keyword(text="her", functions=["PRON"], category="female"),
+            Keyword(text="his", functions=["PRON"], category="male"),
+            Keyword(text="him", functions=["PRON"], category="male"),
         ],
     )
 
