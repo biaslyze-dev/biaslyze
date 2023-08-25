@@ -14,6 +14,9 @@
     <a href="https://pypi.org/project/biaslyze/">
         <img alt="pypi" src="https://img.shields.io/pypi/pyversions/biaslyze">
     </a>
+    <a href="#">
+        <img alt="tests" src="https://github.com/biaslyze-dev/biaslyze/actions/workflows/python-app.yml/badge.svg">
+    </a>
 </div>
 
 
