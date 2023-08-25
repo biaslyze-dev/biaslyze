@@ -8,11 +8,11 @@ The `CounterfactualBiasDetector` class is at the heart of the biaslyze package, 
 
 ## Results: CounterfactualDetectionResult
 
-After running bias detection using the `CounterfactualBiasDetector`, the `CounterfactualDetectionResult` class is used to capture and present the results. This class provides comprehensive information about the detected biases, such as the identified biased concepts, the generated counterfactual examples, and most importantly, visualizations of the results. This facilitates a deeper understanding of the biases present in the analyzed text.
+After running bias detection using the `CounterfactualBiasDetector`, the `CounterfactualDetectionResult` class is used to capture and present the results. This class provides comprehensive information about the models bias analysis, giving pointers to potentially biased concepts, the generated counterfactual examples, and most importantly, visualizations of the results. This facilitates a deeper understanding of the sensitive concepts present in the analyzed text.
 
 ## Concepts
 
-The `Concept` class defines the fundamental building block for bias analysis in the biaslyze package. Concepts represent specific terms, phrases, or ideas related to protected attributes that might be affected by bias. These can be predefined concepts, or users can define their own based on the context of their analysis.
+The `Concept` class defines the fundamental building block for bias analysis in the biaslyze package. Concepts represent specific terms, phrases, or ideas related to protected attributes that might be affected by bias and discrimination. These can be predefined concepts, or users can define their own based on the context of their analysis.
 
 
 ## Concept Detectors
