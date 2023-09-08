@@ -24,9 +24,6 @@ Bias is often subtle and difficult to detect in NLP models, as the protected att
 
 Biaslyze helps to get started with the analysis of bias within NLP models and offers a concrete entry point for further impact assessments and mitigation measures. Especially for developers, researchers and teams with limited resources, our toolbox offers a low-effort approach to bias testing in NLP use cases.
 
-## Supported Models
-
-All text classification models with probability output are supported. This includes models from scikit-learn, tensorflow, pytorch, huggingface transformers and custom models. The bias detection requires you to pass a `predict_proba` function similar to what you would get on scikit-learn models. You can find a tutorial on how to do that for pre-trained transformer models [here](https://biaslyze.org/tutorials/tutorial-hugging-hatexplain/). 
 
 ## Installation
 
@@ -68,6 +65,16 @@ Example output:
 
 See more detailed examples in the [tutorial](https://biaslyze.org/tutorials/tutorial-toxic-comments/).
 
+## Supported Models
+
+All text classification models with probability output are supported. This includes models from scikit-learn, tensorflow, pytorch, huggingface transformers and custom models. The bias detection requires you to pass a `predict_proba` function similar to what you would get on scikit-learn models. You can find a tutorial on how to do that for pre-trained transformer models [here](https://biaslyze.org/tutorials/tutorial-hugging-hatexplain/). 
+
+## Scientific Background
+
+The bias detection and mitigation methods are based on the following papers:
+
+- Garg, Sahaj, et al. **"Counterfactual fairness in text classification through robustness."** [Proceedings of the 2019 AAAI/ACM Conference on AI, Ethics, and Society. 2019](https://arxiv.org/abs/1809.10610).
+- Prabhakaran, Vinodkumar, Ben Hutchinson, and Margaret Mitchell. **"Perturbation sensitivity analysis to detect unintended model biases."** [arXiv preprint arXiv:1910.04210 (2019)](https://arxiv.org/abs/1910.04210).
 
 ## Development setup
 
